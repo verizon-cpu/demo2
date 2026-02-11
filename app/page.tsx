@@ -6,8 +6,8 @@ import { useForm, ValidationError } from '@formspree/react';
 // MicroInteraction Component - Looping MP4 for attention grabbing
 const MicroInteraction = ({ 
   src = "/videos/roofervid.mp4", // Default path - replace with your actual MP4
-  width = 24, 
-  height = 24,
+  width = 400, 
+  height = 400,
   style = {}
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -991,7 +991,7 @@ const HeroSection = () => {
             >
               {/* Micro-interaction - tiny looping MP4 */}
               <MicroInteraction 
-                src="/animations/sparkle.mp4" // Replace with your actual MP4 file
+                src="/videos/roofervid.mp4" // Replace with your actual MP4 file
                 width={32}
                 height={32}
                 style={{ 
@@ -1099,7 +1099,7 @@ const HeroSection = () => {
                 >
                   {/* Micro-interaction */}
                   <MicroInteraction 
-                    src="/animations/sparkle.mp4" // Replace with your actual MP4 file
+                    src="/videos/roofervid.mp4" // Replace with your actual MP4 file
                     width={24}
                     height={24}
                     style={{ 
@@ -1231,7 +1231,7 @@ const HeroSection = () => {
                 >
                   {/* Micro-interaction */}
                   <MicroInteraction 
-                    src="/animations/arrow.mp4" // Replace with your actual MP4 file
+                    src="/videos/roofervid.mp4" // Replace with your actual MP4 file
                     width={28}
                     height={28}
                     style={{ 
