@@ -5,7 +5,7 @@ import { useForm, ValidationError } from '@formspree/react';
 
 // MicroInteraction Component - Looping MP4 for attention grabbing
 const MicroInteraction = ({ 
-  src = "/animations/sparkle.mp4", // Default path - replace with your actual MP4
+  src = "/videos/roofervid.mp4", // Default path - replace with your actual MP4
   width = 24, 
   height = 24,
   style = {}
