@@ -93,8 +93,8 @@ export default function AboutPage() {
   ];
 
   const coreValues = [
-    { icon: "🛡️", title: "Protection", description: "Your safety and security drive every decision we make" },
-    { icon: "🤝", title: "Integrity", description: "Honest assessments, transparent pricing, no surprises" },
+    { icon: "🛡", title: "Protection", description: "Your safety and security drive every decision we make" },
+    { icon: "⚖", title: "Integrity", description: "Honest assessments, transparent pricing, no surprises" },
     { icon: "🔨", title: "Craftsmanship", description: "Meticulous attention to detail that outlasts trends" }
   ];
 
@@ -945,7 +945,7 @@ export default function AboutPage() {
                           onMouseEnter={(e) => handleCertificationHover(e, true)}
                           onMouseLeave={(e) => handleCertificationHover(e, false)}
                         >
-                          <span style={pageStyles.certificationIcon}>🛡️</span> 
+                          <span style={pageStyles.certificationIcon}>🛡</span> 
                           <span>{cert}</span>
                         </div>
                       ))}

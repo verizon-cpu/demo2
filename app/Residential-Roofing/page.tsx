@@ -1,2190 +1,1087 @@
-'use client';
-
-import { useState, useEffect, useRef } from 'react';
+"use client";
+import { useState, useEffect, useRef } from "react";
 import { Header, Footer } from '@/components/Layout';
+// ==================== IMAGE COMPARISON COMPONENT ====================
+function ImageComparison({
+  beforeImage,
+  afterImage,
+  isMobile,
+  isTablet,
+}: {
+  beforeImage: string;
+  afterImage: string;
+  isMobile: boolean;
+  isTablet: boolean;
+}) {
+  const [sliderPosition, setSliderPosition] = useState(50);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
 
-// Header and Footer are imported from separate files - no need to redefine them here
-// import Header from './Header'; // Uncomment when you have the header file
-// import Footer from './Footer'; // Uncomment when you have the footer file
-
-// Before & After Section Component - Roofing Transformations
-function BeforeAfterSection() {
-  const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
-
-  const roofingTransformations = [
-    {
-      before: "https://images.pexels.com/photos/280221/pexels-photo-280221.jpeg?auto=compress&cs=tinysrgb&w=600",
-      after: "https://images.pexels.com/photos/159358/construction-site-build-architecture-159358.jpeg?auto=compress&cs=tinysrgb&w=600",
-      title: "Complete Roof Replacement",
-      description: "From weathered and leaking to durable and beautiful - 5,200 sqft residential roof"
-    },
-    {
-      before: "https://images.pexels.com/photos/276514/pexels-photo-276514.jpeg?auto=compress&cs=tinysrgb&w=600",
-      after: "https://images.pexels.com/photos/162539/architecture-building-facade-house-162539.jpeg?auto=compress&cs=tinysrgb&w=600",
-      title: "Storm Damage Restoration",
-      description: "Emergency repair after severe weather - complete restoration in 3 days"
-    }
-  ];
-
-  const handleImageError = (url: string) => {
-    console.warn(`Image failed to load: ${url}`);
-    setImageErrors(prev => ({ ...prev, [url]: true }));
+  const handleInteractionStart = () => {
+    isDragging.current = true;
   };
 
-  const fallbackBefore = "https://placehold.co/600x400/0A0A0C/FFB800?text=Before+Roofing";
-  const fallbackAfter = "https://placehold.co/600x400/FFB800/0A0A0C?text=After+Roofing";
+  const handleInteractionMove = (clientX: number) => {
+    if (!isDragging.current || !containerRef.current) return;
 
-  return (
-    <section style={{
-      padding: '80px 20px',
-      background: '#0A0A0C',
-      position: 'relative' as const,
-      overflow: 'hidden',
-      borderTop: '4px solid #FFB800',
-    }}>
-      <div style={{
-        maxWidth: '1400px',
-        margin: '0 auto',
-        position: 'relative' as const,
-        zIndex: 2,
-      }}>
-        {/* Section Header */}
-        <div style={{
-          textAlign: 'center' as const,
-          marginBottom: '60px',
-        }}>
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '10px',
-            background: 'rgba(255, 184, 0, 0.1)',
-            padding: '10px 20px',
-            borderRadius: '50px',
-            border: '1px solid rgba(255, 184, 0, 0.3)',
-            marginBottom: '20px',
-            transition: 'all 0.3s ease',
-            cursor: 'pointer',
-          }}>
-            <span style={{
-              fontSize: '14px',
-              fontWeight: 600,
-              color: '#FFB800',
-              letterSpacing: '1px',
-            }}>
-              PROVEN RESULTS
-            </span>
-          </div>
-          
-          <h2 style={{
-            fontSize: '2.5rem',
-            fontWeight: 900,
-            color: '#FFFFFF',
-            lineHeight: 1.2,
-            fontFamily: "'Playfair Display', serif",
-            marginBottom: '20px',
-            position: 'relative' as const,
-            display: 'inline-block',
-          }}>
-            <span style={{
-              color: '#FFB800',
-              position: 'relative' as const,
-            }}>
-              Roofing Transformations
-              <span style={{
-                position: 'absolute',
-                bottom: '-10px',
-                left: '0',
-                width: '100%',
-                height: '3px',
-                background: 'linear-gradient(90deg, #FFB800, #FFD700, #FFB800)',
-                borderRadius: '2px',
-              }} />
-            </span>
-          </h2>
-          
-          <p style={{
-            fontSize: '1.25rem',
-            fontWeight: 400,
-            color: '#FAFAFA',
-            opacity: 0.9,
-            lineHeight: 1.6,
-            maxWidth: '800px',
-            margin: '30px auto',
-            fontFamily: "'Playfair Display', serif",
-          }}>
-            "Quality craftsmanship that stands the test of time — protecting your home with excellence"
-          </p>
-        </div>
+    const container = containerRef.current;
+    const rect = container.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const percentage = (x / rect.width) * 100;
 
-        {/* Roofing Transformations */}
-        {roofingTransformations.map((project, index) => (
-          <div key={index} style={{
-            position: 'relative',
-            maxWidth: '1200px',
-            margin: index === 0 ? '0 auto 60px' : '0 auto',
-          }}>
-            {/* Title */}
-            <div style={{
-              textAlign: 'center',
-              marginBottom: '40px',
-            }}>
-              <h3 style={{
-                fontSize: '1.75rem',
-                fontWeight: 800,
-                color: '#FFFFFF',
-                fontFamily: "'Playfair Display', serif",
-                marginBottom: '12px',
-              }}>
-                {project.title}
-              </h3>
-              <p style={{
-                fontSize: '1.125rem',
-                fontWeight: 500,
-                color: '#FAFAFA',
-                opacity: 0.9,
-                fontFamily: "'Playfair Display', serif",
-              }}>
-                {project.description}
-              </p>
-            </div>
+    setSliderPosition(Math.min(Math.max(percentage, 5), 95));
+  };
 
-            {/* Before & After Images Side by Side */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '30px',
-              marginBottom: index === 0 ? '40px' : '0',
-            }}>
-              {/* Before Image */}
-              <div style={{
-                position: 'relative',
-                borderRadius: '8px',
-                overflow: 'hidden',
-                boxShadow: '0 15px 35px rgba(0, 0, 0, 0.4)',
-                height: '400px',
-                backgroundColor: '#0A0A0C',
-                border: '1px solid rgba(255, 184, 0, 0.2)',
-              }}>
-                <div style={{
-                  position: 'absolute',
-                  top: '20px',
-                  left: '20px',
-                  background: '#0A0A0C',
-                  color: '#FFB800',
-                  padding: '10px 20px',
-                  borderRadius: '4px',
-                  fontSize: '14px',
-                  fontWeight: 700,
-                  fontFamily: "'Playfair Display', serif",
-                  zIndex: 2,
-                  letterSpacing: '1px',
-                  border: '1px solid #FFB800',
-                }}>
-                  BEFORE
-                </div>
-                {!imageErrors[project.before] ? (
-                  <img 
-                    src={project.before}
-                    alt="Roof before installation"
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      objectPosition: 'center',
-                    }}
-                    onError={() => handleImageError(project.before)}
-                    loading="lazy"
-                  />
-                ) : (
-                  <img 
-                    src={fallbackBefore}
-                    alt="Roof before - placeholder"
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                    }}
-                  />
-                )}
-              </div>
-              
-              {/* After Image */}
-              <div style={{
-                position: 'relative',
-                borderRadius: '8px',
-                overflow: 'hidden',
-                boxShadow: '0 15px 35px rgba(0, 0, 0, 0.4)',
-                height: '400px',
-                backgroundColor: '#0A0A0C',
-                border: '1px solid rgba(255, 184, 0, 0.2)',
-              }}>
-                <div style={{
-                  position: 'absolute',
-                  top: '20px',
-                  left: '20px',
-                  background: '#FFB800',
-                  color: '#0A0A0C',
-                  padding: '10px 20px',
-                  borderRadius: '4px',
-                  fontSize: '14px',
-                  fontWeight: 700,
-                  fontFamily: "'Playfair Display', serif",
-                  zIndex: 2,
-                  letterSpacing: '1px',
-                }}>
-                  AFTER
-                </div>
-                {!imageErrors[project.after] ? (
-                  <img 
-                    src={project.after}
-                    alt="Roof after installation"
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      objectPosition: 'center',
-                    }}
-                    onError={() => handleImageError(project.after)}
-                    loading="lazy"
-                  />
-                ) : (
-                  <img 
-                    src={fallbackAfter}
-                    alt="Roof after - placeholder"
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                    }}
-                  />
-                )}
-              </div>
-            </div>
-          </div>
-        ))}
+  const handleInteractionEnd = () => {
+    isDragging.current = false;
+  };
 
-        {/* View More Button */}
-        <div style={{
-          textAlign: 'center',
-          marginTop: '60px',
-        }}>
-          <button 
-            onClick={() => window.location.href = '/gallery'}
-            style={{
-              background: 'transparent',
-              color: '#FFFFFF',
-              border: '2px solid #FFB800',
-              padding: '16px 32px',
-              fontSize: '16px',
-              fontWeight: 700,
-              borderRadius: '4px',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              boxShadow: '0 5px 15px rgba(0, 0, 0, 0.3)',
-              fontFamily: "'Playfair Display', serif",
-              letterSpacing: '0.5px',
-              width: '100%',
-              maxWidth: '400px',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#FFB800';
-              e.currentTarget.style.color = '#0A0A0C';
-              e.currentTarget.style.transform = 'translateY(-3px)';
-              e.currentTarget.style.boxShadow = '0 10px 25px rgba(255, 184, 0, 0.3)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'transparent';
-              e.currentTarget.style.color = '#FFFFFF';
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.3)';
-            }}
-          >
-            View More Roofing Projects
-          </button>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// Why Choose BRAVOS Section Component
-function WhyChooseBravosSection() {
-  const [yearsExperience, setYearsExperience] = useState(0);
-  const [roofsCompleted, setRoofsCompleted] = useState(0);
-  const [satisfactionRate, setSatisfactionRate] = useState(0);
-  
   useEffect(() => {
-    const animateCounters = () => {
-      const duration = 2000;
-      const steps = 60;
-      const incrementYears = 25 / steps;
-      const incrementRoofs = 3500 / steps;
-      const incrementSatisfaction = 99.7 / steps;
-      
-      let currentYears = 0;
-      let currentRoofs = 0;
-      let currentSatisfaction = 0;
-      let step = 0;
-      
-      const counterInterval = setInterval(() => {
-        if (step >= steps) {
-          clearInterval(counterInterval);
-          setYearsExperience(25);
-          setRoofsCompleted(3500);
-          setSatisfactionRate(99.7);
-          return;
-        }
-        
-        currentYears += incrementYears;
-        currentRoofs += incrementRoofs;
-        currentSatisfaction += incrementSatisfaction;
-        
-        setYearsExperience(Math.floor(currentYears));
-        setRoofsCompleted(Math.floor(currentRoofs));
-        setSatisfactionRate(parseFloat(currentSatisfaction.toFixed(1)));
-        
-        step++;
-      }, duration / steps);
+    const handleMouseMove = (e: MouseEvent) => {
+      handleInteractionMove(e.clientX);
     };
-    
-    const timer = setTimeout(animateCounters, 500);
-    return () => clearTimeout(timer);
-  }, []);
 
-  return (
-    <section style={{
-      padding: '80px 20px',
-      background: '#0A0A0C',
-      position: 'relative' as const,
-      borderTop: '1px solid rgba(255, 184, 0, 0.2)',
-    }}>
-      <div style={{
-        maxWidth: '1400px',
-        margin: '0 auto',
-      }}>
-        {/* Section Header */}
-        <div style={{
-          maxWidth: '1200px',
-          margin: '0 auto 60px',
-          textAlign: 'center' as const,
-        }}>
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '10px',
-            background: 'rgba(255, 184, 0, 0.1)',
-            padding: '10px 20px',
-            borderRadius: '50px',
-            border: '1px solid rgba(255, 184, 0, 0.3)',
-            marginBottom: '20px',
-          }}>
-            <span style={{
-              fontSize: '14px',
-              fontWeight: 600,
-              color: '#FFB800',
-              letterSpacing: '1px',
-            }}>
-              THE BRAVOS DIFFERENCE
-            </span>
-          </div>
-          
-          <h2 style={{
-            fontSize: '2.5rem',
-            fontWeight: 800,
-            color: '#FFFFFF',
-            lineHeight: 1.2,
-            fontFamily: "'Playfair Display', serif",
-            margin: '0 0 20px 0',
-            maxWidth: '900px',
-            marginLeft: 'auto',
-            marginRight: 'auto',
-          }}>
-            Why Choose BRAVOS for Your{' '}
-            <span style={{ color: '#FFB800' }}>Residential Roofing in Boston?</span>
-          </h2>
-          
-          <p style={{
-            fontSize: '1.125rem',
-            fontWeight: 400,
-            color: '#FAFAFA',
-            opacity: 0.9,
-            lineHeight: 1.6,
-            maxWidth: '800px',
-            margin: '0 auto 30px',
-          }}>
-            With over two decades of experience, BRAVOS has become Boston's most trusted name in residential roofing. 
-            Our commitment to quality materials, expert craftsmanship, and customer satisfaction sets us apart.
-          </p>
-          
-          {/* Animated Stats Counter */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '30px',
-            marginTop: '30px',
-            maxWidth: '800px',
-            margin: '30px auto',
-          }}>
-            <div style={{ textAlign: 'center' as const }}>
-              <div style={{
-                fontSize: '2.5rem',
-                fontWeight: 800,
-                color: '#FFB800',
-                fontFamily: "'Montserrat', sans-serif",
-                marginBottom: '8px',
-              }}>
-                {yearsExperience}+
-              </div>
-              <div style={{
-                fontSize: '14px',
-                fontWeight: 600,
-                color: '#FAFAFA',
-                opacity: 0.9,
-                letterSpacing: '0.5px',
-              }}>
-                Years of Excellence
-              </div>
-            </div>
-            
-            <div style={{ textAlign: 'center' as const }}>
-              <div style={{
-                fontSize: '2.5rem',
-                fontWeight: 800,
-                color: '#FFB800',
-                fontFamily: "'Montserrat', sans-serif",
-                marginBottom: '8px',
-              }}>
-                {roofsCompleted.toLocaleString()}+
-              </div>
-              <div style={{
-                fontSize: '14px',
-                fontWeight: 600,
-                color: '#FAFAFA',
-                opacity: 0.9,
-                letterSpacing: '0.5px',
-              }}>
-                Roofs Completed
-              </div>
-            </div>
-            
-            <div style={{ textAlign: 'center' as const }}>
-              <div style={{
-                fontSize: '2.5rem',
-                fontWeight: 800,
-                color: '#FFB800',
-                fontFamily: "'Montserrat', sans-serif",
-                marginBottom: '8px',
-              }}>
-                {satisfactionRate}%
-              </div>
-              <div style={{
-                fontSize: '14px',
-                fontWeight: 600,
-                color: '#FAFAFA',
-                opacity: 0.9,
-                letterSpacing: '0.5px',
-              }}>
-                Satisfaction Rate
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        {/* Service Cards */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '30px',
-          margin: '0 auto',
-        }}>
-          {/* Card 1: Premium Materials */}
-          <div style={{
-            background: '#0A0A0C',
-            borderRadius: '8px',
-            overflow: 'hidden',
-            boxShadow: '0 15px 35px rgba(0, 0, 0, 0.4)',
-            transition: 'all 0.3s ease',
-            border: '1px solid rgba(255, 184, 0, 0.2)',
-            paddingBottom: '30px',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-8px)';
-            e.currentTarget.style.boxShadow = '0 25px 50px rgba(0, 0, 0, 0.5)';
-            e.currentTarget.style.borderColor = '#FFB800';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 15px 35px rgba(0, 0, 0, 0.4)';
-            e.currentTarget.style.borderColor = 'rgba(255, 184, 0, 0.2)';
-          }}>
-            <div style={{
-              position: 'relative' as const,
-              height: '250px',
-              overflow: 'hidden',
-            }}>
-              <img 
-                src="https://images.pexels.com/photos/129600/pexels-photo-129600.jpeg?auto=compress&cs=tinysrgb&w=600"
-                alt="Premium roofing materials"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover' as const,
-                  objectPosition: 'center',
-                }}
-              />
-            </div>
-            
-            <div style={{ padding: '25px' }}>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '16px',
-                marginBottom: '20px',
-              }}>
-                <span style={{
-                  fontSize: '14px',
-                  fontWeight: 800,
-                  color: '#FFB800',
-                  background: 'rgba(255, 184, 0, 0.1)',
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '4px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                  01
-                </span>
-                <h3 style={{
-                  fontSize: '1.5rem',
-                  fontWeight: 700,
-                  color: '#FFFFFF',
-                  fontFamily: "'Playfair Display', serif",
-                  margin: 0,
-                }}>
-                  Premium Materials Only
-                </h3>
-              </div>
-              
-              <p style={{
-                fontSize: '1rem',
-                fontWeight: 400,
-                color: '#FAFAFA',
-                opacity: 0.9,
-                lineHeight: 1.6,
-                marginBottom: '20px',
-              }}>
-                We source only the highest-grade roofing materials from GAF, CertainTeed, and Owens Corning. 
-                Our 50-year architectural shingles and premium metal roofing options come with industry-leading warranties.
-              </p>
-              
-              <div style={{
-                display: 'flex',
-                flexDirection: 'column' as const,
-                gap: '12px',
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{
-                    width: '20px',
-                    height: '20px',
-                    background: 'rgba(255, 184, 0, 0.1)',
-                    borderRadius: '4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#FFB800',
-                    fontSize: '12px',
-                  }}>✓</div>
-                  <span style={{ fontSize: '14px', fontWeight: 500, color: '#FAFAFA', opacity: 0.9 }}>
-                    50-Year Architectural Shingles
-                  </span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{
-                    width: '20px',
-                    height: '20px',
-                    background: 'rgba(255, 184, 0, 0.1)',
-                    borderRadius: '4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#FFB800',
-                    fontSize: '12px',
-                  }}>✓</div>
-                  <span style={{ fontSize: '14px', fontWeight: 500, color: '#FAFAFA', opacity: 0.9 }}>
-                    Premium Metal Roofing Systems
-                  </span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{
-                    width: '20px',
-                    height: '20px',
-                    background: 'rgba(255, 184, 0, 0.1)',
-                    borderRadius: '4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#FFB800',
-                    fontSize: '12px',
-                  }}>✓</div>
-                  <span style={{ fontSize: '14px', fontWeight: 500, color: '#FAFAFA', opacity: 0.9 }}>
-                    Manufacturer-Certified Materials
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Card 2: Master Craftsmen */}
-          <div style={{
-            background: '#0A0A0C',
-            borderRadius: '8px',
-            overflow: 'hidden',
-            boxShadow: '0 15px 35px rgba(0, 0, 0, 0.4)',
-            transition: 'all 0.3s ease',
-            border: '1px solid rgba(255, 184, 0, 0.2)',
-            paddingBottom: '30px',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-8px)';
-            e.currentTarget.style.boxShadow = '0 25px 50px rgba(0, 0, 0, 0.5)';
-            e.currentTarget.style.borderColor = '#FFB800';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 15px 35px rgba(0, 0, 0, 0.4)';
-            e.currentTarget.style.borderColor = 'rgba(255, 184, 0, 0.2)';
-          }}>
-            <div style={{
-              position: 'relative' as const,
-              height: '250px',
-              overflow: 'hidden',
-            }}>
-              <img 
-                src="https://images.pexels.com/photos/261770/pexels-photo-261770.jpeg?auto=compress&cs=tinysrgb&w=600"
-                alt="Professional roofing team"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover' as const,
-                  objectPosition: 'center',
-                }}
-              />
-            </div>
-            
-            <div style={{ padding: '25px' }}>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '16px',
-                marginBottom: '20px',
-              }}>
-                <span style={{
-                  fontSize: '14px',
-                  fontWeight: 800,
-                  color: '#FFB800',
-                  background: 'rgba(255, 184, 0, 0.1)',
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '4px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                  02
-                </span>
-                <h3 style={{
-                  fontSize: '1.5rem',
-                  fontWeight: 700,
-                  color: '#FFFFFF',
-                  fontFamily: "'Playfair Display', serif",
-                  margin: 0,
-                }}>
-                  Master Craftsmen
-                </h3>
-              </div>
-              
-              <p style={{
-                fontSize: '1rem',
-                fontWeight: 400,
-                color: '#FAFAFA',
-                opacity: 0.9,
-                lineHeight: 1.6,
-                marginBottom: '20px',
-              }}>
-                Our GAF Master Elite® certified roofers average 15+ years of experience. 
-                Each team undergoes continuous training in the latest installation techniques and safety protocols.
-              </p>
-              
-              <div style={{
-                display: 'flex',
-                flexDirection: 'column' as const,
-                gap: '12px',
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{
-                    width: '20px',
-                    height: '20px',
-                    background: 'rgba(255, 184, 0, 0.1)',
-                    borderRadius: '4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#FFB800',
-                    fontSize: '12px',
-                  }}>✓</div>
-                  <span style={{ fontSize: '14px', fontWeight: 500, color: '#FAFAFA', opacity: 0.9 }}>
-                    GAF Master Elite® Certified
-                  </span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{
-                    width: '20px',
-                    height: '20px',
-                    background: 'rgba(255, 184, 0, 0.1)',
-                    borderRadius: '4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#FFB800',
-                    fontSize: '12px',
-                  }}>✓</div>
-                  <span style={{ fontSize: '14px', fontWeight: 500, color: '#FAFAFA', opacity: 0.9 }}>
-                    Fully Licensed & Insured
-                  </span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{
-                    width: '20px',
-                    height: '20px',
-                    background: 'rgba(255, 184, 0, 0.1)',
-                    borderRadius: '4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#FFB800',
-                    fontSize: '12px',
-                  }}>✓</div>
-                  <span style={{ fontSize: '14px', fontWeight: 500, color: '#FAFAFA', opacity: 0.9 }}>
-                    OSHA Safety Certified
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Card 3: Lifetime Warranty */}
-          <div style={{
-            background: '#0A0A0C',
-            borderRadius: '8px',
-            overflow: 'hidden',
-            boxShadow: '0 15px 35px rgba(0, 0, 0, 0.4)',
-            transition: 'all 0.3s ease',
-            border: '1px solid rgba(255, 184, 0, 0.2)',
-            paddingBottom: '30px',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-8px)';
-            e.currentTarget.style.boxShadow = '0 25px 50px rgba(0, 0, 0, 0.5)';
-            e.currentTarget.style.borderColor = '#FFB800';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 15px 35px rgba(0, 0, 0, 0.4)';
-            e.currentTarget.style.borderColor = 'rgba(255, 184, 0, 0.2)';
-          }}>
-            <div style={{
-              position: 'relative' as const,
-              height: '250px',
-              overflow: 'hidden',
-            }}>
-              <img 
-                src="https://images.pexels.com/photos/1080721/pexels-photo-1080721.jpeg?auto=compress&cs=tinysrgb&w=600"
-                alt="Roof warranty"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover' as const,
-                  objectPosition: 'center',
-                }}
-              />
-            </div>
-            
-            <div style={{ padding: '25px' }}>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '16px',
-                marginBottom: '20px',
-              }}>
-                <span style={{
-                  fontSize: '14px',
-                  fontWeight: 800,
-                  color: '#FFB800',
-                  background: 'rgba(255, 184, 0, 0.1)',
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '4px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                  03
-                </span>
-                <h3 style={{
-                  fontSize: '1.5rem',
-                  fontWeight: 700,
-                  color: '#FFFFFF',
-                  fontFamily: "'Playfair Display', serif",
-                  margin: 0,
-                }}>
-                  Lifetime Warranty
-                </h3>
-              </div>
-              
-              <p style={{
-                fontSize: '1rem',
-                fontWeight: 400,
-                color: '#FAFAFA',
-                opacity: 0.9,
-                lineHeight: 1.6,
-                marginBottom: '20px',
-              }}>
-                Every BRAVOS installation comes with comprehensive warranties — both manufacturer and 
-                workmanship. Your investment is protected for decades to come.
-              </p>
-              
-              <div style={{
-                display: 'flex',
-                flexDirection: 'column' as const,
-                gap: '12px',
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{
-                    width: '20px',
-                    height: '20px',
-                    background: 'rgba(255, 184, 0, 0.1)',
-                    borderRadius: '4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#FFB800',
-                    fontSize: '12px',
-                  }}>✓</div>
-                  <span style={{ fontSize: '14px', fontWeight: 500, color: '#FAFAFA', opacity: 0.9 }}>
-                    50-Year Manufacturer Warranty
-                  </span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{
-                    width: '20px',
-                    height: '20px',
-                    background: 'rgba(255, 184, 0, 0.1)',
-                    borderRadius: '4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#FFB800',
-                    fontSize: '12px',
-                  }}>✓</div>
-                  <span style={{ fontSize: '14px', fontWeight: 500, color: '#FAFAFA', opacity: 0.9 }}>
-                    25-Year Workmanship Guarantee
-                  </span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{
-                    width: '20px',
-                    height: '20px',
-                    background: 'rgba(255, 184, 0, 0.1)',
-                    borderRadius: '4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#FFB800',
-                    fontSize: '12px',
-                  }}>✓</div>
-                  <span style={{ fontSize: '14px', fontWeight: 500, color: '#FAFAFA', opacity: 0.9 }}>
-                    Transferable to New Homeowners
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches[0]) {
+        handleInteractionMove(e.touches[0].clientX);
+      }
+    };
 
-// Residential Roofing Services Section
-function ResidentialRoofingServices() {
-  const services = [
-    {
-      id: 1,
-      title: "Roof Installation & Replacement",
-      description: "Complete tear-off and replacement with premium architectural shingles, metal roofing, or slate. We ensure proper ventilation and waterproofing for maximum longevity.",
-      image: "https://images.pexels.com/photos/1109541/pexels-photo-1109541.jpeg?auto=compress&cs=tinysrgb&w=600"
-    },
-    {
-      id: 2,
-      title: "Storm Damage Repair",
-      description: "24/7 emergency response for hail, wind, and falling debris damage. We work with all insurance companies to restore your roof quickly and efficiently.",
-      image: "https://images.pexels.com/photos/280221/pexels-photo-280221.jpeg?auto=compress&cs=tinysrgb&w=600"
-    },
-    {
-      id: 3,
-      title: "Leak Detection & Repair",
-      description: "Advanced moisture detection technology to pinpoint and repair leaks at their source. We prevent interior water damage and mold growth.",
-      image: "https://images.pexels.com/photos/276514/pexels-photo-276514.jpeg?auto=compress&cs=tinysrgb&w=600"
-    },
-    {
-      id: 4,
-      title: "Gutter Installation & Repair",
-      description: "Seamless aluminum gutter systems, gutter guards, and downspouts. Proper drainage protects your roof's edge and foundation.",
-      image: "https://images.pexels.com/photos/162539/architecture-building-facade-house-162539.jpeg?auto=compress&cs=tinysrgb&w=600"
-    },
-    {
-      id: 5,
-      title: "Skylight Installation",
-      description: "Energy-efficient skylights and solar tubes that bring natural light while maintaining your roof's integrity and weather protection.",
-      image: "https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=600"
-    },
-    {
-      id: 6,
-      title: "Roof Maintenance & Inspection",
-      description: "Annual maintenance plans including thorough inspections, minor repairs, and preventive treatments to extend your roof's lifespan.",
-      image: "https://images.pexels.com/photos/257775/pexels-photo-257775.jpeg?auto=compress&cs=tinysrgb&w=600"
+    const handleMouseUp = () => {
+      handleInteractionEnd();
+    };
+
+    const handleTouchEnd = () => {
+      handleInteractionEnd();
+    };
+
+    if (isDragging.current) {
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+      document.addEventListener("touchmove", handleTouchMove);
+      document.addEventListener("touchend", handleTouchEnd);
     }
-  ];
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, [isDragging.current]);
+
+  const handleContainerClick = (e: React.MouseEvent) => {
+    if (!isMobile) return;
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (rect) {
+      const x = e.clientX - rect.left;
+      const percentage = (x / rect.width) * 100;
+      setSliderPosition(Math.min(Math.max(percentage, 5), 95));
+    }
+  };
+
+  const handleSize = isMobile ? 28 : isTablet ? 32 : 36;
+  const labelPadding = isMobile ? "4px 8px" : "6px 10px";
+  const labelFontSize = isMobile ? "10px" : "11px";
+  const imageHeight = isMobile ? "220px" : isTablet ? "260px" : "300px";
 
   return (
-    <section style={{
-      padding: '80px 20px',
-      background: '#0A0A0C',
-      position: 'relative' as const,
-      borderTop: '1px solid rgba(255, 184, 0, 0.2)',
-      borderBottom: '1px solid rgba(255, 184, 0, 0.2)',
-    }}>
-      <div style={{
-        maxWidth: '1400px',
-        margin: '0 auto',
-      }}>
-        {/* Section Header */}
-        <div style={{
-          textAlign: 'center' as const,
-          marginBottom: '60px',
-        }}>
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '10px',
-            background: 'rgba(255, 184, 0, 0.1)',
-            padding: '10px 20px',
-            borderRadius: '50px',
-            border: '1px solid rgba(255, 184, 0, 0.3)',
-            marginBottom: '20px',
-          }}>
-            <span style={{
-              fontSize: '14px',
-              fontWeight: 600,
-              color: '#FFB800',
-              letterSpacing: '1px',
-            }}>
-              OUR EXPERTISE
-            </span>
-          </div>
-          
-          <h2 style={{
-            fontSize: '2.5rem',
-            fontWeight: 900,
-            color: '#FFFFFF',
-            lineHeight: 1.2,
-            fontFamily: "'Playfair Display', serif",
-            marginBottom: '20px',
-          }}>
-            Comprehensive{' '}
-            <span style={{ color: '#FFB800' }}>Residential Roofing</span>
-          </h2>
-          
-          <p style={{
-            fontSize: '1.125rem',
-            fontWeight: 400,
-            color: '#FAFAFA',
-            opacity: 0.9,
-            lineHeight: 1.6,
-            maxWidth: '800px',
-            margin: '0 auto 30px',
-          }}>
-            From complete replacements to emergency repairs, our certified roofers deliver 
-            exceptional craftsmanship on every project. Here's what we offer:
-          </p>
-        </div>
-        
-        {/* Service Cards Grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '30px',
-          marginBottom: '40px',
-        }}>
-          {services.map((service) => (
-            <div key={service.id} style={{
-              background: '#0A0A0C',
-              borderRadius: '8px',
-              overflow: 'hidden',
-              boxShadow: '0 15px 35px rgba(0, 0, 0, 0.4)',
-              transition: 'all 0.3s ease',
-              border: '1px solid rgba(255, 184, 0, 0.2)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-5px)';
-              e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.6)';
-              e.currentTarget.style.borderColor = '#FFB800';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 15px 35px rgba(0, 0, 0, 0.4)';
-              e.currentTarget.style.borderColor = 'rgba(255, 184, 0, 0.2)';
-            }}>
-              <div style={{
-                position: 'relative' as const,
-                height: '200px',
-                overflow: 'hidden',
-              }}>
-                <img 
-                  src={service.image}
-                  alt={service.title}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover' as const,
-                    objectPosition: 'center',
-                  }}
-                />
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  background: 'linear-gradient(to bottom, rgba(10, 10, 12, 0.2) 0%, transparent 50%)',
-                }} />
-              </div>
-              
-              <div style={{ padding: '25px' }}>
-                <h3 style={{
-                  fontSize: '1.5rem',
-                  fontWeight: 800,
-                  color: '#FFFFFF',
-                  fontFamily: "'Playfair Display', serif",
-                  marginBottom: '12px',
-                }}>
-                  {service.title}
-                </h3>
-                
-                <p style={{
-                  fontSize: '1rem',
-                  fontWeight: 400,
-                  color: '#FAFAFA',
-                  opacity: 0.9,
-                  lineHeight: 1.6,
-                  marginBottom: '0',
-                }}>
-                  {service.description}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+    <div
+      ref={containerRef}
+      style={{
+        position: "relative",
+        width: "100%",
+        height: imageHeight,
+        overflow: "hidden",
+        borderRadius: "8px",
+        cursor: isMobile ? "pointer" : "col-resize",
+        touchAction: "none",
+        boxSizing: "border-box",
+      }}
+      onMouseDown={(e) => {
+        if (!isMobile) {
+          handleInteractionStart();
+          handleInteractionMove(e.clientX);
+        }
+      }}
+      onTouchStart={(e) => {
+        handleInteractionStart();
+        if (e.touches[0]) {
+          handleInteractionMove(e.touches[0].clientX);
+        }
+      }}
+      onClick={handleContainerClick}
+    >
+      <img
+        src={beforeImage}
+        alt="Before roofing work"
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          objectPosition: "center",
+          zIndex: 1,
+        }}
+      />
+
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: `${sliderPosition}%`,
+          height: "100%",
+          overflow: "hidden",
+          zIndex: 2,
+        }}
+      >
+        <img
+          src={afterImage}
+          alt="After roofing work"
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "center",
+          }}
+        />
       </div>
-    </section>
+
+      <div
+        style={{
+          position: "absolute",
+          top: "0",
+          left: `${sliderPosition}%`,
+          transform: "translateX(-50%)",
+          width: `${handleSize}px`,
+          height: `${handleSize}px`,
+          background: "#FFB800",
+          borderRadius: "50%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 4,
+          cursor: isMobile ? "pointer" : "col-resize",
+          boxShadow: "0 4px 15px rgba(0, 0, 0, 0.3)",
+          border: "2px solid #0A0A0C",
+          touchAction: "none",
+        }}
+        onMouseDown={(e) => {
+          e.stopPropagation();
+          handleInteractionStart();
+        }}
+        onTouchStart={(e) => {
+          e.stopPropagation();
+          handleInteractionStart();
+        }}
+      >
+        <svg
+          width={isMobile ? "12" : "14"}
+          height={isMobile ? "12" : "14"}
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M8.5 5L11.7929 8.29289C12.1834 8.68342 12.8166 8.68342 13.2071 8.29289L16.5 5M8.5 19L11.7929 15.7071C12.1834 15.3166 12.8166 15.3166 13.2071 15.7071L16.5 19M19 12L5 12"
+            stroke="#0A0A0C"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </div>
+
+      <div
+        style={{
+          position: "absolute",
+          top: "0",
+          left: `${sliderPosition}%`,
+          transform: "translateX(-1px)",
+          width: "2px",
+          height: "100%",
+          background: "#FAFAFA",
+          zIndex: 3,
+          boxShadow: "0 0 4px rgba(0, 0, 0, 0.3)",
+        }}
+      ></div>
+
+      <div
+        style={{
+          position: "absolute",
+          bottom: isMobile ? "8px" : "12px",
+          left: isMobile ? "8px" : "12px",
+          background: "#FAFAFA",
+          color: "#FAFAFA",
+          padding: labelPadding,
+          fontSize: labelFontSize,
+          fontWeight: 700,
+          borderRadius: "4px",
+          zIndex: 3,
+          letterSpacing: "0.5px",
+          opacity: 0.9,
+        }}
+      >
+        BEFORE
+      </div>
+
+      <div
+        style={{
+          position: "absolute",
+          bottom: isMobile ? "8px" : "12px",
+          right: isMobile ? "8px" : "12px",
+          background: "#FFB800",
+          color: "#FAFAFA",
+          padding: labelPadding,
+          fontSize: labelFontSize,
+          fontWeight: 700,
+          borderRadius: "4px",
+          zIndex: 3,
+          letterSpacing: "0.5px",
+        }}
+      >
+        AFTER
+      </div>
+    </div>
   );
 }
 
-// Contact Form Component with Formspree
-function ContactForm() {
+// ==================== CONTACT FORM COMPONENT ====================
+function ContactForm({ isMobile, isTablet }: { isMobile: boolean; isTablet: boolean }) {
+  const [formStatus, setFormStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    zipCode: '',
-    message: ''
+    fullName: "",
+    email: "",
+    phone: "",
+    zipCode: "",
+    message: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitStatus('idle');
+    setFormStatus("sending");
 
     try {
-      const response = await fetch('https://formspree.io/f/xqeedjny', {
-        method: 'POST',
+      const response = await fetch("https://formspree.io/f/xqeedjny", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
 
       if (response.ok) {
-        setSubmitStatus('success');
-        setFormData({
-          fullName: '',
-          email: '',
-          phone: '',
-          zipCode: '',
-          message: ''
-        });
+        setFormStatus("success");
+        setFormData({ fullName: "", email: "", phone: "", zipCode: "", message: "" });
+        setTimeout(() => setFormStatus("idle"), 5000);
       } else {
-        setSubmitStatus('error');
+        setFormStatus("error");
+        setTimeout(() => setFormStatus("idle"), 5000);
       }
-    } catch (error) {
-      setSubmitStatus('error');
-    } finally {
-      setIsSubmitting(false);
+    } catch {
+      setFormStatus("error");
+      setTimeout(() => setFormStatus("idle"), 5000);
     }
   };
 
+  const formStyles = {
+    container: {
+      background: "#FAFAFA",
+      borderRadius: "10px",
+      padding: isMobile ? "1.5rem" : "2rem",
+      borderTop: "4px solid #FFB800",
+      boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3)",
+      width: "100%",
+      boxSizing: "border-box" as const,
+    },
+    title: {
+      fontSize: isMobile ? "1.25rem" : "1.5rem",
+      fontWeight: 900,
+      color: "#0A0A0C",
+      marginBottom: "0.5rem",
+      fontFamily: "'Playfair Display', serif",
+    },
+    subtitle: {
+      fontSize: isMobile ? "0.8rem" : "0.9rem",
+      color: "#0A0A0C",
+      opacity: 0.9,
+      marginBottom: "1.5rem",
+      fontFamily: "'Playfair Display', serif",
+    },
+    form: {
+      display: "flex",
+      flexDirection: "column" as const,
+      gap: "1rem",
+      width: "100%",
+    },
+    inputGroup: {
+      display: "flex",
+      flexDirection: "column" as const,
+      gap: "0.25rem",
+    },
+    label: {
+      fontSize: "0.8rem",
+      fontWeight: 600,
+      color: "#FFB800",
+      textTransform: "uppercase" as const,
+      letterSpacing: "1px",
+    },
+    input: {
+      width: "100%",
+      padding: isMobile ? "0.75rem" : "0.875rem",
+      background: "rgba(255, 255, 255, 0.05)",
+      border: "1px solid rgba(255, 184, 0, 0.2)",
+      borderRadius: "4px",
+      color: "#FAFAFA",
+      fontSize: isMobile ? "0.9rem" : "1rem",
+      fontFamily: "'Playfair Display', serif",
+      boxSizing: "border-box" as const,
+      transition: "all 0.3s ease",
+    },
+    textarea: {
+      width: "100%",
+      padding: isMobile ? "0.75rem" : "0.875rem",
+      background: "rgba(255, 255, 255, 0.05)",
+      border: "1px solid rgba(255, 184, 0, 0.2)",
+      borderRadius: "4px",
+      color: "#FAFAFA",
+      fontSize: isMobile ? "0.9rem" : "1rem",
+      fontFamily: "'Playfair Display', serif",
+      minHeight: "100px",
+      resize: "vertical" as const,
+      boxSizing: "border-box" as const,
+    },
+    button: {
+      background: "#FFB800",
+      color: "#0A0A0C",
+      border: "none",
+      padding: isMobile ? "0.875rem 1.5rem" : "1rem 2rem",
+      fontSize: isMobile ? "0.9rem" : "1rem",
+      fontWeight: 900,
+      borderRadius: "30px",
+      cursor: "pointer",
+      transition: "all 0.3s ease",
+      letterSpacing: "0.5px",
+      marginTop: "0.5rem",
+      fontFamily: "'Playfair Display', serif",
+    },
+    statusMessage: {
+      success: {
+        color: "#FFB800",
+        marginTop: "1rem",
+        fontSize: "0.9rem",
+        textAlign: "center" as const,
+      },
+      error: {
+        color: "#FF4444",
+        marginTop: "1rem",
+        fontSize: "0.9rem",
+        textAlign: "center" as const,
+      },
+    },
+  };
+
   return (
-    <section style={{
-      padding: '80px 20px',
-      background: '#0A0A0C',
-      position: 'relative' as const,
-      borderTop: '4px solid #FFB800',
-    }}>
-      <div style={{
-        maxWidth: '1200px',
-        margin: '0 auto',
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: '60px',
-        alignItems: 'center',
-      }}>
-        {/* Left Content */}
-        <div>
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '10px',
-            background: 'rgba(255, 184, 0, 0.1)',
-            padding: '10px 20px',
-            borderRadius: '50px',
-            border: '1px solid rgba(255, 184, 0, 0.3)',
-            marginBottom: '20px',
-          }}>
-            <span style={{
-              fontSize: '14px',
-              fontWeight: 600,
-              color: '#FFB800',
-              letterSpacing: '1px',
-            }}>
-              GET STARTED TODAY
-            </span>
-          </div>
-          
-          <h2 style={{
-            fontSize: '2.5rem',
-            fontWeight: 900,
-            color: '#FFFFFF',
-            lineHeight: 1.2,
-            fontFamily: "'Playfair Display', serif",
-            marginBottom: '20px',
-          }}>
-            Request Your{' '}
-            <span style={{ color: '#FFB800' }}>Free Estimate</span>
-          </h2>
-          
-          <p style={{
-            fontSize: '1.125rem',
-            fontWeight: 400,
-            color: '#FAFAFA',
-            opacity: 0.9,
-            lineHeight: 1.6,
-            marginBottom: '30px',
-          }}>
-            Tell us about your roofing project. Our team will provide a detailed, 
-            no-obligation quote within 24 hours.
-          </p>
-          
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column' as const,
-            gap: '20px',
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{
-                width: '40px',
-                height: '40px',
-                background: 'rgba(255, 184, 0, 0.1)',
-                borderRadius: '4px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#FFB800',
-                fontSize: '18px',
-                fontWeight: 600,
-              }}>
-                1
-              </div>
-              <span style={{ fontSize: '16px', color: '#FFFFFF' }}>
-                Free in-home consultation
-              </span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{
-                width: '40px',
-                height: '40px',
-                background: 'rgba(255, 184, 0, 0.1)',
-                borderRadius: '4px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#FFB800',
-                fontSize: '18px',
-                fontWeight: 600,
-              }}>
-                2
-              </div>
-              <span style={{ fontSize: '16px', color: '#FFFFFF' }}>
-                Detailed written proposal
-              </span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{
-                width: '40px',
-                height: '40px',
-                background: 'rgba(255, 184, 0, 0.1)',
-                borderRadius: '4px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#FFB800',
-                fontSize: '18px',
-                fontWeight: 600,
-              }}>
-                3
-              </div>
-              <span style={{ fontSize: '16px', color: '#FFFFFF' }}>
-                Flexible financing available
-              </span>
-            </div>
-          </div>
+    <div style={formStyles.container}>
+      <h3 style={formStyles.title}>Get a Free Estimate</h3>
+      <p style={formStyles.subtitle}>Fill out the form below and we'll contact you within 1 hour.</p>
+      
+      <form onSubmit={handleSubmit} style={formStyles.form}>
+        <div style={formStyles.inputGroup}>
+          <label style={formStyles.label}>Full Name *</label>
+          <input
+            type="text"
+            name="fullName"
+            value={formData.fullName}
+            onChange={handleChange}
+            required
+            style={formStyles.input}
+            onFocus={(e) => {
+              e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
+              e.currentTarget.style.borderColor = "#FFB800";
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)";
+              e.currentTarget.style.borderColor = "rgba(255, 184, 0, 0.2)";
+            }}
+          />
         </div>
-        
-        {/* Form - White Background */}
-        <div style={{
-          background: '#FFFFFF',
-          borderRadius: '12px',
-          padding: '40px',
-          boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5)',
-        }}>
-          <form onSubmit={handleSubmit}>
-            <div style={{ marginBottom: '24px' }}>
-              <label style={{
-                display: 'block',
-                fontSize: '14px',
-                fontWeight: 600,
-                color: '#0A0A0C',
-                marginBottom: '8px',
-              }}>
-                Full Name *
-              </label>
-              <input
-                type="text"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleChange}
-                required
-                style={{
-                  width: '100%',
-                  padding: '12px 16px',
-                  fontSize: '16px',
-                  border: '1px solid #E0E0E0',
-                  borderRadius: '4px',
-                  transition: 'all 0.3s ease',
-                  outline: 'none',
-                }}
-                onFocus={(e) => {
-                  e.currentTarget.style.borderColor = '#FFB800';
-                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(255, 184, 0, 0.1)';
-                }}
-                onBlur={(e) => {
-                  e.currentTarget.style.borderColor = '#E0E0E0';
-                  e.currentTarget.style.boxShadow = 'none';
-                }}
-              />
-            </div>
-            
-            <div style={{ marginBottom: '24px' }}>
-              <label style={{
-                display: 'block',
-                fontSize: '14px',
-                fontWeight: 600,
-                color: '#0A0A0C',
-                marginBottom: '8px',
-              }}>
-                Email Address *
-              </label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                style={{
-                  width: '100%',
-                  padding: '12px 16px',
-                  fontSize: '16px',
-                  border: '1px solid #E0E0E0',
-                  borderRadius: '4px',
-                  transition: 'all 0.3s ease',
-                  outline: 'none',
-                }}
-                onFocus={(e) => {
-                  e.currentTarget.style.borderColor = '#FFB800';
-                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(255, 184, 0, 0.1)';
-                }}
-                onBlur={(e) => {
-                  e.currentTarget.style.borderColor = '#E0E0E0';
-                  e.currentTarget.style.boxShadow = 'none';
-                }}
-              />
-            </div>
-            
-            <div style={{ marginBottom: '24px' }}>
-              <label style={{
-                display: 'block',
-                fontSize: '14px',
-                fontWeight: 600,
-                color: '#0A0A0C',
-                marginBottom: '8px',
-              }}>
-                Phone Number *
-              </label>
-              <input
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                required
-                style={{
-                  width: '100%',
-                  padding: '12px 16px',
-                  fontSize: '16px',
-                  border: '1px solid #E0E0E0',
-                  borderRadius: '4px',
-                  transition: 'all 0.3s ease',
-                  outline: 'none',
-                }}
-                onFocus={(e) => {
-                  e.currentTarget.style.borderColor = '#FFB800';
-                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(255, 184, 0, 0.1)';
-                }}
-                onBlur={(e) => {
-                  e.currentTarget.style.borderColor = '#E0E0E0';
-                  e.currentTarget.style.boxShadow = 'none';
-                }}
-              />
-            </div>
-            
-            <div style={{ marginBottom: '24px' }}>
-              <label style={{
-                display: 'block',
-                fontSize: '14px',
-                fontWeight: 600,
-                color: '#0A0A0C',
-                marginBottom: '8px',
-              }}>
-                ZIP Code *
-              </label>
-              <input
-                type="text"
-                name="zipCode"
-                value={formData.zipCode}
-                onChange={handleChange}
-                required
-                maxLength={5}
-                style={{
-                  width: '100%',
-                  padding: '12px 16px',
-                  fontSize: '16px',
-                  border: '1px solid #E0E0E0',
-                  borderRadius: '4px',
-                  transition: 'all 0.3s ease',
-                  outline: 'none',
-                }}
-                onFocus={(e) => {
-                  e.currentTarget.style.borderColor = '#FFB800';
-                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(255, 184, 0, 0.1)';
-                }}
-                onBlur={(e) => {
-                  e.currentTarget.style.borderColor = '#E0E0E0';
-                  e.currentTarget.style.boxShadow = 'none';
-                }}
-              />
-            </div>
-            
-            <div style={{ marginBottom: '32px' }}>
-              <label style={{
-                display: 'block',
-                fontSize: '14px',
-                fontWeight: 600,
-                color: '#0A0A0C',
-                marginBottom: '8px',
-              }}>
-                Tell Us About Your Project
-              </label>
-              <textarea
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                rows={4}
-                style={{
-                  width: '100%',
-                  padding: '12px 16px',
-                  fontSize: '16px',
-                  border: '1px solid #E0E0E0',
-                  borderRadius: '4px',
-                  transition: 'all 0.3s ease',
-                  outline: 'none',
-                  resize: 'vertical',
-                  fontFamily: 'inherit',
-                }}
-                onFocus={(e) => {
-                  e.currentTarget.style.borderColor = '#FFB800';
-                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(255, 184, 0, 0.1)';
-                }}
-                onBlur={(e) => {
-                  e.currentTarget.style.borderColor = '#E0E0E0';
-                  e.currentTarget.style.boxShadow = 'none';
-                }}
-              />
-            </div>
-            
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              style={{
-                width: '100%',
-                padding: '16px',
-                background: '#FFB800',
-                color: '#0A0A0C',
-                border: 'none',
-                borderRadius: '4px',
-                fontSize: '16px',
-                fontWeight: 700,
-                cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 5px 15px rgba(255, 184, 0, 0.3)',
-                opacity: isSubmitting ? 0.7 : 1,
-              }}
-              onMouseEnter={(e) => {
-                if (!isSubmitting) {
-                  e.currentTarget.style.background = '#0A0A0C';
-                  e.currentTarget.style.color = '#FFB800';
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 10px 25px rgba(255, 184, 0, 0.4)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isSubmitting) {
-                  e.currentTarget.style.background = '#FFB800';
-                  e.currentTarget.style.color = '#0A0A0C';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 5px 15px rgba(255, 184, 0, 0.3)';
-                }
-              }}
-            >
-              {isSubmitting ? 'SENDING...' : 'GET FREE ESTIMATE'}
-            </button>
-            
-            {submitStatus === 'success' && (
-              <div style={{
-                marginTop: '20px',
-                padding: '12px',
-                background: 'rgba(0, 200, 0, 0.1)',
-                border: '1px solid #00A000',
-                borderRadius: '4px',
-                color: '#0A0A0C',
-                textAlign: 'center' as const,
-              }}>
-                Thank you! We'll contact you within 24 hours.
-              </div>
-            )}
-            
-            {submitStatus === 'error' && (
-              <div style={{
-                marginTop: '20px',
-                padding: '12px',
-                background: 'rgba(255, 0, 0, 0.1)',
-                border: '1px solid #FF0000',
-                borderRadius: '4px',
-                color: '#0A0A0C',
-                textAlign: 'center' as const,
-              }}>
-                Something went wrong. Please try again or call us directly.
-              </div>
-            )}
-          </form>
+
+        <div style={formStyles.inputGroup}>
+          <label style={formStyles.label}>Email Address *</label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            style={formStyles.input}
+            onFocus={(e) => {
+              e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
+              e.currentTarget.style.borderColor = "#FFB800";
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)";
+              e.currentTarget.style.borderColor = "rgba(255, 184, 0, 0.2)";
+            }}
+          />
         </div>
-      </div>
-    </section>
+
+        <div style={formStyles.inputGroup}>
+          <label style={formStyles.label}>Phone Number *</label>
+          <input
+            type="tel"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            required
+            style={formStyles.input}
+            onFocus={(e) => {
+              e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
+              e.currentTarget.style.borderColor = "#FFB800";
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)";
+              e.currentTarget.style.borderColor = "rgba(255, 184, 0, 0.2)";
+            }}
+          />
+        </div>
+
+        <div style={formStyles.inputGroup}>
+          <label style={formStyles.label}>Zip Code *</label>
+          <input
+            type="text"
+            name="zipCode"
+            value={formData.zipCode}
+            onChange={handleChange}
+            required
+            style={formStyles.input}
+            onFocus={(e) => {
+              e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
+              e.currentTarget.style.borderColor = "#FFB800";
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)";
+              e.currentTarget.style.borderColor = "rgba(255, 184, 0, 0.2)";
+            }}
+          />
+        </div>
+
+        <div style={formStyles.inputGroup}>
+          <label style={formStyles.label}>Project Details</label>
+          <textarea
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            placeholder="Tell us about your roofing project..."
+            style={formStyles.textarea}
+            onFocus={(e) => {
+              e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
+              e.currentTarget.style.borderColor = "#FFB800";
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)";
+              e.currentTarget.style.borderColor = "rgba(255, 184, 0, 0.2)";
+            }}
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={formStatus === "sending"}
+          style={{
+            ...formStyles.button,
+            opacity: formStatus === "sending" ? 0.7 : 1,
+            cursor: formStatus === "sending" ? "not-allowed" : "pointer",
+          }}
+        >
+          {formStatus === "sending" ? "Sending..." : "Request Free Estimate"}
+        </button>
+
+        {formStatus === "success" && (
+          <div style={formStyles.statusMessage.success}>
+            Thank you! We'll contact you within 1 hour.
+          </div>
+        )}
+        {formStatus === "error" && (
+          <div style={formStyles.statusMessage.error}>
+            Something went wrong. Please try again or call us directly.
+          </div>
+        )}
+      </form>
+    </div>
   );
 }
 
-// FAQ Section Component
-function FAQSection() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+// ==================== MAIN GALLERY PAGE ====================
+interface GalleryItem {
+  id: number;
+  category: string;
+  title: string;
+  beforeImage: string;
+  afterImage: string;
+  description: string;
+  serviceType: string;
+  timeTaken: string;
+  clientQuote: string;
+}
 
-  const faqs = [
+export default function BeforeAfterGallery() {
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [hoveredItem, setHoveredItem] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      const width = window.innerWidth;
+      setIsMobile(width < 768);
+      setIsTablet(width >= 768 && width < 1024);
+    };
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
+
+  const galleryItems: GalleryItem[] = [
     {
-      question: "How long does a roof replacement take?",
-      answer: "Most residential roof replacements are completed in 1-3 days, depending on the size and complexity of your roof. We provide a detailed timeline during your free estimate and work efficiently to minimize disruption to your home."
+      id: 1,
+      category: "residential",
+      title: "Complete Roof Replacement",
+      beforeImage: "https://images.unsplash.com/photo-1594756202469-9ff9799b2e4e?auto=format&fit=crop&w=800",
+      afterImage: "https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?auto=format&fit=crop&w=800",
+      description: "Full roof replacement with premium architectural shingles. Removed 3 layers of old roofing, installed new underlayment and ridge vents.",
+      serviceType: "Roof Replacement",
+      timeTaken: "2 days",
+      clientQuote: "BRAVOS transformed our home! Best investment we've made.",
     },
     {
-      question: "Does homeowners insurance cover roof replacement?",
-      answer: "Most policies cover roof replacement if damage is caused by sudden events like storms, hail, or fallen trees. Our team works directly with your insurance adjuster to ensure you receive maximum coverage. We also assist with the claims process at no additional cost."
+      id: 2,
+      category: "repair",
+      title: "Storm Damage Restoration",
+      beforeImage: "https://images.unsplash.com/photo-1504150558240-0b4fd8946624?auto=format&fit=crop&w=800",
+      afterImage: "https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?auto=format&fit=crop&w=800",
+      description: "Emergency repair after severe hailstorm. Replaced damaged shingles, repaired flashing, and sealed all leak points.",
+      serviceType: "Storm Repair",
+      timeTaken: "6 hours",
+      clientQuote: "Fast response and flawless work. No more leaks!",
     },
     {
-      question: "What are signs I need a new roof?",
-      answer: "Key indicators include: shingles that are curling, cracking, or missing; granules in gutters; daylight visible through roof boards; water stains on ceilings; sagging areas; and a roof age of 20+ years. We offer free inspections to assess your roof's condition."
+      id: 3,
+      category: "commercial",
+      title: "Flat Roof Restoration",
+      beforeImage: "https://images.unsplash.com/photo-1594756202469-9ff9799b2e4e?auto=format&fit=crop&w=800",
+      afterImage: "https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?auto=format&fit=crop&w=800",
+      description: "Commercial TPO roof installation for 15,000 sq ft retail center. Complete tear-off, new insulation, and energy-efficient membrane.",
+      serviceType: "Commercial Roofing",
+      timeTaken: "5 days",
+      clientQuote: "Professional team, minimal disruption to our business.",
     },
     {
-      question: "Do you offer financing?",
-      answer: "Yes! We partner with several reputable financing companies to offer flexible payment options, including 0% APR promotional periods for qualified applicants. Our team can help you find a payment plan that fits your budget."
+      id: 4,
+      category: "maintenance",
+      title: "Gutter & Downspout System",
+      beforeImage: "https://images.unsplash.com/photo-1504150558240-0b4fd8946624?auto=format&fit=crop&w=800",
+      afterImage: "https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?auto=format&fit=crop&w=800",
+      description: "Seamless gutter installation with leaf guards. Solved water damage issues and improved drainage.",
+      serviceType: "Gutter Installation",
+      timeTaken: "1 day",
+      clientQuote: "No more clogged gutters! Worth every penny.",
     },
     {
-      question: "Are you licensed and insured?",
-      answer: "Absolutely. BRAVOS is fully licensed in Massachusetts (#12345), bonded, and carries $2 million in general liability insurance plus workers' compensation. We're also GAF Master Elite® certified, a designation held by only 2% of roofing contractors."
+      id: 5,
+      category: "residential",
+      title: "Metal Roof Installation",
+      beforeImage: "https://images.unsplash.com/photo-1594756202469-9ff9799b2e4e?auto=format&fit=crop&w=800",
+      afterImage: "https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?auto=format&fit=crop&w=800",
+      description: "Premium standing seam metal roof installation. 40-year warranty, energy-efficient coating, and wind resistance up to 140mph.",
+      serviceType: "Metal Roofing",
+      timeTaken: "3 days",
+      clientQuote: "Beautiful and durable. Lower energy bills already!",
     },
     {
-      question: "What warranty do you provide?",
-      answer: "We offer comprehensive protection: 50-year manufacturer warranties on materials, a 25-year workmanship warranty from BRAVOS, and a lifetime warranty on labor for as long as you own your home. All warranties are fully transferable."
+      id: 6,
+      category: "repair",
+      title: "Skylight & Flashing Repair",
+      beforeImage: "https://images.unsplash.com/photo-1504150558240-0b4fd8946624?auto=format&fit=crop&w=800",
+      afterImage: "https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?auto=format&fit=crop&w=800",
+      description: "Leak repair around three skylights. Replaced deteriorated flashing and resealed all penetrations.",
+      serviceType: "Leak Repair",
+      timeTaken: "4 hours",
+      clientQuote: "Finally, no more water stains on the ceiling!",
     },
-    {
-      question: "Do you handle insurance claims?",
-      answer: "Yes, we specialize in insurance restoration. Our claims specialists will inspect your property, document all damage, meet with your adjuster, and ensure you receive fair compensation for your roof replacement or repair."
-    },
-    {
-      question: "What roofing materials do you recommend?",
-      answer: "We primarily install GAF Timberline HDZ architectural shingles, CertainTeed Landmark, and premium standing seam metal roofing. Each material offers different benefits in terms of durability, aesthetics, and cost. We'll help you choose the best option for your home."
-    }
   ];
 
-  const toggleFAQ = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
+  const categories = [
+    { id: "all", name: "All Projects", count: galleryItems.length },
+    { id: "residential", name: "Residential", count: galleryItems.filter((item) => item.category === "residential").length },
+    { id: "repair", name: "Repairs", count: galleryItems.filter((item) => item.category === "repair").length },
+    { id: "commercial", name: "Commercial", count: galleryItems.filter((item) => item.category === "commercial").length },
+    { id: "maintenance", name: "Maintenance", count: galleryItems.filter((item) => item.category === "maintenance").length },
+  ];
+
+  const filteredItems = selectedCategory === "all"
+    ? galleryItems
+    : galleryItems.filter((item) => item.category === selectedCategory);
+
+  const pageStyles: any = {
+    pageContainer: {
+      minHeight: "100vh",
+      background: '#0A0A0C',
+      backgroundImage: 'url("https://images.unsplash.com/photo-1594756202469-9ff9799b2e4e?auto=format&fit=crop&w=1920")',
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundAttachment: isMobile ? "scroll" : "fixed",
+      backgroundBlendMode: "overlay",
+      fontFamily: "'Playfair Display', serif",
+      width: "100vw",
+      margin: 0,
+      padding: 0,
+      boxSizing: "border-box",
+      overflowX: "hidden",
+      position: "relative",
+      left: 0,
+      right: 0,
+    },
+    heroSection: {
+      minHeight: isMobile ? "50vh" : isTablet ? "55vh" : "60vh",
+      background: 'linear-gradient(rgba(10, 10, 12, 0.75), rgba(10, 10, 12, 0.85)), url("https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?auto=format&fit=crop&w=1920")',
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundAttachment: isMobile ? "scroll" : "fixed",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: isMobile ? "5rem 1rem 2rem" : isTablet ? "6rem 1.5rem 3rem" : "7rem 2rem 4rem",
+      width: "100vw",
+      boxSizing: "border-box",
+      position: "relative",
+      left: 0,
+      right: 0,
+      borderBottom: "4px solid #FFB800",
+    },
+    heroContent: {
+      maxWidth: "1200px",
+      width: "100%",
+      textAlign: "center",
+      boxSizing: "border-box",
+      padding: isMobile ? "0 0.5rem" : "0",
+    },
+    heroTitle: {
+      fontSize: isMobile ? "1.75rem" : isTablet ? "2.25rem" : "2.75rem",
+      fontWeight: 900,
+      color: "#FFFFFF",
+      marginBottom: isMobile ? "0.5rem" : "0.75rem",
+      textShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
+      fontFamily: "'Playfair Display', serif",
+      lineHeight: 1.2,
+    },
+    heroSubtitle: {
+      fontSize: isMobile ? "0.9rem" : isTablet ? "1.1rem" : "1.25rem",
+      fontWeight: 700,
+      color: "#FFB800",
+      marginBottom: isMobile ? "0.75rem" : "1rem",
+      maxWidth: "800px",
+      margin: "0 auto",
+      lineHeight: 1.4,
+      fontFamily: "'Playfair Display', serif",
+    },
+    heroText: {
+      fontSize: isMobile ? "0.8rem" : isTablet ? "0.95rem" : "1.1rem",
+      color: "#FAFAFA",
+      opacity: 0.9,
+      maxWidth: "700px",
+      margin: "0 auto",
+      lineHeight: 1.5,
+      fontFamily: "'Playfair Display', serif",
+    },
+    mainContent: {
+      maxWidth: "1400px",
+      margin: "0 auto",
+      padding: isMobile ? "1.5rem 1rem" : isTablet ? "2rem 1.5rem" : "2.5rem 2rem",
+      background: "rgba(10, 10, 12, 0.92)",
+      backdropFilter: "blur(10px)",
+      width: "100%",
+      boxSizing: "border-box",
+    },
+    sectionTitle: {
+      fontSize: isMobile ? "1.5rem" : isTablet ? "1.75rem" : "2rem",
+      fontWeight: 900,
+      color: "#FFFFFF",
+      marginBottom: isMobile ? "0.5rem" : "0.75rem",
+      textAlign: "center",
+      fontFamily: "'Playfair Display', serif",
+      lineHeight: 1.2,
+    },
+    sectionSubtitle: {
+      fontSize: isMobile ? "0.8rem" : isTablet ? "0.9rem" : "1rem",
+      color: "#FAFAFA",
+      opacity: 0.9,
+      marginBottom: isMobile ? "1.5rem" : "2rem",
+      textAlign: "center",
+      fontFamily: "'Playfair Display', serif",
+      lineHeight: 1.5,
+      maxWidth: "800px",
+      margin: "0 auto",
+    },
+    categoriesContainer: {
+      display: "flex",
+      flexWrap: "wrap",
+      justifyContent: "center",
+      gap: isMobile ? "0.5rem" : "0.75rem",
+      marginBottom: isMobile ? "1.5rem" : "2rem",
+      width: "100%",
+    },
+    categoryButton: (active: boolean, hover: boolean) => ({
+      padding: isMobile ? "0.4rem 0.8rem" : "0.5rem 1rem",
+      background: active ? "#FFB800" : hover ? "rgba(255, 184, 0, 0.1)" : "transparent",
+      border: active ? "2px solid #FFB800" : "2px solid rgba(255, 184, 0, 0.3)",
+      borderRadius: "30px",
+      color: active ? "#0A0A0C" : "#FFFFFF",
+      fontSize: isMobile ? "0.75rem" : "0.85rem",
+      fontWeight: active ? 800 : 600,
+      cursor: "pointer",
+      transition: "all 0.3s ease",
+      fontFamily: "'Playfair Display', serif",
+      display: "flex",
+      alignItems: "center",
+      gap: "0.4rem",
+      whiteSpace: "nowrap",
+    }),
+    categoryCount: {
+      background: "#0A0A0C",
+      color: "#FFB800",
+      fontSize: isMobile ? "0.65rem" : "0.7rem",
+      fontWeight: 800,
+      borderRadius: "50%",
+      width: isMobile ? "18px" : "20px",
+      height: isMobile ? "18px" : "20px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      flexShrink: 0,
+    },
+    galleryGrid: {
+      display: "grid",
+      gridTemplateColumns: isMobile ? "1fr" : isTablet ? "repeat(2, 1fr)" : "repeat(3, 1fr)",
+      gap: isMobile ? "1.5rem" : isTablet ? "1.5rem" : "2rem",
+      width: "100%",
+    },
+    galleryItem: {
+      background: "#0A0A0C",
+      borderRadius: "10px",
+      overflow: "hidden",
+      boxShadow: "0 4px 15px rgba(0, 0, 0, 0.3)",
+      transition: "all 0.3s ease",
+      border: "1px solid rgba(255, 184, 0, 0.2)",
+      width: "100%",
+      boxSizing: "border-box",
+      display: "flex",
+      flexDirection: "column",
+    },
+    premiumBadge: {
+      position: "absolute",
+      top: isMobile ? "8px" : "10px",
+      right: isMobile ? "8px" : "10px",
+      background: "rgba(255, 184, 0, 0.1)",
+      color: "#FFB800",
+      padding: isMobile ? "3px 6px" : "4px 8px",
+      fontSize: isMobile ? "0.6rem" : "0.7rem",
+      fontWeight: 900,
+      borderRadius: "4px",
+      zIndex: 3,
+      letterSpacing: "0.5px",
+      textTransform: "uppercase",
+      border: "1px solid rgba(255, 184, 0, 0.3)",
+    },
+    itemContent: {
+      padding: isMobile ? "1rem" : "1.25rem",
+      width: "100%",
+      boxSizing: "border-box",
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+    },
+    itemCategory: {
+      fontSize: isMobile ? "0.65rem" : "0.75rem",
+      fontWeight: 700,
+      color: "#FFB800",
+      textTransform: "uppercase",
+      letterSpacing: "1px",
+      marginBottom: isMobile ? "0.4rem" : "0.5rem",
+    },
+    itemTitle: {
+      fontSize: isMobile ? "1rem" : "1.1rem",
+      fontWeight: 900,
+      color: "#FFFFFF",
+      marginBottom: isMobile ? "0.5rem" : "0.75rem",
+      lineHeight: 1.3,
+    },
+    itemDescription: {
+      fontSize: isMobile ? "0.8rem" : "0.9rem",
+      color: "#FAFAFA",
+      opacity: 0.9,
+      marginBottom: isMobile ? "0.75rem" : "1rem",
+      lineHeight: 1.5,
+      flex: 1,
+    },
+    itemDetails: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      flexWrap: "wrap",
+      gap: "0.5rem",
+      marginBottom: isMobile ? "0.75rem" : "1rem",
+      width: "100%",
+    },
+    serviceType: {
+      fontSize: isMobile ? "0.75rem" : "0.85rem",
+      fontWeight: 700,
+      color: "#FFB800",
+      background: "rgba(255, 184, 0, 0.1)",
+      padding: isMobile ? "3px 8px" : "4px 10px",
+      borderRadius: "4px",
+      border: "1px solid rgba(255, 184, 0, 0.3)",
+    },
+    timeTaken: {
+      fontSize: isMobile ? "0.75rem" : "0.85rem",
+      fontWeight: 700,
+      color: "#FFFFFF",
+      display: "flex",
+      alignItems: "center",
+      gap: "3px",
+      whiteSpace: "nowrap",
+    },
+    clientQuote: {
+      fontSize: isMobile ? "0.8rem" : "0.9rem",
+      fontStyle: "italic",
+      color: "#FFB800",
+      borderLeft: "2px solid #FFB800",
+      paddingLeft: "0.75rem",
+      marginTop: "auto",
+      lineHeight: 1.5,
+    },
+    statsSection: {
+      display: "grid",
+      gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(4, 1fr)",
+      gap: isMobile ? "0.75rem" : "1rem",
+      marginTop: isMobile ? "1.5rem" : "2rem",
+      marginBottom: isMobile ? "1.5rem" : "2rem",
+      width: "100%",
+    },
+    statCard: {
+      background: "#0A0A0C",
+      borderRadius: "8px",
+      padding: isMobile ? "0.75rem" : "1rem",
+      textAlign: "center",
+      boxShadow: "0 3px 10px rgba(0, 0, 0, 0.2)",
+      border: "1px solid rgba(255, 184, 0, 0.2)",
+      width: "100%",
+      boxSizing: "border-box",
+    },
+    statNumber: {
+      fontSize: isMobile ? "1.25rem" : "1.5rem",
+      fontWeight: 900,
+      color: "#FFB800",
+      marginBottom: isMobile ? "0.25rem" : "0.5rem",
+      lineHeight: 1,
+    },
+    statLabel: {
+      fontSize: isMobile ? "0.7rem" : "0.8rem",
+      color: "#FAFAFA",
+      opacity: 0.9,
+      fontWeight: 600,
+    },
+    twoColumnLayout: {
+      display: "grid",
+      gridTemplateColumns: isMobile ? "1fr" : "2fr 1fr",
+      gap: isMobile ? "1.5rem" : "2rem",
+      marginTop: isMobile ? "2rem" : "2.5rem",
+      width: "100%",
+    },
   };
 
+  const handleCategorySelect = (categoryId: string) => {
+    setSelectedCategory(categoryId);
+  };
+
+  const stats = [
+    { number: "500+", label: "Homes Protected" },
+    { number: "25+", label: "Years Experience" },
+    { number: "24/7", label: "Emergency Service" },
+    { number: "Lifetime", label: "Workmanship Warranty" },
+  ];
+
   return (
-    <section style={{
-      padding: '80px 20px',
-      background: '#0A0A0C',
-      position: 'relative' as const,
-      borderTop: '1px solid rgba(255, 184, 0, 0.2)',
-    }}>
-      <div style={{
-        maxWidth: '1200px',
-        margin: '0 auto',
-      }}>
-        {/* Section Header */}
-        <div style={{
-          textAlign: 'center' as const,
-          marginBottom: '60px',
-        }}>
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '10px',
-            background: 'rgba(255, 184, 0, 0.1)',
-            padding: '10px 20px',
-            borderRadius: '50px',
-            border: '1px solid rgba(255, 184, 0, 0.3)',
-            marginBottom: '20px',
-          }}>
-            <span style={{
-              fontSize: '14px',
-              fontWeight: 600,
-              color: '#FFB800',
-              letterSpacing: '1px',
-            }}>
-              HAVE QUESTIONS?
-            </span>
-          </div>
-          
-          <h2 style={{
-            fontSize: '2.5rem',
-            fontWeight: 900,
-            color: '#FFFFFF',
-            lineHeight: 1.2,
-            fontFamily: "'Playfair Display', serif",
-            margin: '0 0 20px 0',
-          }}>
-            Frequently Asked <span style={{ color: '#FFB800' }}>Questions</span>
-          </h2>
-          
-          <p style={{
-            fontSize: '1.125rem',
-            fontWeight: 400,
-            color: '#FAFAFA',
-            opacity: 0.9,
-            lineHeight: 1.6,
-            maxWidth: '800px',
-            margin: '0 auto',
-          }}>
-            Get answers to common questions about our roofing services, warranties, and process.
+    <div style={pageStyles.pageContainer}>
+      <Header />
+      
+      <section style={pageStyles.heroSection}>
+        <div style={pageStyles.heroContent}>
+          <h1 style={pageStyles.heroTitle}>
+            BRAVOS Roofing Portfolio
+          </h1>
+          <p style={pageStyles.heroSubtitle}>
+            Excellence in Every Layer
+          </p>
+          <p style={pageStyles.heroText}>
+            See the BRAVOS difference. Drag or tap the slider to compare before and after 
+            of our premium roofing installations and repairs.
           </p>
         </div>
-
-        {/* FAQ Accordion */}
-        <div style={{
-          maxWidth: '900px',
-          margin: '0 auto',
-        }}>
-          {faqs.map((faq, index) => (
-            <div 
-              key={index}
-              style={{
-                background: '#0A0A0C',
-                borderRadius: '8px',
-                marginBottom: '12px',
-                overflow: 'hidden',
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-                border: openIndex === index 
-                  ? '1px solid #FFB800' 
-                  : '1px solid rgba(255, 184, 0, 0.2)',
-                transition: 'all 0.3s ease',
-              }}
-            >
+      </section>
+      
+      <main style={pageStyles.mainContent}>
+        <div style={{ width: "100%", marginBottom: isMobile ? "1.5rem" : "2rem" }}>
+          <h2 style={pageStyles.sectionTitle}>Our Roofing Transformations</h2>
+          <p style={pageStyles.sectionSubtitle}>
+            Browse our portfolio of completed roofing projects. Click on categories to filter by project type.
+          </p>
+          
+          <div style={pageStyles.categoriesContainer}>
+            {categories.map((category) => (
               <button
-                onClick={() => toggleFAQ(index)}
-                style={{
-                  width: '100%',
-                  background: openIndex === index ? 'rgba(255, 184, 0, 0.05)' : 'transparent',
-                  border: 'none',
-                  padding: '20px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  cursor: 'pointer',
-                  textAlign: 'left' as const,
-                }}
+                key={category.id}
+                style={pageStyles.categoryButton(
+                  selectedCategory === category.id,
+                  hoveredItem === parseInt(category.id.replace("cat", "") || "0")
+                )}
+                onClick={() => handleCategorySelect(category.id)}
+                onMouseEnter={() => setHoveredItem(parseInt(category.id.replace("cat", "") || "0"))}
+                onMouseLeave={() => setHoveredItem(null)}
               >
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '16px',
-                  flex: 1,
-                }}>
-                  <div style={{
-                    width: '32px',
-                    height: '32px',
-                    background: '#FFB800',
-                    borderRadius: '4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '12px',
-                    fontWeight: 700,
-                    color: '#0A0A0C',
-                    flexShrink: 0,
-                  }}>
-                    Q{index + 1}
-                  </div>
-                  <h3 style={{
-                    fontSize: '1.125rem',
-                    fontWeight: 700,
-                    color: '#FFFFFF',
-                    fontFamily: "'Playfair Display', serif",
-                    margin: 0,
-                    lineHeight: 1.4,
-                  }}>
-                    {faq.question}
-                  </h3>
+                <span>{category.name}</span>
+                <span style={pageStyles.categoryCount}>{category.count}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+        
+        <div style={pageStyles.statsSection}>
+          {stats.map((stat, index) => (
+            <div key={index} style={pageStyles.statCard}>
+              <div style={pageStyles.statNumber}>{stat.number}</div>
+              <div style={pageStyles.statLabel}>{stat.label}</div>
+            </div>
+          ))}
+        </div>
+        
+        <div style={pageStyles.galleryGrid}>
+          {filteredItems.map((item) => (
+            <div
+              key={item.id}
+              style={{
+                ...pageStyles.galleryItem,
+                transform: hoveredItem === item.id ? "translateY(-4px)" : "translateY(0)",
+                boxShadow: hoveredItem === item.id ? "0 8px 25px rgba(0, 0, 0, 0.4)" : "0 4px 15px rgba(0, 0, 0, 0.3)",
+              }}
+              onMouseEnter={() => setHoveredItem(item.id)}
+              onMouseLeave={() => setHoveredItem(null)}
+            >
+              <div style={{ position: "relative", width: "100%" }}>
+                <div style={pageStyles.premiumBadge}>BRAVOS CERTIFIED</div>
+                <ImageComparison
+                  beforeImage={item.beforeImage}
+                  afterImage={item.afterImage}
+                  isMobile={isMobile}
+                  isTablet={isTablet}
+                />
+              </div>
+              
+              <div style={pageStyles.itemContent}>
+                <div style={pageStyles.itemCategory}>
+                  {item.category.toUpperCase()}
+                </div>
+                <h3 style={pageStyles.itemTitle}>{item.title}</h3>
+                <p style={pageStyles.itemDescription}>{item.description}</p>
+                
+                <div style={pageStyles.itemDetails}>
+                  <span style={pageStyles.serviceType}>{item.serviceType}</span>
+                  <span style={pageStyles.timeTaken}>⏱️ {item.timeTaken}</span>
                 </div>
                 
-                <div style={{
-                  width: '20px',
-                  height: '20px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  transition: 'transform 0.3s ease',
-                  transform: openIndex === index ? 'rotate(45deg)' : 'rotate(0deg)',
-                  flexShrink: 0,
-                  marginLeft: '10px',
-                }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 5V19M5 12H19" stroke="#FFB800" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-              </button>
-              
-              <div style={{
-                maxHeight: openIndex === index ? '500px' : '0',
-                overflow: 'hidden',
-                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-              }}>
-                <div style={{
-                  padding: openIndex === index ? '0 20px 20px 68px' : '0 20px',
-                  opacity: openIndex === index ? 1 : 0,
-                  transition: 'opacity 0.3s ease 0.2s',
-                }}>
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: '16px',
-                  }}>
-                    <div style={{
-                      width: '20px',
-                      height: '20px',
-                      background: 'rgba(255, 184, 0, 0.1)',
-                      borderRadius: '4px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '10px',
-                      fontWeight: 700,
-                      color: '#FFB800',
-                      flexShrink: 0,
-                      marginTop: '3px',
-                    }}>
-                      A
-                    </div>
-                    <p style={{
-                      fontSize: '1rem',
-                      fontWeight: 400,
-                      color: '#FAFAFA',
-                      opacity: 0.9,
-                      lineHeight: 1.6,
-                      margin: 0,
-                    }}>
-                      {faq.answer}
-                    </p>
-                  </div>
-                </div>
+                <div style={pageStyles.clientQuote}>"{item.clientQuote}"</div>
               </div>
             </div>
           ))}
         </div>
-      </div>
-    </section>
-  );
-}
-
-export default function HeroSection() {
-  return (
-    <div style={{
-      position: 'relative',
-      overflow: 'hidden',
-      background: '#0A0A0C',
-    }}>
-      {/* Hero Section */}
-      <div style={{
-        minHeight: '100vh',
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: '#0A0A0C',
-        paddingTop: '80px',
-        width: '100%',
-        overflowX: 'hidden',
-        borderTop: '4px solid #FFB800',
-      }}>
-        {/* Full-Width Background Image with Overlay */}
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          zIndex: 1,
-          width: '100%',
-          overflow: 'hidden',
-        }}>
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundImage: 'url("https://images.pexels.com/photos/159358/construction-site-build-architecture-159358.jpeg?auto=compress&cs=tinysrgb&w=2070")',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            width: '100%',
-            minWidth: '100%',
-            opacity: 0.6,
-          }} />
-          
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'linear-gradient(135deg, #0A0A0C 0%, rgba(10, 10, 12, 0.8) 40%, rgba(10, 10, 12, 0.6) 100%)',
-            width: '100%',
-          }} />
-        </div>
-
-        {/* Hero Content */}
-        <div style={{
-          position: 'relative',
-          zIndex: 3,
-          maxWidth: '1400px',
-          padding: '20px',
-          textAlign: 'center',
-          display: 'flex',
-          flexDirection: 'column' as const,
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '100%',
-        }}>
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '10px',
-            background: 'rgba(255, 184, 0, 0.1)',
-            padding: '10px 20px',
-            borderRadius: '50px',
-            border: '1px solid rgba(255, 184, 0, 0.3)',
-            marginBottom: '30px',
-          }}>
-            <span style={{
-              fontSize: '14px',
-              fontWeight: 600,
-              color: '#FFB800',
-              letterSpacing: '1px',
-            }}>
-              MASSACHUSETTS' TRUSTED ROOFING EXPERTS
-            </span>
-          </div>
-          
-          <h1 style={{
-            fontSize: '3.5rem',
-            fontWeight: 900,
-            color: '#FFFFFF',
-            marginBottom: '24px',
-            lineHeight: 1.1,
-            letterSpacing: '-0.5px',
-            textShadow: '0 4px 25px rgba(0, 0, 0, 0.5)',
-            fontFamily: "'Playfair Display', serif",
-            maxWidth: '1100px',
-            width: '100%',
-          }}>
-            Premium Residential Roofing in{' '}
-            <span style={{
-              color: '#FFB800',
-              position: 'relative',
-              display: 'inline-block',
-            }}>
-              Boston
-              <span style={{
-                position: 'absolute',
-                bottom: '-6px',
-                left: 0,
-                right: 0,
-                height: '4px',
-                background: '#FFB800',
-              }} />
-            </span>
-          </h1>
-
-          <p style={{
-            fontSize: '1.35rem',
-            fontWeight: 500,
-            color: '#FAFAFA',
-            opacity: 0.95,
-            marginBottom: '40px',
-            lineHeight: 1.6,
-            maxWidth: '900px',
-            fontFamily: "'Playfair Display', serif",
-            textShadow: '0 2px 10px rgba(0, 0, 0, 0.4)',
-            width: '100%',
-          }}>
-            Expert craftsmanship, premium materials, and lifetime warranties. 
-            Protect your home with Boston's highest-rated roofing company.
-          </p>
-
-          {/* Stats */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '40px',
-            marginTop: '20px',
-            maxWidth: '800px',
-            width: '100%',
-          }}>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{
-                fontSize: '2.5rem',
+        
+        {/* Two Column Layout: Gallery + Contact Form */}
+        <div style={pageStyles.twoColumnLayout}>
+          {/* Left Column: CTA Section */}
+          <div
+            style={{
+              background: "#0A0A0C",
+              borderRadius: "10px",
+              padding: isMobile ? "1.5rem 1rem" : isTablet ? "2rem 1.5rem" : "2.5rem 2rem",
+              textAlign: "center",
+              width: "100%",
+              boxSizing: "border-box",
+              borderTop: "4px solid #FFB800",
+            }}
+          >
+            <h3
+              style={{
+                fontSize: isMobile ? "1.25rem" : isTablet ? "1.5rem" : "1.75rem",
                 fontWeight: 900,
-                color: '#FFB800',
-                marginBottom: '8px',
-                fontFamily: "'Playfair Display', serif",
-              }}>
-                25+
+                color: "#FFFFFF",
+                marginBottom: isMobile ? "0.75rem" : "1rem",
+                lineHeight: 1.2,
+              }}
+            >
+              Ready to Protect Your Home?
+            </h3>
+            <p
+              style={{
+                fontSize: isMobile ? "0.85rem" : isTablet ? "0.95rem" : "1.1rem",
+                color: "#FAFAFA",
+                opacity: 0.9,
+                marginBottom: isMobile ? "1.25rem" : "1.5rem",
+                maxWidth: "700px",
+                margin: "0 auto",
+                lineHeight: 1.5,
+                padding: isMobile ? "0 0.5rem" : "0",
+              }}
+            >
+              Get a free, no-obligation inspection and estimate from Houston's most trusted roofing contractor.
+            </p>
+            <div style={{ display: "flex", justifyContent: "center", gap: "1rem", flexWrap: "wrap" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.709 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18455 2.99721 7.13631 4.39828 5.49706C5.79935 3.85781 7.69279 2.71537 9.79619 2.24013C11.8996 1.7649 14.1003 1.98232 16.07 2.85999" stroke="#FFB800" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M22 4L12 14.01L9 11.01" stroke="#FFB800" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                <span style={{ color: "#FFFFFF", fontSize: "0.9rem" }}>Licensed & Insured</span>
               </div>
-              <div style={{
-                fontSize: '14px',
-                fontWeight: 700,
-                color: '#FFFFFF',
-                textTransform: 'uppercase' as const,
-                letterSpacing: '2px',
-              }}>
-                Years Experience
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 2L15 9H22L16 14L19 21L12 16.5L5 21L8 14L2 9H9L12 2Z" stroke="#FFB800" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                <span style={{ color: "#FFFFFF", fontSize: "0.9rem" }}>5-Star Reviews</span>
               </div>
-            </div>
-            
-            <div style={{ textAlign: 'center' }}>
-              <div style={{
-                fontSize: '2.5rem',
-                fontWeight: 900,
-                color: '#FFB800',
-                marginBottom: '8px',
-                fontFamily: "'Playfair Display', serif",
-              }}>
-                3,500+
-              </div>
-              <div style={{
-                fontSize: '14px',
-                fontWeight: 700,
-                color: '#FFFFFF',
-                textTransform: 'uppercase' as const,
-                letterSpacing: '2px',
-              }}>
-                Roofs Completed
-              </div>
-            </div>
-            
-            <div style={{ textAlign: 'center' }}>
-              <div style={{
-                fontSize: '2.5rem',
-                fontWeight: 900,
-                color: '#FFB800',
-                marginBottom: '8px',
-                fontFamily: "'Playfair Display', serif",
-              }}>
-                A+
-              </div>
-              <div style={{
-                fontSize: '14px',
-                fontWeight: 700,
-                color: '#FFFFFF',
-                textTransform: 'uppercase' as const,
-                letterSpacing: '2px',
-              }}>
-                BBB Rating
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#FFB800" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M12 6V12L16 14" stroke="#FFB800" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                <span style={{ color: "#FFFFFF", fontSize: "0.9rem" }}>Lifetime Warranty</span>
               </div>
             </div>
           </div>
+          
+          {/* Right Column: Contact Form */}
+          <ContactForm isMobile={isMobile} isTablet={isTablet} />
         </div>
-      </div>
-
-      {/* Elegant Body Content Section */}
-      <div style={{
-        background: '#0A0A0C',
-        padding: '80px 20px',
-        position: 'relative',
-        width: '100%',
-        overflowX: 'hidden',
-      }}>
-        <div style={{
-          maxWidth: '1100px',
-          margin: '0 auto',
-          width: '100%',
-        }}>
-          <div style={{
-            textAlign: 'center',
-            marginBottom: '60px',
-          }}>
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '12px',
-              marginBottom: '20px',
-            }}>
-              <div style={{
-                width: '30px',
-                height: '1px',
-                background: '#FFB800',
-              }} />
-              <span style={{
-                fontSize: '12px',
-                fontWeight: 800,
-                color: '#FFB800',
-                letterSpacing: '2px',
-                textTransform: 'uppercase' as const,
-                fontFamily: "'Playfair Display', serif",
-              }}>
-                CRAFTSMANSHIP & INTEGRITY
-              </span>
-              <div style={{
-                width: '30px',
-                height: '1px',
-                background: '#FFB800',
-              }} />
-            </div>
-            <h2 style={{
-              fontSize: '2.5rem',
-              fontWeight: 900,
-              color: '#FFFFFF',
-              lineHeight: 1.2,
-              fontFamily: "'Playfair Display', serif",
-              marginBottom: '20px',
-            }}>
-              Protecting Boston's Homes<br />
-              <span style={{
-                color: '#FFB800',
-                position: 'relative',
-                display: 'inline-block',
-              }}>
-                For Over Two Decades
-                <span style={{
-                  position: 'absolute',
-                  bottom: '-4px',
-                  left: 0,
-                  right: 0,
-                  height: '3px',
-                  background: '#FFB800',
-                }} />
-              </span>
-            </h2>
-          </div>
-
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column' as const,
-            gap: '30px',
-          }}>
-            <div style={{
-              position: 'relative',
-              paddingLeft: '25px',
-              width: '100%',
-            }}>
-              <div style={{
-                position: 'absolute',
-                left: 0,
-                top: 0,
-                width: '3px',
-                height: '100%',
-                background: '#FFB800',
-                borderRadius: '2px',
-              }} />
-              <p style={{
-                fontSize: '1.125rem',
-                fontWeight: 500,
-                color: '#FAFAFA',
-                opacity: 0.95,
-                lineHeight: 1.8,
-                fontFamily: "'Playfair Display', serif",
-                marginBottom: '20px',
-              }}>
-                Since 1999, BRAVOS has been the premier choice for residential roofing in the Greater Boston area. 
-                We've built our reputation on quality workmanship, transparent communication, and roofs that stand 
-                strong against New England's challenging weather conditions.
-              </p>
-              <p style={{
-                fontSize: '1.125rem',
-                fontWeight: 500,
-                color: '#FAFAFA',
-                opacity: 0.95,
-                lineHeight: 1.8,
-                fontFamily: "'Playfair Display', serif",
-              }}>
-                Whether you need a complete roof replacement, emergency storm repair, or routine maintenance, 
-                our GAF Master Elite® certified team delivers exceptional results that enhance your home's 
-                beauty, value, and protection.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Before & After Section */}
-      <BeforeAfterSection />
-
-      {/* Why Choose BRAVOS Section */}
-      <WhyChooseBravosSection />
-
-      {/* Residential Roofing Services Section */}
-      <ResidentialRoofingServices />
-
-      {/* Contact Form Section */}
-      <ContactForm />
-
-      {/* FAQ Section */}
-      <FAQSection />
-
-      {/* Responsive CSS */}
-      <style jsx global>{`
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
-        
-        html, body {
-          overflow-x: hidden;
-          width: 100%;
-          max-width: 100vw;
-          font-family: 'Playfair Display', serif;
-          background: #0A0A0C;
-          color: #FFFFFF;
-        }
-        
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap');
-        
-        @media (max-width: 1024px) {
-          .hero-heading {
-            font-size: 2.2rem !important;
-          }
-          
-          h2 {
-            font-size: 2rem !important;
-          }
-          
-          [style*="grid-template-columns: 1fr 1fr"] {
-            grid-template-columns: 1fr !important;
-          }
-        }
-        
-        @media (max-width: 768px) {
-          .hero-heading {
-            font-size: 1.8rem !important;
-          }
-          
-          h2 {
-            font-size: 1.8rem !important;
-          }
-          
-          [style*="grid-template-columns: repeat(3, 1fr)"] {
-            grid-template-columns: 1fr !important;
-            gap: 20px !important;
-          }
-        }
-        
-        html {
-          scroll-behavior: smooth;
-        }
-        
-        img {
-          max-width: 100%;
-          height: auto;
-        }
-        
-        button, a {
-          user-select: none;
-        }
-      `}</style>
+      </main>
+      
+      
     </div>
   );
 }

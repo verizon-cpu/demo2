@@ -3,6 +3,43 @@
 import { useState, useEffect, FormEvent, ChangeEvent, useRef } from 'react';
 import { useForm, ValidationError } from '@formspree/react';
 
+// MicroInteraction Component - Looping MP4 for attention grabbing
+const MicroInteraction = ({ 
+  src = "/animations/sparkle.mp4", // Default path - replace with your actual MP4
+  width = 24, 
+  height = 24,
+  style = {}
+}) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = 0.8; // Slightly slower for elegance
+    }
+  }, []);
+
+  return (
+    <video
+      ref={videoRef}
+      src={src}
+      width={width}
+      height={height}
+      loop
+      autoPlay
+      muted
+      playsInline
+      style={{
+        position: 'absolute',
+        top: '-15px',
+        right: '-15px',
+        zIndex: 20,
+        pointerEvents: 'none',
+        ...style
+      }}
+    />
+  );
+};
+
 // Bottom CTA Buttons Component - UPDATED FOR ROOFING
 interface BottomCTAButtonsProps {
   onCallClick?: () => void;
@@ -409,13 +446,14 @@ const HeroSection = () => {
       minHeight: '100%',
     },
     
+    // UPDATED: More exposed background - reduced opacity from 0.85/0.75 to 0.60/0.50
     overlayGradient: {
       position: 'absolute',
       top: 0,
       left: 0,
       right: 0,
       bottom: 0,
-      background: 'linear-gradient(135deg, rgba(10, 10, 12, 0.85) 0%, rgba(10, 10, 12, 0.75) 100%)',
+      background: 'linear-gradient(135deg, rgba(10, 10, 12, 0.60) 0%, rgba(10, 10, 12, 0.50) 100%)',
       zIndex: 2,
     },
 
@@ -451,6 +489,7 @@ const HeroSection = () => {
       width: '100%',
     },
 
+    // UPDATED: Added relative positioning to contain the micro-interaction
     excellenceBadge: (active: boolean) => ({
       display: 'flex',
       alignItems: 'center',
@@ -472,6 +511,7 @@ const HeroSection = () => {
       cursor: 'pointer',
       flexWrap: isSmallMobile ? 'wrap' : 'nowrap',
       textAlign: isSmallMobile ? 'center' : 'left',
+      position: 'relative', // For micro-interaction positioning
     }),
     
     numberOneBadge: (active: boolean) => ({
@@ -651,6 +691,7 @@ const HeroSection = () => {
       cursor: 'pointer',
       transform: active ? 'translateY(-3px) scale(1.05)' : 'translateY(0) scale(1)',
       boxShadow: active ? '0 12px 30px rgba(0, 0, 0, 0.3)' : '0 8px 20px rgba(0, 0, 0, 0.2)',
+      position: 'relative', // For micro-interaction
     }),
     
     googleText: {
@@ -832,6 +873,7 @@ const HeroSection = () => {
       width: '100%',
     },
     
+    // UPDATED: Added relative positioning for micro-interaction
     submitButton: (active: boolean) => ({
       marginTop: '0.5rem',
       padding: isMobile ? (isSmallMobile ? '0.9rem' : '1.1rem') : '1.25rem',
@@ -851,6 +893,7 @@ const HeroSection = () => {
       transform: active ? 'translateY(-3px)' : 'translateY(0)',
       boxShadow: active ? '0 15px 40px rgba(255, 184, 0, 0.4)' : '0 10px 30px rgba(255, 184, 0, 0.3)',
       width: '100%',
+      position: 'relative', // For micro-interaction
     }),
     
     successMessage: {
@@ -931,12 +974,14 @@ const HeroSection = () => {
   return (
     <section style={baseStyles.heroSection}>
       <div style={baseStyles.backgroundContainer}>
+        {/* UPDATED: More exposed overlay - reduced opacity */}
         <div style={baseStyles.overlayGradient}></div>
       </div>
       
       <div style={baseStyles.heroContent}>
         <div style={baseStyles.heroGrid}>
           <div style={baseStyles.leftColumn}>
+            {/* UPDATED: Added micro-interaction MP4 above the #1 badge */}
             <div 
               style={baseStyles.excellenceBadge(excellenceBadgeActive)}
               onMouseEnter={() => setExcellenceBadgeActive(true)}
@@ -944,6 +989,18 @@ const HeroSection = () => {
               onTouchStart={() => handleTouchStart(setExcellenceBadgeActive, true)}
               onTouchEnd={() => handleTouchEnd(setExcellenceBadgeActive, false)}
             >
+              {/* Micro-interaction - tiny looping MP4 */}
+              <MicroInteraction 
+                src="/animations/sparkle.mp4" // Replace with your actual MP4 file
+                width={32}
+                height={32}
+                style={{ 
+                  top: '-12px', 
+                  right: '-8px',
+                  filter: 'drop-shadow(0 4px 8px rgba(255, 184, 0, 0.3))'
+                }}
+              />
+              
               <div style={baseStyles.numberOneBadge(excellenceBadgeActive)}>
                 <span style={baseStyles.numberOne}>#1</span>
               </div>
@@ -1031,6 +1088,7 @@ const HeroSection = () => {
                 <strong style={baseStyles.reviewRating}>4.9/5</strong> from 350+ Google Reviews
               </div>
               <div style={baseStyles.reviewsCTAContainer}>
+                {/* UPDATED: Added micro-interaction to Google badge */}
                 <div 
                   style={baseStyles.googleBadge(googleBadgeActive)}
                   onClick={handleGoogleReviewsClick}
@@ -1039,6 +1097,18 @@ const HeroSection = () => {
                   onTouchStart={() => handleTouchStart(setGoogleBadgeActive, true)}
                   onTouchEnd={() => handleTouchEnd(setGoogleBadgeActive, false)}
                 >
+                  {/* Micro-interaction */}
+                  <MicroInteraction 
+                    src="/animations/sparkle.mp4" // Replace with your actual MP4 file
+                    width={24}
+                    height={24}
+                    style={{ 
+                      top: '-10px', 
+                      right: '-8px',
+                      filter: 'drop-shadow(0 4px 8px rgba(255, 184, 0, 0.3))'
+                    }}
+                  />
+                  
                   <svg width="20" height="20" viewBox="0 0 24 24">
                     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                     <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -1149,6 +1219,7 @@ const HeroSection = () => {
                   />
                 </div>
                 
+                {/* UPDATED: Added micro-interaction to submit button */}
                 <button 
                   type="submit" 
                   style={baseStyles.submitButton(submitButtonActive)}
@@ -1158,6 +1229,18 @@ const HeroSection = () => {
                   onTouchEnd={() => handleTouchEnd(setSubmitButtonActive, false)}
                   disabled={state.submitting}
                 >
+                  {/* Micro-interaction */}
+                  <MicroInteraction 
+                    src="/animations/arrow.mp4" // Replace with your actual MP4 file
+                    width={28}
+                    height={28}
+                    style={{ 
+                      top: '-10px', 
+                      right: '-5px',
+                      filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2))'
+                    }}
+                  />
+                  
                   <span style={baseStyles.buttonText}>
                     {state.submitting ? 'Sending...' : 'Get Free Estimate'}
                   </span>
