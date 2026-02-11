@@ -24,12 +24,12 @@ export default function Header({
   const [activeItem, setActiveItem] = useState<string | null>(null);
 
   const services = [
-    { name: "Residential Roofing", url: "/services/residential" },
-    { name: "Commercial Roofing", url: "/services/commercial" },
-    { name: "Emergency Repairs", url: "/services/emergency" },
-    { name: "Roof Inspection", url: "/services/inspection" },
-    { name: "Storm Damage", url: "/services/storm-damage" },
-    { name: "Maintenance", url: "/services/maintenance" }
+    { name: "Residential Roofing", url: "/Residential-Roofing" },
+    { name: "Commercial Roofing", url: "/Commercial-Roofing" },
+    { name: "Emergency Repairs", url: "/Emergency-Roofing" },
+    { name: "Roof Inspection", url: "/Roof-inspection" },
+    { name: "Storm Damage", url: "//Storm-damage" },
+    { name: "Maintenance", url: "/Maintenance" }
   ];
 
   useEffect(() => {
@@ -74,8 +74,12 @@ export default function Header({
   };
 
   const getHeaderBackground = () => {
-    if (isTransparent && !isScrolled) return 'transparent';
-    return '#0A0A0C';
+    // On homepage (isTransparent=true) and not scrolled → use dark glass
+  if (isTransparent && !isScrolled) {
+    return 'rgba(10, 10, 12, 0.78)'; // Deep charcoal glass
+  }
+  // Scrolled or inner pages → solid charcoal
+  return '#0A0A0C';
   };
 
   const styles = {
@@ -86,30 +90,32 @@ export default function Header({
       right: 0,
       zIndex: 1000,
       background: getHeaderBackground(),
-      backdropFilter: isScrolled || !isTransparent ? 'none' : 'blur(8px)',
-      transition: 'all 0.3s ease',
-      borderBottom: isScrolled || !isTransparent ? '2px solid #FFB800' : 'none',
-      boxShadow: isScrolled ? '0 4px 20px rgba(0, 0, 0, 0.1)' : 'none',
+       backdropFilter: isScrolled || !isTransparent ? 'none' : 'blur(12px) saturate(180%)', // Stronger blur
+  WebkitBackdropFilter: isScrolled || !isTransparent ? 'none' : 'blur(12px) saturate(180%)',
+  backgroundColor: getHeaderBackground(),
     },
     container: {
       maxWidth: '1400px',
       margin: '0 auto',
-      padding: isMobile ? '0.75rem 1.5rem' : '1rem 2rem',
+      padding: isMobile ? '0.6rem 0.75rem' : '0.6rem 0.5rem',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
       width: '100%',
       boxSizing: 'border-box' as const,
+        minHeight: isMobile ? '70px' : '80px', // Fixed height
     },
     logo: {
       display: 'flex',
       alignItems: 'center',
       textDecoration: 'none',
       cursor: 'pointer',
-      height: isMobile ? '50px' : '60px',
+      height: isMobile ? '100px': '60px',
+       marginTop: '-20px', // ← Pull logo up
+  marginBottom: '-20px', // ← Pull logo down
     },
     logoImage: {
-      width: 'auto',
+      width: '700',
       height: '100%',
       objectFit: 'contain' as const,
     },
@@ -297,13 +303,17 @@ export default function Header({
           {/* Logo - PNG Image */}
           <div style={styles.logo} onClick={() => handleNavigation('/')}>
             <Image 
-              src={logoImage}
-              alt={logoName}
-              width={isMobile ? 150 : 180}
-              height={isMobile ? 50 : 60}
-              style={styles.logoImage}
-              priority
-            />
+  src={logoImage}
+  alt={logoName}
+  width={450}  // ← YOU control this
+  height={140} // ← YOU control this
+  style={{
+    width: 'auto',
+    height: '200px', // Match height above
+    objectFit: 'contain',
+  }}
+  priority
+/>
           </div>
 
           {/* Desktop Navigation */}
@@ -436,12 +446,17 @@ export default function Header({
           <div style={styles.mobileMenuHeader}>
             <div style={styles.mobileLogo}>
               <Image 
-                src={logoImage}
-                alt={logoName}
-                width={150}
-                height={50}
-                style={styles.logoImage}
-              />
+  src={logoImage}
+  alt={logoName}
+  width={450}  // ← YOU control this
+  height={140} // ← YOU control this
+  style={{
+    width: 'auto',
+    height: '300px', // Match height above
+    objectFit: 'contain',
+  }}
+  priority
+/>
             </div>
             <button style={styles.closeButton} onClick={toggleMobileMenu}>
               ✕
