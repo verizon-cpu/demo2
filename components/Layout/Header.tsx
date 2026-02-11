@@ -14,7 +14,7 @@ export default function Header({
   logoName = "BRAVOS",
   phoneNumber = "(281) 555-1234",
   isTransparent = false,
-  logoImage = "/images/bravos.png" // Default path
+  logoImage = "/image/bravos.png" // Default path
 }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
