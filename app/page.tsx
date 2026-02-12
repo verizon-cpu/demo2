@@ -5,7 +5,7 @@ import { useForm, ValidationError } from '@formspree/react';
 
 // MicroInteraction Component - Image Logo for attention grabbing
 const MicroInteraction = ({ 
-  src = "/image/roofimg.png", // Default path - replace with your actual logo
+  src = "/image/pointer.jpeg", // Default path - replace with your actual logo
   width = 32, 
   height = 32,
   style = {}
@@ -16,8 +16,8 @@ const MicroInteraction = ({
       alt="BRAVOS Logo"
       style={{
         position: 'absolute',
-        top: '-4000px',
-        right: '100px',
+        top: '0px',
+        right: '0px',
         zIndex: 20,
         pointerEvents: 'none',
         width: `${width}px`,
@@ -580,19 +580,22 @@ const HeroSection = () => {
       fontFamily: "'Inter', sans-serif",
       fontWeight: '400',
       textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)',
+       marginTop: '100px',
     },
 
     trustGrid: {
       display: 'grid',
-      gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
+      gridTemplateColumns: isMobile ? 'repeat(3, 1fr)' : 'repeat(3, 1fr)',
       gap: isMobile ? (isSmallMobile ? '0.5rem' : '0.75rem') : '1rem',
       width: '100%',
     },
     
     trustCard: (active: boolean) => ({
       display: 'flex',
+      flexDirection: 'column',
       alignItems: 'center',
-      gap: isMobile ? (isSmallMobile ? '0.5rem' : '0.5rem') : '0.75rem',
+      justifyContent: 'center',
+      gap: isMobile ? (isSmallMobile ? '0.3rem' : '0.4rem') : '0.5rem',
       backgroundColor: active ? 'rgba(255, 184, 0, 0.15)' : 'rgba(255, 184, 0, 0.1)',
       borderRadius: '12px',
       padding: isMobile ? (isSmallMobile ? '0.5rem' : '0.75rem') : '1rem',
@@ -600,13 +603,12 @@ const HeroSection = () => {
       transition: 'all 0.3s ease',
       backdropFilter: 'blur(10px)',
       transform: active ? 'translateY(-2px)' : 'translateY(0)',
-      minHeight: isSmallMobile ? '60px' : 'auto',
+      minHeight: isSmallMobile ? '80px' : 'auto',
     }),
     
     trustIcon: {
-      width: isMobile ? (isSmallMobile ? '24px' : '30px') : '40px',
-      height: isMobile ? (isSmallMobile ? '24px' : '30px') : '40px',
-      backgroundColor: 'rgba(255, 184, 0, 0.15)',
+      width: isMobile ? (isSmallMobile ? '32px' : '40px') : '50px',
+      height: isMobile ? (isSmallMobile ? '32px' : '40px') : '50px',
       borderRadius: '10px',
       display: 'flex',
       alignItems: 'center',
@@ -614,20 +616,10 @@ const HeroSection = () => {
       flexShrink: 0,
     },
     
-    trustTitle: {
-      fontSize: isMobile ? (isSmallMobile ? '0.6rem' : '0.7rem') : '0.875rem',
-      fontWeight: '700',
-      color: colors.gold,
-      marginBottom: '0.25rem',
-      fontFamily: "'Inter', sans-serif",
-      whiteSpace: 'nowrap',
-    },
-    
-    trustDesc: {
-      fontSize: isMobile ? (isSmallMobile ? '0.5rem' : '0.6rem') : '0.75rem',
-      color: colors.softWhite,
-      fontFamily: "'Inter', sans-serif",
-      fontWeight: '400',
+    trustImage: {
+      width: '100%',
+      height: '100%',
+      objectFit: 'contain' as const,
     },
 
     reviewsContainer: {
@@ -995,11 +987,11 @@ const HeroSection = () => {
             >
               <MicroInteraction 
                 src="/image/roofimg.png"
-                width={200}
-                height={200}
+                width={300}
+                height={250}
                 style={{ 
-                  top: '-5px', 
-                  right: '8px',
+                  top: '80px', 
+                  right: '-70px',
                   filter: 'drop-shadow(0 4px 8px rgba(255, 184, 0, 0.3))'
                 }}
               />
@@ -1031,13 +1023,11 @@ const HeroSection = () => {
                 onTouchEnd={() => handleTouchEnd(setTrustCardActive, null)}
               >
                 <div style={baseStyles.trustIcon}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#FFB800" stroke="#FFB800" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-                <div>
-                  <div style={baseStyles.trustTitle}>25+ Years</div>
-                  <div style={baseStyles.trustDesc}>Industry Experience</div>
+                  <img 
+                    src="/image/batch1.png" 
+                    alt="25+ Years Experience"
+                    style={baseStyles.trustImage}
+                  />
                 </div>
               </div>
               
@@ -1049,15 +1039,11 @@ const HeroSection = () => {
                 onTouchEnd={() => handleTouchEnd(setTrustCardActive, null)}
               >
                 <div style={baseStyles.trustIcon}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="#FFB800" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M19.4 15C20.2837 15 21 15.7163 21 16.6V19.4C21 20.2837 20.2837 21 19.4 21H4.6C3.71634 21 3 20.2837 3 19.4V16.6C3 15.7163 3.71634 15 4.6 15" stroke="#FFB800" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M16 7C16 8.65685 14.6569 10 13 10C11.3431 10 10 8.65685 10 7C10 5.34315 11.3431 4 13 4C14.6569 4 16 5.34315 16 7Z" stroke="#FFB800" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-                <div>
-                  <div style={baseStyles.trustTitle}>Licensed & Bonded</div>
-                  <div style={baseStyles.trustDesc}>Full Insurance</div>
+                  <img 
+                    src="/image/batch2.png" 
+                    alt="Licensed & Bonded"
+                    style={baseStyles.trustImage}
+                  />
                 </div>
               </div>
               
@@ -1069,14 +1055,11 @@ const HeroSection = () => {
                 onTouchEnd={() => handleTouchEnd(setTrustCardActive, null)}
               >
                 <div style={baseStyles.trustIcon}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.709 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18455 2.99721 7.13631 4.39828 5.49706C5.79935 3.85781 7.69279 2.71537 9.79619 2.24013C11.8996 1.7649 14.1003 1.98232 16.07 2.85999" stroke="#FFB800" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M22 4L12 14.01L9 11.01" stroke="#FFB800" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-                <div>
-                  <div style={baseStyles.trustTitle}>Lifetime Warranty</div>
-                  <div style={baseStyles.trustDesc}>On Installation</div>
+                  <img 
+                    src="/image/batch3.png" 
+                    alt="Lifetime Warranty"
+                    style={baseStyles.trustImage}
+                  />
                 </div>
               </div>
             </div>
@@ -1099,17 +1082,6 @@ const HeroSection = () => {
                   onTouchStart={() => handleTouchStart(setGoogleBadgeActive, true)}
                   onTouchEnd={() => handleTouchEnd(setGoogleBadgeActive, false)}
                 >
-                  <MicroInteraction 
-                    src="/image/roofimg.png"
-                    width={100}
-                    height={100}
-                    style={{ 
-                      top: '-10px', 
-                      right: '-8px',
-                      filter: 'drop-shadow(0 4px 8px rgba(255, 184, 0, 0.3))'
-                    }}
-                  />
-                  
                   <svg width="20" height="20" viewBox="0 0 24 24">
                     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                     <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
