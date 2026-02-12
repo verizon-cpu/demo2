@@ -374,9 +374,9 @@ export default function Header({
               </a>
 
               <a 
-                style={styles.navItem(activeItem === 'gallery')}
-                onClick={() => handleNavigation('/gallery')}
-                onMouseEnter={() => setActiveItem('gallery')}
+                style={styles.navItem(activeItem === 'Gallery')}
+                onClick={() => handleNavigation('/Gallery')}
+                onMouseEnter={() => setActiveItem('Gallery')}
                 onMouseLeave={() => setActiveItem(null)}
               >
                 Gallery
