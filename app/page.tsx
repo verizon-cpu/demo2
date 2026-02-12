@@ -5,7 +5,7 @@ import { useForm, ValidationError } from '@formspree/react';
 
 // MicroInteraction Component - Image Logo for attention grabbing
 const MicroInteraction = ({ 
-  src = "/images/roofimg.png", // Default path - replace with your actual logo
+  src = "/image/roofimg.png", // Default path - replace with your actual logo
   width = 32, 
   height = 32,
   style = {}
@@ -16,8 +16,8 @@ const MicroInteraction = ({
       alt="BRAVOS Logo"
       style={{
         position: 'absolute',
-        top: '-15px',
-        right: '-15px',
+        top: '-4000px',
+        right: '100px',
         zIndex: 20,
         pointerEvents: 'none',
         width: `${width}px`,
@@ -424,7 +424,7 @@ const HeroSection = () => {
       left: 0,
       right: 0,
       bottom: 0,
-      backgroundImage: 'url("/image/roofimg.png")',
+      backgroundImage: 'url("/image/roofer.png")',
       backgroundSize: 'cover',
       backgroundPosition: isMobile ? 'center 30%' : 'center',
       backgroundRepeat: 'no-repeat',
@@ -994,7 +994,7 @@ const HeroSection = () => {
               onTouchEnd={() => handleTouchEnd(setExcellenceBadgeActive, false)}
             >
               <MicroInteraction 
-                src="/images/roofimg.png"
+                src="/image/roofimg.png"
                 width={200}
                 height={200}
                 style={{ 
@@ -1100,7 +1100,7 @@ const HeroSection = () => {
                   onTouchEnd={() => handleTouchEnd(setGoogleBadgeActive, false)}
                 >
                   <MicroInteraction 
-                    src="/images/roofimg.png"
+                    src="/image/roofimg.png"
                     width={100}
                     height={100}
                     style={{ 
@@ -1230,7 +1230,7 @@ const HeroSection = () => {
                   disabled={state.submitting}
                 >
                   <MicroInteraction 
-                    src="/images/roofimg.png"
+                    src="/image/roofimg.png"
                     width={100}
                     height={100}
                     style={{ 
