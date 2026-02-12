@@ -980,7 +980,7 @@ export default function BeforeAfterGallery() {
               onMouseLeave={() => setHoveredItem(null)}
             >
               <div style={{ position: "relative", width: "100%" }}>
-                <div style={pageStyles.premiumBadge}>BRAVOS CERTIFIED</div>
+                <div style={pageStyles.premiumBadge}>BRAVOS CERTIFIED ROOFER</div>
                 <ImageComparison
                   afterImage={item.beforeImage}
                   beforeImage={item.afterImage}
