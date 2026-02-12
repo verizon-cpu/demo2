@@ -107,35 +107,25 @@ function ServiceCard({ title, description, image, features }: {
   );
 }
 
-// Before & After Component
+// Before & After Section
 function BeforeAfterSection() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  
   const projects = [
     {
       title: "Complete Roof Replacement",
       location: "Newton, MA",
-      before: "https://images.pexels.com/photos/164558/pexels-photo-164558.jpeg?auto=compress&cs=tinysrgb&w=600",
-      after: "https://images.pexels.com/photos/280471/pexels-photo-280471.jpeg?auto=compress&cs=tinysrgb&w=600",
+      before: "/image/spoiledroof.jpg",
+      after: "/image/repairedroof.jpg",
       description: "Full tear-off and replacement with architectural shingles",
       duration: "3 days",
     },
     {
       title: "Emergency Leak Repair",
       location: "Boston, MA",
-      before: "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=600",
-      after: "https://images.pexels.com/photos/280471/pexels-photo-280471.jpeg?auto=compress&cs=tinysrgb&w=600",
+      before: "/image/spoiledroof.jpg",
+      after: "/image/repairedroof.jpg",
       description: "Storm damage repair and full leak remediation",
       duration: "1 day",
-    },
-    {
-      title: "New Construction Roofing",
-      location: "Cambridge, MA",
-      before: "https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg?auto=compress&cs=tinysrgb&w=600",
-      after: "https://images.pexels.com/photos/280471/pexels-photo-280471.jpeg?auto=compress&cs=tinysrgb&w=600",
-      description: "Premium architectural shingles with ice/water shield",
-      duration: "4 days",
-    },
+    }
   ];
 
   return (
@@ -199,181 +189,192 @@ function BeforeAfterSection() {
           </h2>
         </div>
 
-        {/* Project Tabs */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          gap: '15px',
-          marginBottom: '40px',
-          flexWrap: 'wrap',
-        }}>
-          {projects.map((project, index) => (
-            <button
-              key={index}
-              onClick={() => setActiveIndex(index)}
-              style={{
-                padding: '12px 24px',
-                background: activeIndex === index 
-                  ? 'linear-gradient(135deg, #FFB800 0%, #FFD700 100%)'
-                  : 'transparent',
-                border: activeIndex === index
-                  ? 'none'
-                  : '2px solid rgba(255, 184, 0, 0.3)',
-                borderRadius: '30px',
-                color: activeIndex === index ? '#FFFFFF' : '#FFB800',
-                fontWeight: 700,
-                fontSize: '0.95rem',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                fontFamily: "'Playfair Display', serif",
-              }}
-              onMouseEnter={(e) => {
-                if (activeIndex !== index) {
-                  e.currentTarget.style.background = 'rgba(255, 184, 0, 0.1)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (activeIndex !== index) {
-                  e.currentTarget.style.background = 'transparent';
-                }
-              }}
-            >
-              {project.title}
-            </button>
-          ))}
-        </div>
-
-        {/* Before & After Display */}
+        {/* Two Before & After Projects */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: '1fr 1fr',
           gap: '30px',
           marginBottom: '40px',
         }}>
-          {/* Before */}
-          <div style={{
-            position: 'relative',
-            borderRadius: '20px',
-            overflow: 'hidden',
-            boxShadow: '0 15px 30px rgba(0,0,0,0.15)',
-            height: '350px',
-          }}>
-            <div style={{
-              position: 'absolute',
-              top: '20px',
-              left: '20px',
-              background: 'rgba(0,0,0,0.8)',
-              color: '#FFFFFF',
-              padding: '12px 24px',
-              borderRadius: '30px',
-              fontSize: '14px',
-              fontWeight: 700,
-              zIndex: 2,
-              border: '2px solid #FFB800',
+          {projects.map((project, index) => (
+            <div key={index} style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '20px',
             }}>
-              BEFORE
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '15px',
+              }}>
+                {/* Before */}
+                <div style={{
+                  position: 'relative',
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  boxShadow: '0 10px 20px rgba(0,0,0,0.1)',
+                  height: '250px',
+                }}>
+                  <div style={{
+                    position: 'absolute',
+                    top: '12px',
+                    left: '12px',
+                    background: 'rgba(0,0,0,0.8)',
+                    color: '#FFFFFF',
+                    padding: '8px 16px',
+                    borderRadius: '30px',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    zIndex: 2,
+                    border: '1px solid #FFB800',
+                  }}>
+                    BEFORE
+                  </div>
+                  <img 
+                    src={project.before}
+                    alt="Before"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                    }}
+                  />
+                </div>
+                
+                {/* After */}
+                <div style={{
+                  position: 'relative',
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  boxShadow: '0 10px 20px rgba(255,184,0,0.15)',
+                  height: '250px',
+                }}>
+                  <div style={{
+                    position: 'absolute',
+                    top: '12px',
+                    left: '12px',
+                    background: 'linear-gradient(135deg, #FFB800 0%, #FFD700 100%)',
+                    color: '#1A1A1A',
+                    padding: '8px 16px',
+                    borderRadius: '30px',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    zIndex: 2,
+                  }}>
+                    AFTER
+                  </div>
+                  <img 
+                    src={project.after}
+                    alt="After"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Project Details */}
+              <div style={{
+                background: '#FFFFFF',
+                borderRadius: '12px',
+                padding: '20px',
+                border: '1px solid rgba(255,184,0,0.2)',
+              }}>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start',
+                  marginBottom: '8px',
+                }}>
+                  <h4 style={{
+                    fontSize: '1.1rem',
+                    fontWeight: 700,
+                    color: '#1A1A1A',
+                    fontFamily: "'Playfair Display', serif",
+                  }}>
+                    {project.title}
+                  </h4>
+                  <span style={{
+                    background: 'rgba(255,184,0,0.1)',
+                    padding: '6px 12px',
+                    borderRadius: '20px',
+                    fontSize: '0.85rem',
+                    fontWeight: 600,
+                    color: '#FFB800',
+                    border: '1px solid rgba(255,184,0,0.3)',
+                  }}>
+                    {project.duration}
+                  </span>
+                </div>
+                <p style={{
+                  color: '#4B5563',
+                  fontSize: '0.9rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  marginBottom: '6px',
+                }}>
+                  <span>📍</span> {project.location}
+                </p>
+                <p style={{
+                  color: '#4B5563',
+                  fontSize: '0.9rem',
+                }}>
+                  {project.description}
+                </p>
+              </div>
             </div>
-            <img 
-              src={projects[activeIndex].before}
-              alt="Before"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-              }}
-            />
-          </div>
-          
-          {/* After */}
-          <div style={{
-            position: 'relative',
-            borderRadius: '20px',
-            overflow: 'hidden',
-            boxShadow: '0 15px 30px rgba(255,184,0,0.2)',
-            height: '350px',
-          }}>
-            <div style={{
-              position: 'absolute',
-              top: '20px',
-              left: '20px',
-              background: 'linear-gradient(135deg, #FFB800 0%, #FFD700 100%)',
-              color: '#1A1A1A',
-              padding: '12px 24px',
-              borderRadius: '30px',
-              fontSize: '14px',
-              fontWeight: 700,
-              zIndex: 2,
-            }}>
-              AFTER
-            </div>
-            <img 
-              src={projects[activeIndex].after}
-              alt="After"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-              }}
-            />
-          </div>
+          ))}
         </div>
 
-        {/* Project Details */}
+        {/* View Gallery Button */}
         <div style={{
-          background: 'linear-gradient(135deg, rgba(255,184,0,0.05) 0%, rgba(255,215,0,0.05) 100%)',
-          borderRadius: '16px',
-          padding: '30px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '20px',
+          textAlign: 'center',
         }}>
-          <div>
-            <h4 style={{
-              fontSize: '1.25rem',
-              fontWeight: 700,
+          <button
+            onClick={() => {
+              // Navigate to gallery page
+              window.location.href = '/gallery';
+            }}
+            style={{
+              padding: '16px 40px',
+              background: 'linear-gradient(135deg, #FFB800 0%, #FFD700 100%)',
               color: '#1A1A1A',
-              marginBottom: '8px',
+              border: 'none',
+              borderRadius: '40px',
+              fontSize: '1.1rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
               fontFamily: "'Playfair Display', serif",
-            }}>
-              {projects[activeIndex].title}
-            </h4>
-            <p style={{
-              color: '#4B5563',
-              fontSize: '0.95rem',
-              display: 'flex',
+              boxShadow: '0 8px 25px rgba(255,184,0,0.3)',
+              display: 'inline-flex',
               alignItems: 'center',
-              gap: '8px',
-            }}>
-              <span>📍</span> {projects[activeIndex].location}
-            </p>
-            <p style={{
-              color: '#4B5563',
-              fontSize: '0.95rem',
-              marginTop: '8px',
-            }}>
-              {projects[activeIndex].description}
-            </p>
-          </div>
-          <div style={{
-            background: 'rgba(255,184,0,0.1)',
-            padding: '16px 24px',
-            borderRadius: '12px',
-            border: '1px solid rgba(255,184,0,0.3)',
+              gap: '10px',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-3px)';
+              e.currentTarget.style.boxShadow = '0 12px 30px rgba(255,184,0,0.4)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 8px 25px rgba(255,184,0,0.3)';
+            }}
+          >
+            <span style={{ fontSize: '1.2rem' }}>📸</span>
+            View More Projects in Gallery
+            <span style={{ fontSize: '1.2rem' }}>→</span>
+          </button>
+          <p style={{
+            marginTop: '16px',
+            color: '#6B7280',
+            fontSize: '0.9rem',
+            fontFamily: "'Playfair Display', serif",
           }}>
-            <span style={{
-              color: '#4B5563',
-              fontSize: '0.9rem',
-              display: 'block',
-              marginBottom: '4px',
-            }}>Completion Time</span>
-            <span style={{
-              fontSize: '1.5rem',
-              fontWeight: 800,
-              color: '#FFB800',
-            }}>{projects[activeIndex].duration}</span>
-          </div>
+            Explore 50+ completed roofing projects in our gallery
+          </p>
         </div>
       </div>
     </section>
@@ -1433,7 +1434,7 @@ export default function RoofingPage() {
       {/* Residential Services - CLEAR breakdown */}
       <ResidentialServicesSection />
 
-      {/* Before & After Gallery */}
+      {/* Before & After Gallery - Two Projects with View More Button */}
       <BeforeAfterSection />
 
       {/* Comprehensive FAQ */}

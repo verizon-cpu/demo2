@@ -5,7 +5,7 @@ import { useForm, ValidationError } from '@formspree/react';
 
 // MicroInteraction Component - Image Logo for attention grabbing
 const MicroInteraction = ({ 
-  src = "/image/pointer.jpeg", // Default path - replace with your actual logo
+  src = "/image/pointer1.png", // Default path - replace with your actual logo
   width = 32, 
   height = 32,
   style = {}
@@ -424,7 +424,7 @@ const HeroSection = () => {
       left: 0,
       right: 0,
       bottom: 0,
-      backgroundImage: 'url("/image/roofer.png")',
+      backgroundImage: 'url("/image/roofer1.png")',
       backgroundSize: 'cover',
       backgroundPosition: isMobile ? 'center 30%' : 'center',
       backgroundRepeat: 'no-repeat',
@@ -584,31 +584,27 @@ const HeroSection = () => {
     },
 
     trustGrid: {
-      display: 'grid',
-      gridTemplateColumns: isMobile ? 'repeat(3, 1fr)' : 'repeat(3, 1fr)',
-      gap: isMobile ? (isSmallMobile ? '0.5rem' : '0.75rem') : '1rem',
-      width: '100%',
-    },
+  display: 'grid',
+  gridTemplateColumns: 'repeat(3, 1fr)',
+  gap: isMobile ? (isSmallMobile ? '0.5rem' : '0.75rem') : '1rem',
+  width: '100%',
+},
     
     trustCard: (active: boolean) => ({
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: isMobile ? (isSmallMobile ? '0.3rem' : '0.4rem') : '0.5rem',
-      backgroundColor: active ? 'rgba(255, 184, 0, 0.15)' : 'rgba(255, 184, 0, 0.1)',
-      borderRadius: '12px',
-      padding: isMobile ? (isSmallMobile ? '0.5rem' : '0.75rem') : '1rem',
-      border: `1px solid ${active ? colors.gold : colors.goldBorder}`,
-      transition: 'all 0.3s ease',
-      backdropFilter: 'blur(10px)',
-      transform: active ? 'translateY(-2px)' : 'translateY(0)',
-      minHeight: isSmallMobile ? '80px' : 'auto',
-    }),
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: 'transparent',
+  border: 'none',
+  padding: 0,
+  transition: 'all 0.3s ease',
+  transform: active ? 'translateY(-2px)' : 'translateY(0)',
+}),
     
     trustIcon: {
-      width: isMobile ? (isSmallMobile ? '32px' : '40px') : '50px',
-      height: isMobile ? (isSmallMobile ? '32px' : '40px') : '50px',
+      width: isMobile ? (isSmallMobile ? '100px' : '100px') : '200px',
+      height: isMobile ? (isSmallMobile ? '100px' : '100px') : '200px',
       borderRadius: '10px',
       display: 'flex',
       alignItems: 'center',
@@ -986,12 +982,12 @@ const HeroSection = () => {
               onTouchEnd={() => handleTouchEnd(setExcellenceBadgeActive, false)}
             >
               <MicroInteraction 
-                src="/image/roofimg.png"
-                width={300}
-                height={250}
+                src="/image/pointer1.png"
+                width={200}
+                height={220}
                 style={{ 
                   top: '80px', 
-                  right: '-70px',
+                  right: '-20px',
                   filter: 'drop-shadow(0 4px 8px rgba(255, 184, 0, 0.3))'
                 }}
               />
@@ -1024,7 +1020,7 @@ const HeroSection = () => {
               >
                 <div style={baseStyles.trustIcon}>
                   <img 
-                    src="/image/batch1.png" 
+                    src="/image/lifetime1.png" 
                     alt="25+ Years Experience"
                     style={baseStyles.trustImage}
                   />
@@ -1040,7 +1036,7 @@ const HeroSection = () => {
               >
                 <div style={baseStyles.trustIcon}>
                   <img 
-                    src="/image/batch2.png" 
+                    src="/image/award1.png" 
                     alt="Licensed & Bonded"
                     style={baseStyles.trustImage}
                   />
@@ -1056,7 +1052,7 @@ const HeroSection = () => {
               >
                 <div style={baseStyles.trustIcon}>
                   <img 
-                    src="/image/batch3.png" 
+                    src="/image/award1.png" 
                     alt="Lifetime Warranty"
                     style={baseStyles.trustImage}
                   />
@@ -1202,7 +1198,7 @@ const HeroSection = () => {
                   disabled={state.submitting}
                 >
                   <MicroInteraction 
-                    src="/image/roofimg.png"
+                    src="/image/pointer1.png"
                     width={100}
                     height={100}
                     style={{ 
@@ -2295,15 +2291,15 @@ const BodySection = () => {
     {
       id: 1,
       title: "#1 Complete Roof Transformation",
-      beforeImage: "https://images.unsplash.com/photo-1632882968060-c5f5f5cdbb29?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      afterImage: "https://images.unsplash.com/photo-1632778149955-ea8d5832e29a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      beforeImage: "/image/spoiledroof.jpg",
+      afterImage: "/image/repairedroof.jpg",
       description: "From severe storm damage to premium architectural shingle installation with lifetime warranty"
     },
     {
       id: 2,
       title: "#2 Metal Roof Replacement",
-      beforeImage: "https://images.unsplash.com/photo-1632882910410-8b179c7f6adc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      afterImage: "https://images.unsplash.com/photo-1632778149955-ea8d5832e29a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      beforeImage: "/image/smetalroof.jpg",
+      afterImage: "/image/rmetalroof.jpg",
       description: "Aged asphalt shingles replaced with energy-efficient standing seam metal roof"
     }
   ];
@@ -2390,7 +2386,7 @@ const BodySection = () => {
         'OSHA-Certified Safety Training',
         'Continuous Technical Education'
       ],
-      image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      image: '/image/team.jpg',
       imageAlt: 'Professional roofing team at work'
     },
     {
@@ -2402,7 +2398,7 @@ const BodySection = () => {
         'Premium Material Selection',
         'Advanced Ventilation Systems'
       ],
-      image: 'https://images.unsplash.com/photo-1632778149955-ea8d5832e29a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      image: '/image/team.jpg',
       imageAlt: 'Detailed roofing craftsmanship'
     },
     {
@@ -3760,7 +3756,7 @@ const BodySection = () => {
           onTouchStart={() => handleTouchStart(setActiveBeforeAfterButton, true)}
           onTouchEnd={() => handleTouchEnd(setActiveBeforeAfterButton, false)}
           onClick={() => {
-            window.location.href = '/before-after';
+            window.location.href = '/gallery';
           }}
         >
           See More Transformations

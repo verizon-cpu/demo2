@@ -214,7 +214,7 @@ function ImageComparison({
           bottom: isMobile ? "8px" : "12px",
           left: isMobile ? "8px" : "12px",
           background: "#FAFAFA",
-          color: "#FAFAFA",
+          color: "#0A0A0C",
           padding: labelPadding,
           fontSize: labelFontSize,
           fontWeight: 700,
@@ -555,8 +555,8 @@ export default function BeforeAfterGallery() {
       id: 1,
       category: "residential",
       title: "Complete Roof Replacement",
-      beforeImage: "https://images.unsplash.com/photo-1594756202469-9ff9799b2e4e?auto=format&fit=crop&w=800",
-      afterImage: "https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?auto=format&fit=crop&w=800",
+      beforeImage: "/image/spoiledroof.jpg",
+      afterImage: "/image/repairedroof.jpg",
       description: "Full roof replacement with premium architectural shingles. Removed 3 layers of old roofing, installed new underlayment and ridge vents.",
       serviceType: "Roof Replacement",
       timeTaken: "2 days",
@@ -566,8 +566,8 @@ export default function BeforeAfterGallery() {
       id: 2,
       category: "repair",
       title: "Storm Damage Restoration",
-      beforeImage: "https://images.unsplash.com/photo-1504150558240-0b4fd8946624?auto=format&fit=crop&w=800",
-      afterImage: "https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?auto=format&fit=crop&w=800",
+      beforeImage: "/image/spoiledroof.jpg",
+      afterImage: "/image/repairedroof.jpg",
       description: "Emergency repair after severe hailstorm. Replaced damaged shingles, repaired flashing, and sealed all leak points.",
       serviceType: "Storm Repair",
       timeTaken: "6 hours",
@@ -577,8 +577,8 @@ export default function BeforeAfterGallery() {
       id: 3,
       category: "commercial",
       title: "Flat Roof Restoration",
-      beforeImage: "https://images.unsplash.com/photo-1594756202469-9ff9799b2e4e?auto=format&fit=crop&w=800",
-      afterImage: "https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?auto=format&fit=crop&w=800",
+      beforeImage: "/image/spoiledroof.jpg",
+      afterImage: "/image/repairedroof.jpg",
       description: "Commercial TPO roof installation for 15,000 sq ft retail center. Complete tear-off, new insulation, and energy-efficient membrane.",
       serviceType: "Commercial Roofing",
       timeTaken: "5 days",
@@ -588,8 +588,8 @@ export default function BeforeAfterGallery() {
       id: 4,
       category: "maintenance",
       title: "Gutter & Downspout System",
-      beforeImage: "https://images.unsplash.com/photo-1504150558240-0b4fd8946624?auto=format&fit=crop&w=800",
-      afterImage: "https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?auto=format&fit=crop&w=800",
+      beforeImage: "/image/spoiledroof.jpg",
+      afterImage: "/image/repairedroof.jpg",
       description: "Seamless gutter installation with leaf guards. Solved water damage issues and improved drainage.",
       serviceType: "Gutter Installation",
       timeTaken: "1 day",
@@ -599,8 +599,8 @@ export default function BeforeAfterGallery() {
       id: 5,
       category: "residential",
       title: "Metal Roof Installation",
-      beforeImage: "https://images.unsplash.com/photo-1594756202469-9ff9799b2e4e?auto=format&fit=crop&w=800",
-      afterImage: "https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?auto=format&fit=crop&w=800",
+      beforeImage: "/image/spoiledroof.jpg",
+      afterImage: "/image/repairedroof.jpg",
       description: "Premium standing seam metal roof installation. 40-year warranty, energy-efficient coating, and wind resistance up to 140mph.",
       serviceType: "Metal Roofing",
       timeTaken: "3 days",
@@ -610,9 +610,9 @@ export default function BeforeAfterGallery() {
       id: 6,
       category: "repair",
       title: "Skylight & Flashing Repair",
-      beforeImage: "https://images.unsplash.com/photo-1504150558240-0b4fd8946624?auto=format&fit=crop&w=800",
-      afterImage: "https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?auto=format&fit=crop&w=800",
-      description: "Leak repair around three skylights. Replaced deteriorated flashing and resealed all penetrations.",
+      beforeImage: "/image/spoiledroof.jpg",
+      afterImage: "/image/repairedroof.jpg",
+      description: "hey",
       serviceType: "Leak Repair",
       timeTaken: "4 hours",
       clientQuote: "Finally, no more water stains on the ceiling!",
@@ -647,7 +647,7 @@ export default function BeforeAfterGallery() {
     },
     heroSection: {
       minHeight: isMobile ? "50vh" : isTablet ? "55vh" : "60vh",
-      background: 'linear-gradient(rgba(10, 10, 12, 0.85), rgba(10, 10, 12, 0.7)), url("https://images.unsplash.com/photo-1594756202469-9ff9799b2e4e?auto=format&fit=crop&w=1920")',
+      background: 'linear-gradient(rgba(10, 10, 12, 0.85), rgba(10, 10, 12, 0.7)), url("/image/roofer1.png")',
       backgroundSize: "cover",
       backgroundPosition: "center",
       backgroundAttachment: isMobile ? "scroll" : "fixed",
@@ -982,8 +982,8 @@ export default function BeforeAfterGallery() {
               <div style={{ position: "relative", width: "100%" }}>
                 <div style={pageStyles.premiumBadge}>BRAVOS CERTIFIED</div>
                 <ImageComparison
-                  beforeImage={item.beforeImage}
-                  afterImage={item.afterImage}
+                  afterImage={item.beforeImage}
+                  beforeImage={item.afterImage}
                   isMobile={isMobile}
                   isTablet={isTablet}
                 />

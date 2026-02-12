@@ -29,7 +29,7 @@ export default function AboutPage() {
       title: "Our Story & Legacy",
       subtitle: "Fort Worth's Most Trusted Roofing Experts Since 2005",
       description: "BRAVOS Roofing was born from a simple belief: every home deserves superior protection. What started as a family-owned operation with one truck and an unwavering commitment to quality has grown into Fort Worth's premier roofing company. For nearly two decades, we've weathered every storm alongside our community—literally. Our journey from local startup to industry leader is built on thousands of successful roof installations, countless emergency repairs, and enduring relationships with homeowners who trust us with their most valuable asset. We don't just install roofs; we safeguard memories, increase property value, and deliver peace of mind through craftsmanship that stands the test of time.",
-      image: "https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?auto=format&fit=crop&w=800",
+      image: "/image/gafteam.jpg",
       stats: [
         { label: "Roofs Installed", value: "3,200+" },
         { label: "Years of Excellence", value: "19" },
@@ -44,7 +44,7 @@ export default function AboutPage() {
       title: "Our Installation Process",
       subtitle: "The BRAVOS Method: Engineered for Longevity",
       description: "We've perfected a 9-step installation protocol that exceeds manufacturer specifications and industry standards. It begins with a comprehensive inspection using drone technology and ends with a meticulous cleanup that leaves your property immaculate. Between those bookends, our certified crews execute each phase with surgical precision—from ice and water shield application to ridge vent installation and premium shingle placement. We don't cut corners because we know your roof is the only thing standing between your family and the Texas elements. Every BRAVOS roof is backed by enhanced labor warranties and our personal guarantee of satisfaction.",
-      image: "https://images.unsplash.com/photo-1590577976322-3d2d6e2130d5?auto=format&fit=crop&w=800",
+      image: "/image/team.jpg",
       features: [
         "Drone Inspection & 3D Measurement Technology",
         "Synthetic Underlayment & Ice/Water Protection",
@@ -61,7 +61,7 @@ export default function AboutPage() {
       title: "Our Certified Crew",
       subtitle: "Factory-Trained. Background-Checked. Proudly Local.",
       description: "The difference between a good roof and a great roof is the hands that install it. That's why every BRAVOS crew member undergoes 160 hours of supervised field training before leading a single project. We invest continuously in manufacturer certifications, safety education, and emerging technique mastery. Our lead foremen average 12+ years of experience and many have been with us since our first year in business. When you hire BRAVOS, you're not getting subcontractors or day laborers—you're getting career craftsmen who take genuine pride in Fort Worth's skyline, one ridge line at a time.",
-      image: "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=800",
+      image: "/image/gafteam.jpg",
       certifications: [
         "GAF Master Elite® Certified Contractors",
         "CertainTeed SELECT ShingleMaster™",
@@ -78,7 +78,7 @@ export default function AboutPage() {
       title: "Our Materials & Warranties",
       subtitle: "Premium Products Backed by Ironclad Protection",
       description: "A roof is only as strong as its weakest component. That's why BRAVOS exclusively partners with industry leaders like GAF and CertainTeed—manufacturers who share our obsession with durability. We utilize architectural shingles with algae resistance, Class 4 impact-rated options for hail protection, and 30-year warranty coverage as our baseline. Beyond manufacturer guarantees, we provide our own workmanship warranty because we believe in standing behind every nail we drive. From synthetic underlayment that outperforms traditional felt to copper flashing systems, every material selection is deliberate, tested, and purpose-built for North Texas weather.",
-      image: "https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?auto=format&fit=crop&w=800",
+      image: "/image/team.jpg",
       features: [
         "GAF Timberline HDZ® with LayerLock® Technology",
         "CertainTeed Landmark® Algae-Resistant Shingles",
@@ -131,7 +131,7 @@ export default function AboutPage() {
   const pageStyles: any = {
     pageContainer: {
       minHeight: '100vh',
-      background: 'linear-gradient(45deg, rgba(0, 0, 0, 0.75) 0%, rgba(10, 10, 10, 0.8) 100%), url("https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=1920")',
+      background: 'linear-gradient(45deg, rgba(0, 0, 0, 0.75) 0%, rgba(10, 10, 10, 0.8) 100%), url("/image/roofer1.png")',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundAttachment: 'fixed',
@@ -145,7 +145,7 @@ export default function AboutPage() {
     
     heroSection: {
       minHeight: isMobile ? '60vh' : '80vh',
-      background: 'linear-gradient(45deg, rgba(0, 0, 0, 0.7) 0%, rgba(20, 20, 20, 0.8) 100%), url("https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?auto=format&fit=crop&w=1920")',
+      background: 'linear-gradient(45deg, rgba(0, 0, 0, 0.7) 0%, rgba(20, 20, 20, 0.8) 100%), url("/image/roofer1.png")',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundAttachment: 'fixed',

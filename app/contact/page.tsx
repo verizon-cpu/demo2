@@ -2136,7 +2136,7 @@ export default function ContactPage() {
     
     heroSection: {
       minHeight: isMobile ? '60vh' : '70vh',
-      background: 'linear-gradient(rgba(10, 10, 12, 0.7), rgba(10, 10, 12, 0.7)), url("https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?auto=format&fit=crop&w=1920")',
+      background: 'linear-gradient(rgba(10, 10, 12, 0.7), rgba(10, 10, 12, 0.7)), url("/image/roofer1.png")',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       display: 'flex',
@@ -2296,7 +2296,7 @@ export default function ContactPage() {
           <div style={{width: '100%'}}>
             <div style={pageStyles.imageSection}>
               <img 
-                src="https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?auto=format&fit=crop&w=800" 
+                src="/image/team.jpg" 
                 alt="Professional roofing installation"
                 style={pageStyles.roofingImage}
               />
