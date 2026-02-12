@@ -3,37 +3,26 @@
 import { useState, useEffect, FormEvent, ChangeEvent, useRef } from 'react';
 import { useForm, ValidationError } from '@formspree/react';
 
-// MicroInteraction Component - Looping MP4 for attention grabbing
+// MicroInteraction Component - Image Logo for attention grabbing
 const MicroInteraction = ({ 
-  src = "/videos/roofervid.mp4", // Default path - replace with your actual MP4
-  width = 400, 
-  height = 400,
+  src = "/images/roofimg.png", // Default path - replace with your actual logo
+  width = 32, 
+  height = 32,
   style = {}
 }) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.playbackRate = 0.8; // Slightly slower for elegance
-    }
-  }, []);
-
   return (
-    <video
-      ref={videoRef}
+    <img
       src={src}
-      width={width}
-      height={height}
-      loop
-      autoPlay
-      muted
-      playsInline
+      alt="BRAVOS Logo"
       style={{
         position: 'absolute',
         top: '-15px',
         right: '-15px',
         zIndex: 20,
         pointerEvents: 'none',
+        width: `${width}px`,
+        height: `${height}px`,
+        objectFit: 'contain',
         ...style
       }}
     />
@@ -435,7 +424,7 @@ const HeroSection = () => {
       left: 0,
       right: 0,
       bottom: 0,
-      backgroundImage: 'url("/image/roofer1.png")',
+      backgroundImage: 'url("/image/roofimg.png")',
       backgroundSize: 'cover',
       backgroundPosition: isMobile ? 'center 30%' : 'center',
       backgroundRepeat: 'no-repeat',
@@ -446,7 +435,6 @@ const HeroSection = () => {
       minHeight: '100%',
     },
     
-    // UPDATED: More exposed background - reduced opacity from 0.85/0.75 to 0.60/0.50
     overlayGradient: {
       position: 'absolute',
       top: 0,
@@ -489,7 +477,6 @@ const HeroSection = () => {
       width: '100%',
     },
 
-    // UPDATED: Added relative positioning to contain the micro-interaction
     excellenceBadge: (active: boolean) => ({
       display: 'flex',
       alignItems: 'center',
@@ -511,7 +498,7 @@ const HeroSection = () => {
       cursor: 'pointer',
       flexWrap: isSmallMobile ? 'wrap' : 'nowrap',
       textAlign: isSmallMobile ? 'center' : 'left',
-      position: 'relative', // For micro-interaction positioning
+      position: 'relative',
     }),
     
     numberOneBadge: (active: boolean) => ({
@@ -691,7 +678,7 @@ const HeroSection = () => {
       cursor: 'pointer',
       transform: active ? 'translateY(-3px) scale(1.05)' : 'translateY(0) scale(1)',
       boxShadow: active ? '0 12px 30px rgba(0, 0, 0, 0.3)' : '0 8px 20px rgba(0, 0, 0, 0.2)',
-      position: 'relative', // For micro-interaction
+      position: 'relative',
     }),
     
     googleText: {
@@ -751,6 +738,11 @@ const HeroSection = () => {
       width: 'fit-content',
       maxWidth: '100%',
       backdropFilter: 'blur(10px)',
+    },
+    
+    bostonIcon: {
+      width: '16px',
+      height: '16px',
     },
     
     bostonText: {
@@ -873,7 +865,6 @@ const HeroSection = () => {
       width: '100%',
     },
     
-    // UPDATED: Added relative positioning for micro-interaction
     submitButton: (active: boolean) => ({
       marginTop: '0.5rem',
       padding: isMobile ? (isSmallMobile ? '0.9rem' : '1.1rem') : '1.25rem',
@@ -893,8 +884,18 @@ const HeroSection = () => {
       transform: active ? 'translateY(-3px)' : 'translateY(0)',
       boxShadow: active ? '0 15px 40px rgba(255, 184, 0, 0.4)' : '0 10px 30px rgba(255, 184, 0, 0.3)',
       width: '100%',
-      position: 'relative', // For micro-interaction
+      position: 'relative',
     }),
+    
+    buttonText: {
+      fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.125rem',
+      fontWeight: '700',
+    },
+    
+    buttonArrow: {
+      display: 'flex',
+      alignItems: 'center',
+    },
     
     successMessage: {
       marginTop: '1.5rem',
@@ -963,6 +964,11 @@ const HeroSection = () => {
       width: '100%',
     },
     
+    securityIcon: {
+      width: '16px',
+      height: '16px',
+    },
+    
     securityText: {
       fontSize: isMobile ? (isSmallMobile ? '0.6rem' : '0.7rem') : '0.75rem',
       color: '#6B7280',
@@ -974,14 +980,12 @@ const HeroSection = () => {
   return (
     <section style={baseStyles.heroSection}>
       <div style={baseStyles.backgroundContainer}>
-        {/* UPDATED: More exposed overlay - reduced opacity */}
         <div style={baseStyles.overlayGradient}></div>
       </div>
       
       <div style={baseStyles.heroContent}>
         <div style={baseStyles.heroGrid}>
           <div style={baseStyles.leftColumn}>
-            {/* UPDATED: Added micro-interaction MP4 above the #1 badge */}
             <div 
               style={baseStyles.excellenceBadge(excellenceBadgeActive)}
               onMouseEnter={() => setExcellenceBadgeActive(true)}
@@ -989,14 +993,13 @@ const HeroSection = () => {
               onTouchStart={() => handleTouchStart(setExcellenceBadgeActive, true)}
               onTouchEnd={() => handleTouchEnd(setExcellenceBadgeActive, false)}
             >
-              {/* Micro-interaction - tiny looping MP4 */}
               <MicroInteraction 
-                src="/videos/roofervid.mp4" // Replace with your actual MP4 file
-                width={32}
-                height={32}
+                src="/images/roofimg.png"
+                width={200}
+                height={200}
                 style={{ 
-                  top: '-12px', 
-                  right: '-8px',
+                  top: '-5px', 
+                  right: '8px',
                   filter: 'drop-shadow(0 4px 8px rgba(255, 184, 0, 0.3))'
                 }}
               />
@@ -1088,7 +1091,6 @@ const HeroSection = () => {
                 <strong style={baseStyles.reviewRating}>4.9/5</strong> from 350+ Google Reviews
               </div>
               <div style={baseStyles.reviewsCTAContainer}>
-                {/* UPDATED: Added micro-interaction to Google badge */}
                 <div 
                   style={baseStyles.googleBadge(googleBadgeActive)}
                   onClick={handleGoogleReviewsClick}
@@ -1097,11 +1099,10 @@ const HeroSection = () => {
                   onTouchStart={() => handleTouchStart(setGoogleBadgeActive, true)}
                   onTouchEnd={() => handleTouchEnd(setGoogleBadgeActive, false)}
                 >
-                  {/* Micro-interaction */}
                   <MicroInteraction 
-                    src="/videos/roofervid.mp4" // Replace with your actual MP4 file
-                    width={24}
-                    height={24}
+                    src="/images/roofimg.png"
+                    width={100}
+                    height={100}
                     style={{ 
                       top: '-10px', 
                       right: '-8px',
@@ -1219,7 +1220,6 @@ const HeroSection = () => {
                   />
                 </div>
                 
-                {/* UPDATED: Added micro-interaction to submit button */}
                 <button 
                   type="submit" 
                   style={baseStyles.submitButton(submitButtonActive)}
@@ -1229,11 +1229,10 @@ const HeroSection = () => {
                   onTouchEnd={() => handleTouchEnd(setSubmitButtonActive, false)}
                   disabled={state.submitting}
                 >
-                  {/* Micro-interaction */}
                   <MicroInteraction 
-                    src="/videos/roofervid.mp4" // Replace with your actual MP4 file
-                    width={28}
-                    height={28}
+                    src="/images/roofimg.png"
+                    width={100}
+                    height={100}
                     style={{ 
                       top: '-10px', 
                       right: '-5px',
@@ -2661,16 +2660,6 @@ const BodySection = () => {
       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
       transform: active ? 'translateY(-15px) scale(1.02)' : 'translateY(0) scale(1)',
       position: 'relative',
-      '&::before': active ? {
-        content: '""',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        height: '4px',
-        background: `linear-gradient(90deg, ${colors.gold}, #E6A600)`,
-        zIndex: 3,
-      } : {},
     }),
     
     featureImageContainer: {
@@ -2880,16 +2869,6 @@ const BodySection = () => {
         : `1px solid ${colors.goldBorder}`,
       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
       transform: active ? 'translateY(-15px)' : 'translateY(0)',
-      '&::before': active ? {
-        content: '""',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        height: '4px',
-        background: `linear-gradient(90deg, ${colors.gold}, #E6A600)`,
-        zIndex: 3,
-      } : {},
     }),
     
     transformationTitle: {
@@ -3148,16 +3127,6 @@ const BodySection = () => {
       boxShadow: active 
         ? '0 40px 80px rgba(10, 10, 12, 0.15)' 
         : '0 20px 60px rgba(10, 10, 12, 0.08)',
-      '&::before': active ? {
-        content: '""',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        height: '4px',
-        background: `linear-gradient(90deg, ${colors.gold}, #E6A600)`,
-        zIndex: 3,
-      } : {},
     }),
     
     reviewHeader: {
@@ -3344,16 +3313,6 @@ const BodySection = () => {
       transform: active ? 'translateY(-20px)' : 'translateY(0)',
       display: 'flex',
       flexDirection: 'column',
-      '&::before': active ? {
-        content: '""',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        height: '4px',
-        background: `linear-gradient(90deg, ${colors.gold}, #E6A600)`,
-        zIndex: 3,
-      } : {},
     }),
     
     planHeader: (color: string) => ({
