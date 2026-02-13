@@ -2616,7 +2616,7 @@ const BodySection = () => {
     },
     
     featureCard: (active: boolean) => ({
-      backgroundColor: active ? '#F9FAFB' : colors.white,
+      backgroundColor: active ? '#123a61' : colors.white,
       borderRadius: '32px',
       overflow: 'hidden',
       boxShadow: active 
