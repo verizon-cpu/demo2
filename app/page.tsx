@@ -3,229 +3,127 @@
 import { useState, useEffect, FormEvent, ChangeEvent, useRef } from 'react';
 import { useForm, ValidationError } from '@formspree/react';
 
-// Waving USA Flag Component (as image)
-const USAFlag = ({ width = 40, height = 30 }) => {
+// MicroInteraction Component - Image Flag on Hero Section
+const MicroInteraction = ({ 
+  src = "/image/pointer1.png",
+  width = 200, 
+  height = 220,
+  style = {}
+}) => {
   return (
-    <img 
-      src="/image/usa-flag.png" 
-      alt="USA Flag"
+    <img
+      src={src}
+      alt="BRAVOS Flag"
       style={{
+        position: 'absolute' as const,
+        top: '-20px',
+        right: '-30px',
+        zIndex: 20,
+        pointerEvents: 'none' as const,
         width: `${width}px`,
         height: `${height}px`,
-        objectFit: 'contain',
-        marginRight: '8px',
-        animation: 'waveFlag 2s ease-in-out infinite',
-        transformOrigin: 'center',
+        objectFit: 'contain' as const,
+        filter: 'drop-shadow(0 10px 20px rgba(255, 184, 0, 0.4))',
+        transform: 'rotate(5deg)',
+        ...style
       }}
     />
   );
 };
 
-// Rotating Star Ring Component
-const RotatingStarRing = ({ color = '#FFB800', size = 60 }) => {
-  return (
-    <div style={{
-      position: 'relative',
-      width: size,
-      height: size,
-      animation: 'rotateRing 10s linear infinite',
-    }}>
-      {[...Array(8)].map((_, i) => {
-        const angle = (i * 45) * Math.PI / 180;
-        const radius = size * 0.4;
-        const x = Math.cos(angle) * radius;
-        const y = Math.sin(angle) * radius;
-        
-        return (
-          <div key={i} style={{
-            position: 'absolute',
-            left: `calc(50% + ${x}px - 6px)`,
-            top: `calc(50% + ${y}px - 6px)`,
-            width: '12px',
-            height: '12px',
-            backgroundColor: color,
-            clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)',
-            transform: `rotate(${i * 45}deg)`,
-          }} />
-        );
-      })}
-      <style jsx>{`
-        @keyframes rotateRing {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
-    </div>
-  );
-};
-
-// Horizontal Auto-scrolling Logo Carousel
-const LogoCarousel = ({ 
-  backgroundColor = '#0A0A0C'
-}) => {
+// Logo Carousel Component
+const LogoCarousel = ({ autoRotate = true, showNavigation = true }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [isPaused, setIsPaused] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const autoRotateRef = useRef<NodeJS.Timeout>(undefined);
 
   const logos = [
-    { id: 1, src: "/image/lifetime1.png", alt: "25+ Years Experience" },
-    { id: 2, src: "/image/award1.png", alt: "Licensed & Bonded" },
-    { id: 3, src: "/image/award1.png", alt: "Lifetime Warranty" },
-    { id: 4, src: "/image/award1.png", alt: "GAF Certified" },
-    { id: 5, src: "/image/award1.png", alt: "OSHA Certified" },
-    { id: 6, src: "/image/award1.png", alt: "Insurance Approved" },
-    { id: 7, src: "/image/lifetime1.png", alt: "5-Star Rated" },
-    { id: 8, src: "/image/award1.png", alt: "BBB Accredited" },
-    { id: 9, src: "/image/award1.png", alt: "Angi Super Service" },
-    { id: 10, src: "/image/lifetime1.png", alt: "Home Advisor Elite" },
+    { id: 1, src: "/image/gaf.png", alt: "GAF Certified" },
+    { id: 2, src: "/image/ CertainTeed.png", alt: "CertainTeed" },
+    { id: 3, src: "/image/owens-corning.png", alt: "Owens Corning" },
+    { id: 4, src: "/image/malarkey.png", alt: "Malarkey" },
+    { id: 5, src: "/image/iko.png", alt: "IKO" },
+    { id: 6, src: "/image/tamko.png", alt: "TAMKO" },
+    { id: 7, src: "/image/atlas.png", alt: "Atlas" },
+    { id: 8, src: "/image/ CertainTeed.png", alt: "GAF" },
+    { id: 9, src: "/image/owens-corning.png", alt: "CertainTeed" },
+    { id: 10, src: "/image/gaf.png", alt: "Owens Corning" },
   ];
 
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
+    
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   useEffect(() => {
-    const scrollContainer = scrollRef.current;
-    if (!scrollContainer || isPaused) return;
-
-    let animationFrame: number;
-    let scrollPosition = 0;
-
-    const scroll = () => {
-      if (!scrollContainer || isPaused) return;
-      
-      scrollPosition += 0.5;
-      if (scrollPosition >= scrollContainer.scrollWidth / 2) {
-        scrollPosition = 0;
-      }
-      
-      scrollContainer.scrollLeft = scrollPosition;
-      animationFrame = requestAnimationFrame(scroll);
-    };
-
-    animationFrame = requestAnimationFrame(scroll);
-
-    return () => {
-      if (animationFrame) {
-        cancelAnimationFrame(animationFrame);
-      }
-    };
-  }, [isPaused]);
-
-  const handleMouseEnter = () => setIsPaused(true);
-  const handleMouseLeave = () => setIsPaused(false);
-
-  // Manual navigation
-  const scrollLeft = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: -200, behavior: 'smooth' });
+    if (autoRotate && !isHovered) {
+      autoRotateRef.current = setInterval(() => {
+        setCurrentIndex((prev) => (prev + 1) % Math.max(1, logos.length - (isMobile ? 2 : 4)));
+      }, 3000);
     }
+    return () => {
+      if (autoRotateRef.current) {
+        clearInterval(autoRotateRef.current);
+      }
+    };
+  }, [autoRotate, isHovered, isMobile, logos.length]);
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => Math.max(0, prev - 1));
   };
 
-  const scrollRight = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: 200, behavior: 'smooth' });
-    }
+  const handleNext = () => {
+    setCurrentIndex((prev) => 
+      Math.min(logos.length - (isMobile ? 2 : 4), prev + 1)
+    );
   };
 
   return (
-    <div style={{
-      width: '100%',
-      backgroundColor: backgroundColor,
-      padding: '20px 0',
-      position: 'relative',
-      borderTop: '1px solid rgba(255, 184, 0, 0.2)',
-      borderBottom: '1px solid rgba(255, 184, 0, 0.2)',
-    }}>
-      <div style={{
-        position: 'relative',
-        maxWidth: '1400px',
+    <div 
+      style={{
+        width: '100%',
+        maxWidth: '1200px',
         margin: '0 auto',
-      }}>
-        {/* Navigation Buttons */}
-        <button
-          onClick={scrollLeft}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-          style={{
-            position: 'absolute',
-            left: '10px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            zIndex: 10,
-            width: '40px',
-            height: '40px',
-            borderRadius: '50%',
-            backgroundColor: '#FFB800',
-            border: 'none',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '20px',
-            color: '#0A0A0C',
-            boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
-          }}
-        >
-          ←
-        </button>
-        
-        <button
-          onClick={scrollRight}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-          style={{
-            position: 'absolute',
-            right: '10px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            zIndex: 10,
-            width: '40px',
-            height: '40px',
-            borderRadius: '50%',
-            backgroundColor: '#FFB800',
-            border: 'none',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '20px',
-            color: '#0A0A0C',
-            boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
-          }}
-        >
-          →
-        </button>
-
-        {/* Scrolling Container */}
+        position: 'relative' as const,
+        padding: isMobile ? '15px 0' : '20px 0',
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div
+        ref={carouselRef}
+        style={{
+          overflow: 'hidden' as const,
+          width: '100%',
+        }}
+      >
         <div
-          ref={scrollRef}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
           style={{
-            display: 'flex',
-            overflowX: 'hidden',
-            scrollBehavior: 'smooth',
-            padding: '10px 0',
-            cursor: 'grab',
+            display: 'flex' as const,
+            gap: isMobile ? '20px' : '40px',
+            transition: 'transform 0.5s ease-in-out',
+            transform: `translateX(-${currentIndex * (isMobile ? 160 : 200)}px)`,
           }}
         >
-          {/* Double the logos for seamless looping */}
-          {[...logos, ...logos].map((logo, index) => (
+          {logos.map((logo) => (
             <div
-              key={`${logo.id}-${index}`}
+              key={logo.id}
               style={{
                 flex: '0 0 auto',
-                width: isMobile ? '100px' : '150px',
-                margin: '0 20px',
-                display: 'flex',
-                justifyContent: 'center',
+                width: isMobile ? '140px' : '180px',
+                height: isMobile ? '70px' : '90px',
+                display: 'flex' as const,
                 alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'transparent',
+                transition: 'all 0.3s ease',
               }}
             >
               <img
@@ -233,134 +131,191 @@ const LogoCarousel = ({
                 alt={logo.alt}
                 style={{
                   width: '100%',
-                  height: 'auto',
-                  maxHeight: isMobile ? '60px' : '80px',
-                  objectFit: 'contain',
-                  filter: 'brightness(0) invert(1)',
+                  height: '100%',
+                  objectFit: 'contain' as const,
+                  filter: 'brightness(1) contrast(1)',
                   opacity: 0.9,
                   transition: 'all 0.3s ease',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'scale(1.1)';
                   e.currentTarget.style.opacity = '1';
-                  e.currentTarget.style.filter = 'brightness(0) invert(0.8) sepia(1) hue-rotate(0deg) saturate(5)';
+                  e.currentTarget.style.transform = 'scale(1.05)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'scale(1)';
                   e.currentTarget.style.opacity = '0.9';
-                  e.currentTarget.style.filter = 'brightness(0) invert(1)';
+                  e.currentTarget.style.transform = 'scale(1)';
                 }}
               />
             </div>
           ))}
         </div>
       </div>
+
+      {showNavigation && (
+        <>
+          <button
+            onClick={handlePrev}
+            disabled={currentIndex === 0}
+            style={{
+              position: 'absolute' as const,
+              left: isMobile ? '-10px' : '-20px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              width: isMobile ? '30px' : '40px',
+              height: isMobile ? '30px' : '40px',
+              borderRadius: '50%',
+              background: 'rgba(255, 184, 0, 0.2)',
+              border: '2px solid rgba(255, 184, 0, 0.5)',
+              color: '#FFB800',
+              fontSize: isMobile ? '16px' : '20px',
+              display: 'flex' as const,
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: currentIndex === 0 ? 'default' : 'pointer',
+              opacity: currentIndex === 0 ? 0.3 : 1,
+              transition: 'all 0.3s ease',
+              zIndex: 10,
+              backdropFilter: 'blur(5px)',
+            }}
+            onMouseEnter={(e) => {
+              if (currentIndex !== 0) {
+                e.currentTarget.style.background = 'rgba(255, 184, 0, 0.3)';
+                e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 184, 0, 0.2)';
+              e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
+            }}
+          >
+            ←
+          </button>
+          <button
+            onClick={handleNext}
+            disabled={currentIndex >= logos.length - (isMobile ? 2 : 4)}
+            style={{
+              position: 'absolute' as const,
+              right: isMobile ? '-10px' : '-20px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              width: isMobile ? '30px' : '40px',
+              height: isMobile ? '30px' : '40px',
+              borderRadius: '50%',
+              background: 'rgba(255, 184, 0, 0.2)',
+              border: '2px solid rgba(255, 184, 0, 0.5)',
+              color: '#FFB800',
+              fontSize: isMobile ? '16px' : '20px',
+              display: 'flex' as const,
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: currentIndex >= logos.length - (isMobile ? 2 : 4) ? 'default' : 'pointer',
+              opacity: currentIndex >= logos.length - (isMobile ? 2 : 4) ? 0.3 : 1,
+              transition: 'all 0.3s ease',
+              zIndex: 10,
+              backdropFilter: 'blur(5px)',
+            }}
+            onMouseEnter={(e) => {
+              if (currentIndex < logos.length - (isMobile ? 2 : 4)) {
+                e.currentTarget.style.background = 'rgba(255, 184, 0, 0.3)';
+                e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 184, 0, 0.2)';
+              e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
+            }}
+          >
+            →
+          </button>
+        </>
+      )}
     </div>
   );
 };
 
-// Star Popper Component for sides
-const StarPopper = ({ side = 'left' }) => {
-  const [stars, setStars] = useState<Array<{ id: number; x: number; y: number; size: number; color: string }>>([]);
-  
+// Star Rotation Ring Component
+const StarRotationRing = ({ size = 300, color = '#FFB800' }) => {
+  const [rotation, setRotation] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      const newStar = {
-        id: Date.now() + Math.random(),
-        x: side === 'left' ? Math.random() * 30 : 70 + Math.random() * 30,
-        y: Math.random() * 100,
-        size: 15 + Math.random() * 25,
-        color: side === 'left' ? '#3C3B6E' : '#B22234',
-      };
-      
-      setStars(prev => [...prev.slice(-8), newStar]);
-      
-      setTimeout(() => {
-        setStars(prev => prev.filter(s => s.id !== newStar.id));
-      }, 2000);
-    }, 200);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
     
-    return () => clearInterval(interval);
-  }, [side]);
-  
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    const interval = setInterval(() => {
+      setRotation(prev => (prev + 1) % 360);
+    }, 50);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
+
+  const stars = Array.from({ length: 24 }, (_, i) => i);
+
   return (
-    <div style={{
-      position: 'absolute',
-      top: 0,
-      left: side === 'left' ? 0 : 'auto',
-      right: side === 'right' ? 0 : 'auto',
-      width: '150px',
-      height: '100%',
-      pointerEvents: 'none',
-      zIndex: 5,
-      overflow: 'hidden',
-    }}>
-      {stars.map(star => (
-        <div
-          key={star.id}
-          style={{
-            position: 'absolute',
-            left: `${star.x}%`,
-            top: `${star.y}%`,
-            animation: 'popStar 1.5s ease-out forwards',
-          }}
-        >
-          <div style={{
-            width: star.size,
-            height: star.size,
-            backgroundColor: star.color,
-            clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)',
-          }} />
-        </div>
-      ))}
+    <div
+      style={{
+        position: 'absolute' as const,
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: isMobile ? size * 0.7 : size,
+        height: isMobile ? size * 0.7 : size,
+        pointerEvents: 'none' as const,
+        zIndex: 1,
+        opacity: 0.6,
+      }}
+    >
+      <div
+        style={{
+          position: 'relative' as const,
+          width: '100%',
+          height: '100%',
+          animation: 'spin 20s linear infinite',
+        }}
+      >
+        {stars.map((_, index) => {
+          const angle = (index / stars.length) * 360;
+          const radian = (angle * Math.PI) / 180;
+          const x = 50 + 45 * Math.cos(radian);
+          const y = 50 + 45 * Math.sin(radian);
+
+          return (
+            <div
+              key={index}
+              style={{
+                position: 'absolute' as const,
+                left: `${x}%`,
+                top: `${y}%`,
+                transform: 'translate(-50%, -50%)',
+                color: color,
+                fontSize: isMobile ? '12px' : '16px',
+                opacity: 0.3 + (index % 3) * 0.2,
+                filter: `drop-shadow(0 0 5px ${color})`,
+              }}
+            >
+              ★
+            </div>
+          );
+        })}
+      </div>
       <style jsx>{`
-        @keyframes popStar {
-          0% {
-            opacity: 1;
-            transform: scale(0) translateY(0) rotate(0deg);
+        @keyframes spin {
+          from {
+            transform: rotate(0deg);
           }
-          50% {
-            opacity: 1;
-            transform: scale(1.2) translateY(-20px) rotate(180deg);
+          to {
+            transform: rotate(360deg);
           }
-          100% {
-            opacity: 0;
-            transform: scale(0) translateY(-40px) rotate(360deg);
-          }
-        }
-        @keyframes waveFlag {
-          0%, 100% { transform: rotate(0deg) scale(1); }
-          25% { transform: rotate(2deg) scale(1.05); }
-          75% { transform: rotate(-2deg) scale(1.05); }
         }
       `}</style>
     </div>
-  );
-};
-
-// MicroInteraction Component - Image Logo for attention grabbing
-const MicroInteraction = ({ 
-  src = "/image/pointer1.png",
-  width = 32, 
-  height = 32,
-  style = {}
-}) => {
-  return (
-    <img
-      src={src}
-      alt="BRAVOS Logo"
-      style={{
-        position: 'absolute',
-        top: '0px',
-        right: '0px',
-        zIndex: 20,
-        pointerEvents: 'none',
-        width: `${width}px`,
-        height: `${height}px`,
-        objectFit: 'contain',
-        ...style
-      }}
-    />
   );
 };
 
@@ -440,15 +395,15 @@ function BottomCTAButtons({
     justifyContent: 'center',
     cursor: 'pointer',
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-    position: 'relative',
-    overflow: 'hidden',
+    position: 'relative' as const,
+    overflow: 'hidden' as const,
     fontFamily: "'Inter', sans-serif",
     fontWeight: 700,
     fontSize: isMobile ? '10px' : '11px',
     letterSpacing: '0.5px',
     textTransform: 'uppercase' as const,
     flexShrink: 0,
-    whiteSpace: 'nowrap',
+    whiteSpace: 'nowrap' as const,
     ...buttonStyle
   };
 
@@ -498,25 +453,27 @@ function BottomCTAButtons({
   return (
     <div 
       style={{
-        position: 'fixed',
+        position: 'fixed' as const,
         bottom: isMobile ? '10px' : '15px',
         left: '50%',
         transform: 'translateX(-50%)',
-        display: 'flex',
+        display: 'flex' as const,
         alignItems: 'center',
         justifyContent: 'center',
         gap: isMobile ? '6px' : '8px',
         zIndex: 9999,
-        pointerEvents: 'auto',
-        background: '#0A0A0C',
+        pointerEvents: 'auto' as const,
+        background: 'rgba(10, 10, 12, 0.95)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
         borderRadius: '50px',
         padding: isMobile ? '6px' : '8px',
         boxShadow: '0 8px 30px rgba(10, 10, 12, 0.4)',
         border: '1px solid rgba(255, 184, 0, 0.3)',
         width: isMobile ? 'calc(100vw - 20px)' : 'calc(100vw - 30px)',
         maxWidth: '500px',
-        overflowX: 'auto',
-        WebkitOverflowScrolling: 'touch',
+        overflowX: 'auto' as const,
+        WebkitOverflowScrolling: 'touch' as const,
         transition: 'all 0.3s ease',
         ...containerStyle
       }}
@@ -538,7 +495,7 @@ function BottomCTAButtons({
           ...(hoveredButton === 'call' ? callHoverStyle : {})
         }}
       >
-        <span style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', gap: isMobile ? '4px' : '5px' }}>
+        <span style={{ position: 'relative' as const, zIndex: 2, display: 'flex' as const, alignItems: 'center', gap: isMobile ? '4px' : '5px' }}>
           {showPhoneIcon && (
             <svg width={isMobile ? "12" : "14"} height={isMobile ? "12" : "14"} viewBox="0 0 24 24" fill="none">
               <path d="M20 10.999H22C22 5.869 18.127 2 12.99 2V4C17.052 4 20 6.943 20 10.999Z" fill="#0A0A0C"/>
@@ -558,7 +515,7 @@ function BottomCTAButtons({
           ...(hoveredButton === 'quote' ? quoteHoverStyle : {})
         }}
       >
-        <span style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', gap: isMobile ? '4px' : '5px' }}>
+        <span style={{ position: 'relative' as const, zIndex: 2, display: 'flex' as const, alignItems: 'center', gap: isMobile ? '4px' : '5px' }}>
           {showQuoteIcon && (
             <svg width={isMobile ? "12" : "14"} height={isMobile ? "12" : "14"} viewBox="0 0 24 24" fill="none">
               <path d="M9 12H15M12 9V15M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -577,7 +534,7 @@ function BottomCTAButtons({
           ...(hoveredButton === 'book' ? bookHoverStyle : {})
         }}
       >
-        <span style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', gap: isMobile ? '4px' : '5px' }}>
+        <span style={{ position: 'relative' as const, zIndex: 2, display: 'flex' as const, alignItems: 'center', gap: isMobile ? '4px' : '5px' }}>
           {showBookIcon && (
             <svg width={isMobile ? "12" : "14"} height={isMobile ? "12" : "14"} viewBox="0 0 24 24" fill="none">
               <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#0A0A0C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -596,6 +553,7 @@ const HeroSection = () => {
   const [isTablet, setIsTablet] = useState(false);
   const [isSmallMobile, setIsSmallMobile] = useState(false);
   
+  // Formspree integration
   const [state, handleSubmit] = useForm("xqeedjny");
   
   const [formData, setFormData] = useState({
@@ -608,34 +566,54 @@ const HeroSection = () => {
   
   const [formStatus, setFormStatus] = useState<'idle' | 'success' | 'error'>('idle');
   
+  const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+  
+  const [activeItem, setActiveItem] = useState<string | null>(null);
+  const [activeService, setActiveService] = useState<number | null>(null);
+  const [activeMobileItem, setActiveMobileItem] = useState<string | null>(null);
+  const [activeMobileService, setActiveMobileService] = useState<number | null>(null);
   const [excellenceBadgeActive, setExcellenceBadgeActive] = useState(false);
   const [googleBadgeActive, setGoogleBadgeActive] = useState(false);
   const [googleReviewsActive, setGoogleReviewsActive] = useState(false);
   const [trustCardActive, setTrustCardActive] = useState<number | null>(null);
   const [submitButtonActive, setSubmitButtonActive] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
+    setHasMounted(true);
+    
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
 
     const checkScreenSize = () => {
       const width = window.innerWidth;
+      const height = window.innerHeight;
       setIsMobile(width < 768);
       setIsTablet(width >= 768 && width < 1024);
       setIsSmallMobile(width < 480);
+      
+      if (!isMobile) {
+        setIsMobileMenuOpen(false);
+        setMobileServicesOpen(false);
+      }
     };
 
     checkScreenSize();
     window.addEventListener('scroll', handleScroll);
     window.addEventListener('resize', checkScreenSize);
+    window.addEventListener('orientationchange', checkScreenSize);
     
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', checkScreenSize);
+      window.removeEventListener('orientationchange', checkScreenSize);
     };
   }, []);
 
+  // Reset form status after 5 seconds
   useEffect(() => {
     if (formStatus === 'success' || formStatus === 'error') {
       const timer = setTimeout(() => {
@@ -687,6 +665,15 @@ const HeroSection = () => {
   const handleGoogleReviewsClick = () => {
     window.open("https://g.page/r/YOUR_GOOGLE_REVIEWS_LINK", '_blank');
   };
+  
+  const services = [
+    { name: "Residential Roofing", url: "/residential-roofing" },
+    { name: "Commercial Roofing", url: "/commercial-roofing" },
+    { name: "Roof Repair", url: "/roof-repair" },
+    { name: "Emergency Services", url: "/emergency-services" },
+    { name: "Roof Inspection", url: "/roof-inspection" },
+    { name: "Storm Damage", url: "/storm-damage" }
+  ];
 
   const handleTouchStart = (setter: (value: any) => void, value: any) => {
     setter(value);
@@ -696,6 +683,7 @@ const HeroSection = () => {
     setTimeout(() => setter(resetValue), 150);
   };
 
+  // BRAVOS Colors
   const colors = {
     background: '#0A0A0C',
     gold: '#FFB800',
@@ -709,10 +697,10 @@ const HeroSection = () => {
 
   const baseStyles: any = {
     heroSection: {
-      position: 'relative',
+      position: 'relative' as const,
       minHeight: '100dvh',
       backgroundColor: colors.background,
-      overflow: 'hidden',
+      overflow: 'hidden' as const,
       fontFamily: "'Inter', sans-serif",
       width: '100%',
       maxWidth: '100vw',
@@ -721,7 +709,7 @@ const HeroSection = () => {
     },
 
     backgroundContainer: {
-      position: 'absolute',
+      position: 'absolute' as const,
       top: 0,
       left: 0,
       right: 0,
@@ -734,10 +722,11 @@ const HeroSection = () => {
       zIndex: 1,
       width: '100%',
       height: '100%',
+      minHeight: '100%',
     },
     
     overlayGradient: {
-      position: 'absolute',
+      position: 'absolute' as const,
       top: 0,
       left: 0,
       right: 0,
@@ -747,12 +736,12 @@ const HeroSection = () => {
     },
 
     heroContent: {
-      position: 'relative',
+      position: 'relative' as const,
       zIndex: 10,
       paddingTop: isMobile ? (isSmallMobile ? '100px' : '120px') : '140px',
       paddingBottom: isMobile ? (isSmallMobile ? '60px' : '80px') : '80px',
       minHeight: 'calc(100dvh - 60px)',
-      display: 'flex',
+      display: 'flex' as const,
       alignItems: 'center',
       paddingLeft: isMobile ? (isSmallMobile ? '16px' : '20px') : '40px',
       paddingRight: isMobile ? (isSmallMobile ? '16px' : '20px') : '40px',
@@ -764,7 +753,7 @@ const HeroSection = () => {
     heroGrid: {
       maxWidth: '1280px',
       margin: '0 auto',
-      display: 'grid',
+      display: 'grid' as const,
       gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
       gap: isMobile ? (isSmallMobile ? '1.5rem' : '2rem') : '4rem',
       alignItems: isMobile ? 'flex-start' : 'center',
@@ -772,15 +761,15 @@ const HeroSection = () => {
     },
     
     leftColumn: {
-      display: 'flex',
-      flexDirection: 'column',
+      display: 'flex' as const,
+      flexDirection: 'column' as const,
       gap: isMobile ? (isSmallMobile ? '1rem' : '1.5rem') : '2rem',
       width: '100%',
-      position: 'relative',
+      position: 'relative' as const,
     },
 
     excellenceBadge: (active: boolean) => ({
-      display: 'flex',
+      display: 'flex' as const,
       alignItems: 'center',
       justifyContent: isSmallMobile ? 'center' : 'flex-start',
       gap: isMobile ? (isSmallMobile ? '0.4rem' : '0.5rem') : '1rem',
@@ -791,6 +780,7 @@ const HeroSection = () => {
       width: '100%',
       maxWidth: '100%',
       boxSizing: 'border-box',
+      backdropFilter: 'blur(10px)',
       boxShadow: active 
         ? '0 15px 40px rgba(255, 184, 0, 0.3), 0 0 0 2px rgba(255, 255, 255, 0.1) inset' 
         : '0 10px 30px rgba(255, 184, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
@@ -799,7 +789,7 @@ const HeroSection = () => {
       cursor: 'pointer',
       flexWrap: isSmallMobile ? 'wrap' : 'nowrap',
       textAlign: isSmallMobile ? 'center' : 'left',
-      position: 'relative',
+      position: 'relative' as const,
     }),
     
     numberOneBadge: (active: boolean) => ({
@@ -807,7 +797,7 @@ const HeroSection = () => {
       height: isMobile ? (isSmallMobile ? '32px' : '40px') : '50px',
       backgroundColor: colors.gold,
       borderRadius: '50%',
-      display: 'flex',
+      display: 'flex' as const,
       alignItems: 'center',
       justifyContent: 'center',
       flexShrink: 0,
@@ -834,15 +824,12 @@ const HeroSection = () => {
       lineHeight: '1.2',
       letterSpacing: isMobile ? (isSmallMobile ? '0.2px' : '0.3px') : '1px',
       fontFamily: "'Inter', sans-serif",
-      textTransform: 'uppercase',
-      whiteSpace: isSmallMobile ? 'normal' : 'nowrap',
-      overflow: 'hidden',
+      textTransform: 'uppercase' as const,
+      whiteSpace: isSmallMobile ? 'normal' : 'nowrap' as const,
+      overflow: 'hidden' as const,
       textOverflow: 'ellipsis',
       flexShrink: 1,
       minWidth: 0,
-      display: 'flex',
-      alignItems: 'center',
-      gap: '8px',
     },
     
     houstonBold: {
@@ -863,15 +850,11 @@ const HeroSection = () => {
       fontFamily: "'Inter', sans-serif",
       letterSpacing: '-0.5px',
       textShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
-      position: 'relative',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '15px',
     },
     
     headlineHighlight: {
       color: colors.gold,
-      display: 'block',
+      display: 'block' as const,
       fontFamily: "'Inter', sans-serif",
       fontWeight: '800',
       fontSize: isMobile ? (isSmallMobile ? '2rem' : '2.4rem') : (isTablet ? '3.4rem' : '4rem'),
@@ -892,51 +875,40 @@ const HeroSection = () => {
     },
 
     trustGrid: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(3, 1fr)',
-      gap: isMobile ? (isSmallMobile ? '0.5rem' : '0.75rem') : '1rem',
+      display: 'flex' as const,
+      flexDirection: 'column' as const,
+      gap: '1rem',
       width: '100%',
+      marginTop: '1rem',
     },
     
-    trustCard: (active: boolean) => ({
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: 'transparent',
-      border: 'none',
-      padding: 0,
-      transition: 'all 0.3s ease',
-      transform: active ? 'translateY(-2px)' : 'translateY(0)',
-    }),
-    
-    trustIcon: {
-      width: isMobile ? (isSmallMobile ? '100px' : '100px') : '200px',
-      height: isMobile ? (isSmallMobile ? '100px' : '100px') : '200px',
-      borderRadius: '10px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      flexShrink: 0,
+    trustText: {
+      fontSize: isMobile ? (isSmallMobile ? '1.8rem' : '2rem') : '2.5rem',
+      fontWeight: '800',
+      color: colors.white,
+      fontFamily: "'Inter', sans-serif",
+      lineHeight: '1.2',
+      textTransform: 'uppercase' as const,
+      letterSpacing: '-1px',
     },
     
-    trustImage: {
-      width: '100%',
-      height: '100%',
-      objectFit: 'contain' as const,
+    trustTextHighlight: {
+      color: colors.gold,
+      display: 'block' as const,
+      fontSize: isMobile ? (isSmallMobile ? '2rem' : '2.2rem') : '2.8rem',
     },
 
     reviewsContainer: {
-      display: 'flex',
-      flexDirection: isMobile ? 'column' : 'row',
+      display: 'flex' as const,
+      flexDirection: isMobile ? 'column' as const : 'row' as const,
       alignItems: isMobile ? 'flex-start' : 'center',
       gap: isMobile ? (isSmallMobile ? '0.5rem' : '0.75rem') : '1rem',
-      flexWrap: 'wrap',
+      flexWrap: 'wrap' as const,
       width: '100%',
     },
     
     stars: {
-      display: 'flex',
+      display: 'flex' as const,
       gap: '0.25rem',
     },
     
@@ -962,18 +934,19 @@ const HeroSection = () => {
     },
     
     googleBadge: (active: boolean) => ({
-      display: 'flex',
+      display: 'flex' as const,
       alignItems: 'center',
       gap: '0.5rem',
       backgroundColor: active ? 'rgba(255, 184, 0, 0.25)' : 'rgba(255, 184, 0, 0.15)',
       padding: isMobile ? (isSmallMobile ? '0.5rem 0.75rem' : '0.75rem 1rem') : '1rem 1.25rem',
       borderRadius: '30px',
+      backdropFilter: 'blur(10px)',
       border: active ? `2px solid ${colors.gold}` : `2px solid ${colors.goldBorder}`,
       transition: 'all 0.3s ease',
       cursor: 'pointer',
       transform: active ? 'translateY(-3px) scale(1.05)' : 'translateY(0) scale(1)',
       boxShadow: active ? '0 12px 30px rgba(0, 0, 0, 0.3)' : '0 8px 20px rgba(0, 0, 0, 0.2)',
-      position: 'relative',
+      position: 'relative' as const,
     }),
     
     googleText: {
@@ -985,7 +958,7 @@ const HeroSection = () => {
     },
 
     googleReviewsCTA: (active: boolean) => ({
-      display: 'flex',
+      display: 'flex' as const,
       alignItems: 'center',
       gap: '0.5rem',
       backgroundColor: active ? colors.gold : 'rgba(255, 184, 0, 0.1)',
@@ -993,6 +966,7 @@ const HeroSection = () => {
       border: active ? `2px solid ${colors.gold}` : `2px solid ${colors.goldBorder}`,
       padding: isMobile ? (isSmallMobile ? '0.5rem 0.75rem' : '0.75rem 1rem') : '1rem 1.25rem',
       borderRadius: '30px',
+      backdropFilter: 'blur(10px)',
       transition: 'all 0.3s ease',
       cursor: 'pointer',
       transform: active ? 'translateY(-3px) scale(1.05)' : 'translateY(0) scale(1)',
@@ -1009,11 +983,11 @@ const HeroSection = () => {
     },
     
     reviewsCTAContainer: {
-      display: 'flex',
-      flexDirection: isMobile ? 'column' : 'row',
+      display: 'flex' as const,
+      flexDirection: isMobile ? 'column' as const : 'row' as const,
       alignItems: isMobile ? 'stretch' : 'center',
       gap: '0.75rem',
-      flexWrap: 'wrap',
+      flexWrap: 'wrap' as const,
       width: '100%',
     },
 
@@ -1023,7 +997,7 @@ const HeroSection = () => {
     },
     
     bostonBadge: {
-      display: 'flex',
+      display: 'flex' as const,
       alignItems: 'center',
       gap: '0.5rem',
       backgroundColor: 'rgba(10, 10, 12, 0.6)',
@@ -1031,6 +1005,7 @@ const HeroSection = () => {
       borderRadius: '20px',
       width: 'fit-content',
       maxWidth: '100%',
+      backdropFilter: 'blur(10px)',
     },
     
     bostonIcon: {
@@ -1061,7 +1036,7 @@ const HeroSection = () => {
     },
     
     cardHeader: {
-      textAlign: 'center',
+      textAlign: 'center' as const,
       marginBottom: '1.75rem',
     },
     
@@ -1085,15 +1060,15 @@ const HeroSection = () => {
     },
     
     form: {
-      display: 'flex',
-      flexDirection: 'column',
+      display: 'flex' as const,
+      flexDirection: 'column' as const,
       gap: '1.25rem',
       width: '100%',
     },
     
     formGroup: {
-      display: 'flex',
-      flexDirection: 'column',
+      display: 'flex' as const,
+      flexDirection: 'column' as const,
       gap: '0.5rem',
       width: '100%',
     },
@@ -1129,12 +1104,12 @@ const HeroSection = () => {
       fontWeight: '400',
       width: '100%',
       boxSizing: 'border-box',
-      resize: 'vertical',
+      resize: 'vertical' as const,
       minHeight: '100px',
     },
     
     formRow: {
-      display: 'grid',
+      display: 'grid' as const,
       gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
       gap: '1rem',
       width: '100%',
@@ -1150,7 +1125,7 @@ const HeroSection = () => {
       fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.125rem',
       fontWeight: '700',
       cursor: 'pointer',
-      display: 'flex',
+      display: 'flex' as const,
       alignItems: 'center',
       justifyContent: 'center',
       gap: '0.5rem',
@@ -1159,7 +1134,7 @@ const HeroSection = () => {
       transform: active ? 'translateY(-3px)' : 'translateY(0)',
       boxShadow: active ? '0 15px 40px rgba(255, 184, 0, 0.4)' : '0 10px 30px rgba(255, 184, 0, 0.3)',
       width: '100%',
-      position: 'relative',
+      position: 'relative' as const,
     }),
     
     buttonText: {
@@ -1168,7 +1143,7 @@ const HeroSection = () => {
     },
     
     buttonArrow: {
-      display: 'flex',
+      display: 'flex' as const,
       alignItems: 'center',
     },
     
@@ -1178,7 +1153,7 @@ const HeroSection = () => {
       backgroundColor: 'rgba(255, 184, 0, 0.1)',
       borderRadius: '12px',
       border: `2px solid ${colors.gold}`,
-      textAlign: 'center',
+      textAlign: 'center' as const,
       width: '100%',
       boxSizing: 'border-box',
     },
@@ -1205,7 +1180,7 @@ const HeroSection = () => {
       backgroundColor: 'rgba(239, 68, 68, 0.1)',
       borderRadius: '12px',
       border: '2px solid #EF4444',
-      textAlign: 'center',
+      textAlign: 'center' as const,
       width: '100%',
       boxSizing: 'border-box',
     },
@@ -1221,7 +1196,7 @@ const HeroSection = () => {
     formNote: {
       fontSize: isMobile ? (isSmallMobile ? '0.6rem' : '0.7rem') : '0.75rem',
       color: '#6B7280',
-      textAlign: 'center',
+      textAlign: 'center' as const,
       marginTop: '1rem',
       lineHeight: '1.5',
       fontFamily: "'Inter', sans-serif",
@@ -1229,7 +1204,7 @@ const HeroSection = () => {
     },
     
     securityBadge: {
-      display: 'flex',
+      display: 'flex' as const,
       alignItems: 'center',
       justifyContent: 'center',
       gap: '0.5rem',
@@ -1254,9 +1229,6 @@ const HeroSection = () => {
 
   return (
     <section style={baseStyles.heroSection}>
-      <StarPopper side="left" />
-      <StarPopper side="right" />
-      
       <div style={baseStyles.backgroundContainer}>
         <div style={baseStyles.overlayGradient}></div>
       </div>
@@ -1276,9 +1248,10 @@ const HeroSection = () => {
                 width={200}
                 height={220}
                 style={{ 
-                  top: '80px', 
-                  right: '-20px',
-                  filter: 'drop-shadow(0 4px 8px rgba(255, 184, 0, 0.3))'
+                  top: '-20px', 
+                  right: '-30px',
+                  filter: 'drop-shadow(0 10px 20px rgba(255, 184, 0, 0.4))',
+                  transform: 'rotate(5deg)',
                 }}
               />
               
@@ -1286,13 +1259,11 @@ const HeroSection = () => {
                 <span style={baseStyles.numberOne}>#1</span>
               </div>
               <span style={baseStyles.badgeText}>
-                <USAFlag width={30} height={22} />
                 <strong style={baseStyles.houstonBold}>HOUSTON'S PREMIER</strong> ROOFING CONTRACTOR
               </span>
             </div>
             
             <h1 style={baseStyles.headline}>
-              <RotatingStarRing color="#FFB800" size={50} />
               Protect Your Home With
               <span style={baseStyles.headlineHighlight}> BRAVOS</span>
             </h1>
@@ -1303,70 +1274,15 @@ const HeroSection = () => {
             </p>
             
             <div style={baseStyles.trustGrid}>
-              <div 
-                style={baseStyles.trustCard(trustCardActive === 0)}
-                onMouseEnter={() => setTrustCardActive(0)}
-                onMouseLeave={() => setTrustCardActive(null)}
-                onTouchStart={() => handleTouchStart(setTrustCardActive, 0)}
-                onTouchEnd={() => handleTouchEnd(setTrustCardActive, null)}
-              >
-                <div style={baseStyles.trustIcon}>
-                  <img 
-                    src="/image/lifetime1.png" 
-                    alt="25+ Years Experience"
-                    style={baseStyles.trustImage}
-                  />
-                </div>
+              <div style={baseStyles.trustText}>
+                Licensed, <span style={baseStyles.trustTextHighlight}>Certified</span>
               </div>
-              
-              <div 
-                style={baseStyles.trustCard(trustCardActive === 1)}
-                onMouseEnter={() => setTrustCardActive(1)}
-                onMouseLeave={() => setTrustCardActive(null)}
-                onTouchStart={() => handleTouchStart(setTrustCardActive, 1)}
-                onTouchEnd={() => handleTouchEnd(setTrustCardActive, null)}
-              >
-                <div style={baseStyles.trustIcon}>
-                  <img 
-                    src="/image/award1.png" 
-                    alt="Licensed & Bonded"
-                    style={baseStyles.trustImage}
-                  />
-                </div>
-              </div>
-              
-              <div 
-                style={baseStyles.trustCard(trustCardActive === 2)}
-                onMouseEnter={() => setTrustCardActive(2)}
-                onMouseLeave={() => setTrustCardActive(null)}
-                onTouchStart={() => handleTouchStart(setTrustCardActive, 2)}
-                onTouchEnd={() => handleTouchEnd(setTrustCardActive, null)}
-              >
-                <div style={baseStyles.trustIcon}>
-                  <img 
-                    src="/image/award1.png" 
-                    alt="Lifetime Warranty"
-                    style={baseStyles.trustImage}
-                  />
-                </div>
+              <div style={baseStyles.trustText}>
+                & <span style={baseStyles.trustTextHighlight}>Trusted</span>
               </div>
             </div>
-
-            {/* Licensed, Certified & Trusted title with 10-logo carousel */}
-            <div style={{ marginTop: '30px' }}>
-              <h3 style={{
-                fontSize: isMobile ? '1.5rem' : '2rem',
-                fontWeight: '800',
-                color: '#FFB800',
-                textAlign: 'center',
-                marginBottom: '20px',
-                textTransform: 'uppercase',
-                letterSpacing: '2px',
-              }}>
-                licensed, certified & trusted
-              </h3>
-              <LogoCarousel backgroundColor="#0A0A0C" />
-            </div>
+            
+            <LogoCarousel autoRotate={true} showNavigation={true} />
             
             <div style={baseStyles.reviewsContainer}>
               <div style={baseStyles.stars}>
@@ -1565,7 +1481,7 @@ const HeroSection = () => {
   );
 };
 
-// Video Testimonial Card Component (keep as is from your original)
+// Video Testimonial Card Component
 const VideoTestimonialCard = ({ 
   video, 
   index, 
@@ -1577,6 +1493,15 @@ const VideoTestimonialCard = ({
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [isSmallMobile, setIsSmallMobile] = useState(false);
+
+  const colors = {
+    background: '#0A0A0C',
+    gold: '#FFB800',
+    goldLight: 'rgba(255, 184, 0, 0.1)',
+    goldBorder: 'rgba(255, 184, 0, 0.3)',
+    white: '#FFFFFF',
+    softWhite: '#FAFAFA',
+  };
 
   useEffect(() => {
     const checkMobile = () => {
@@ -1621,14 +1546,14 @@ const VideoTestimonialCard = ({
   return (
     <div 
       style={{
-        backgroundColor: activeVideo === index ? '#F9FAFB' : '#FFFFFF',
+        backgroundColor: activeVideo === index ? '#F9FAFB' : colors.white,
         borderRadius: '24px',
-        overflow: 'hidden',
+        overflow: 'hidden' as const,
         boxShadow: activeVideo === index 
           ? '0 30px 60px rgba(10, 10, 12, 0.2)' 
           : '0 20px 40px rgba(10, 10, 12, 0.1)',
         border: activeVideo === index 
-          ? `2px solid #FFB800` 
+          ? `2px solid ${colors.gold}` 
           : '1px solid rgba(255, 184, 0, 0.2)',
         transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
         transform: activeVideo === index ? 'translateY(-10px)' : 'translateY(0)',
@@ -1642,10 +1567,10 @@ const VideoTestimonialCard = ({
       onClick={handlePlayVideo}
     >
       <div style={{
-        position: 'relative',
+        position: 'relative' as const,
         height: isMobile ? (isSmallMobile ? '180px' : '200px') : '250px',
-        overflow: 'hidden',
-        backgroundColor: '#0A0A0C',
+        overflow: 'hidden' as const,
+        backgroundColor: colors.background,
       }}>
         {playingVideo === video.id ? (
           <video
@@ -1654,7 +1579,7 @@ const VideoTestimonialCard = ({
             style={{
               width: '100%',
               height: '100%',
-              objectFit: 'cover',
+              objectFit: 'cover' as const,
             }}
             controls
             onEnded={handleVideoEnded}
@@ -1668,22 +1593,22 @@ const VideoTestimonialCard = ({
               style={{
                 width: '100%',
                 height: '100%',
-                objectFit: 'cover',
+                objectFit: 'cover' as const,
                 filter: activeVideo === index ? 'brightness(0.7)' : 'brightness(1)',
                 transition: 'filter 0.3s ease',
               }}
             />
             
             <div style={{
-              position: 'absolute',
+              position: 'absolute' as const,
               top: '20px',
               left: '20px',
-              backgroundColor: '#FFB800',
-              color: '#0A0A0C',
+              backgroundColor: colors.gold,
+              color: colors.background,
               width: isMobile ? (isSmallMobile ? '35px' : '40px') : '50px',
               height: isMobile ? (isSmallMobile ? '35px' : '40px') : '50px',
               borderRadius: '50%',
-              display: 'flex',
+              display: 'flex' as const,
               alignItems: 'center',
               justifyContent: 'center',
               fontSize: isMobile ? (isSmallMobile ? '14px' : '16px') : '20px',
@@ -1695,13 +1620,13 @@ const VideoTestimonialCard = ({
             </div>
             
             <div style={{
-              position: 'absolute',
+              position: 'absolute' as const,
               top: 0,
               left: 0,
               right: 0,
               bottom: 0,
               backgroundColor: 'rgba(10, 10, 12, 0.7)',
-              display: 'flex',
+              display: 'flex' as const,
               alignItems: 'center',
               justifyContent: 'center',
               opacity: activeVideo === index ? 1 : 0,
@@ -1710,16 +1635,16 @@ const VideoTestimonialCard = ({
               <div style={{
                 width: isMobile ? (isSmallMobile ? '50px' : '60px') : '80px',
                 height: isMobile ? (isSmallMobile ? '50px' : '60px') : '80px',
-                backgroundColor: '#FFB800',
+                backgroundColor: colors.gold,
                 borderRadius: '50%',
-                display: 'flex',
+                display: 'flex' as const,
                 alignItems: 'center',
                 justifyContent: 'center',
                 transform: activeVideo === index ? 'scale(1)' : 'scale(0.8)',
                 transition: 'transform 0.3s ease',
               }}>
                 <span style={{
-                  color: '#0A0A0C',
+                  color: colors.background,
                   fontSize: isMobile ? (isSmallMobile ? '1.25rem' : '1.5rem') : '2rem',
                   marginLeft: '8px',
                   fontWeight: '700',
@@ -1737,12 +1662,12 @@ const VideoTestimonialCard = ({
         paddingRight: isMobile ? (isSmallMobile ? '16px' : '20px') : '24px',
         paddingBottom: isMobile ? (isSmallMobile ? '20px' : '24px') : '32px',
         paddingLeft: isMobile ? (isSmallMobile ? '16px' : '20px') : '24px',
-        textAlign: 'left',
+        textAlign: 'left' as const,
       }}>
         <h4 style={{
           fontSize: isMobile ? (isSmallMobile ? '1.1rem' : '1.25rem') : '1.5rem',
           fontWeight: '700',
-          color: '#0A0A0C',
+          color: colors.background,
           marginTop: 0,
           marginBottom: '8px',
           fontFamily: "'Inter', sans-serif",
@@ -1760,13 +1685,13 @@ const VideoTestimonialCard = ({
         </p>
         <div style={{
           fontSize: isMobile ? (isSmallMobile ? '0.7rem' : '0.75rem') : '0.875rem',
-          color: '#FFB800',
+          color: colors.gold,
           fontWeight: '600',
           fontFamily: "'Inter', sans-serif",
-          backgroundColor: 'rgba(255, 184, 0, 0.1)',
+          backgroundColor: colors.goldLight,
           padding: '4px 12px',
           borderRadius: '20px',
-          display: 'inline-block',
+          display: 'inline-block' as const,
           marginBottom: '16px',
         }}>
           {video.role}
@@ -1778,7 +1703,7 @@ const VideoTestimonialCard = ({
           margin: 0,
           fontWeight: '400',
           fontFamily: "'Inter', sans-serif",
-          fontStyle: 'italic',
+          fontStyle: 'italic' as const,
         }}>
           "{video.content}"
         </p>
@@ -1794,6 +1719,12 @@ const StatsCounter = () => {
   const [satisfactionRate, setSatisfactionRate] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [isSmallMobile, setIsSmallMobile] = useState(false);
+
+  const colors = {
+    background: '#0A0A0C',
+    gold: '#FFB800',
+    softWhite: '#FAFAFA',
+  };
 
   useEffect(() => {
     const checkMobile = () => {
@@ -1850,7 +1781,7 @@ const StatsCounter = () => {
 
   return (
     <div style={{
-      display: 'grid',
+      display: 'grid' as const,
       gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
       justifyContent: 'center',
       alignItems: 'center',
@@ -1874,7 +1805,7 @@ const StatsCounter = () => {
         <div style={{
           fontSize: isMobile ? (isSmallMobile ? '1.75rem' : '2rem') : '2.5rem',
           fontWeight: 700,
-          color: '#FFB800',
+          color: colors.gold,
           fontFamily: "'Inter', sans-serif",
           marginBottom: '8px',
           transition: 'all 0.3s ease',
@@ -1884,7 +1815,7 @@ const StatsCounter = () => {
         <div style={{
           fontSize: isMobile ? (isSmallMobile ? '11px' : '12px') : '14px',
           fontWeight: 400,
-          color: '#FAFAFA',
+          color: colors.softWhite,
           letterSpacing: '0.5px',
           transition: 'all 0.3s ease',
           fontFamily: "'Inter', sans-serif",
@@ -1908,7 +1839,7 @@ const StatsCounter = () => {
         <div style={{
           fontSize: isMobile ? (isSmallMobile ? '1.75rem' : '2rem') : '2.5rem',
           fontWeight: 700,
-          color: '#FFB800',
+          color: colors.gold,
           fontFamily: "'Inter', sans-serif",
           marginBottom: '8px',
           transition: 'all 0.3s ease',
@@ -1918,7 +1849,7 @@ const StatsCounter = () => {
         <div style={{
           fontSize: isMobile ? (isSmallMobile ? '11px' : '12px') : '14px',
           fontWeight: 400,
-          color: '#FAFAFA',
+          color: colors.softWhite,
           letterSpacing: '0.5px',
           transition: 'all 0.3s ease',
           fontFamily: "'Inter', sans-serif",
@@ -1942,7 +1873,7 @@ const StatsCounter = () => {
         <div style={{
           fontSize: isMobile ? (isSmallMobile ? '1.75rem' : '2rem') : '2.5rem',
           fontWeight: 700,
-          color: '#FFB800',
+          color: colors.gold,
           fontFamily: "'Inter', sans-serif",
           marginBottom: '8px',
           transition: 'all 0.3s ease',
@@ -1952,7 +1883,7 @@ const StatsCounter = () => {
         <div style={{
           fontSize: isMobile ? (isSmallMobile ? '11px' : '12px') : '14px',
           fontWeight: 400,
-          color: '#FAFAFA',
+          color: colors.softWhite,
           letterSpacing: '0.5px',
           transition: 'all 0.3s ease',
           fontFamily: "'Inter', sans-serif",
@@ -1964,7 +1895,7 @@ const StatsCounter = () => {
   );
 };
 
-// FAQ Section Component (keep as is from your original)
+// FAQ Section Component
 interface FAQItem {
   question: string;
   answer: string;
@@ -1985,27 +1916,39 @@ interface FAQSectionProps {
 
 function FAQSection({
   title = 'Frequently Asked Roofing Questions',
-  subtitle = 'Find answers to common questions about our roofing services.',
+  subtitle = 'Find answers to common questions about our roofing services. If you don\'t see your question here, contact our team for personalized assistance.',
   faqs = [
     {
       question: "How do I know if I need a roof replacement or repair?",
-      answer: "Our expert inspectors will assess your roof's condition, age, and extent of damage."
+      answer: "Our expert inspectors will assess your roof's condition, age, and extent of damage. Generally, if your roof is over 20 years old, has widespread damage, or multiple leaks, replacement may be more cost-effective. We provide honest recommendations based on what's best for your home."
     },
     {
       question: "How long does a typical roof replacement take?",
-      answer: "Most residential roof replacements are completed within 1-3 days."
+      answer: "Most residential roof replacements are completed within 1-3 days, depending on the size of your home, roof complexity, and weather conditions. We'll provide a specific timeline during your consultation and keep you updated throughout the process."
     },
     {
       question: "What roofing materials do you offer?",
-      answer: "We offer architectural asphalt shingles, metal roofing, tile, slate, and flat roofing systems."
+      answer: "We offer a wide range of premium materials including architectural asphalt shingles, metal roofing, tile, slate, and flat roofing systems. Our team will help you choose the best option for your home's style, budget, and local climate."
     },
     {
       question: "Are you licensed and insured?",
-      answer: "Yes, BRAVOS is fully licensed, bonded, and insured."
+      answer: "Yes, BRAVOS is fully licensed, bonded, and insured with comprehensive liability and workers' compensation coverage. We also offer extended warranties on both materials and workmanship for your peace of mind."
     },
     {
       question: "Do you handle insurance claims?",
-      answer: "Absolutely. Our team specializes in insurance claim assistance."
+      answer: "Absolutely. Our team specializes in insurance claim assistance and will work directly with your insurance adjuster to ensure you receive fair coverage for storm damage, hail damage, or other covered perils."
+    },
+    {
+      question: "What's included in your free estimate?",
+      answer: "Our complimentary roof inspection includes a thorough assessment of your roof's condition, photo documentation, detailed measurements, material recommendations, and a transparent written quote with no hidden fees or surprises."
+    },
+    {
+      question: "Do you offer financing options?",
+      answer: "Yes, we offer flexible financing options with competitive rates to help make your roof replacement more affordable. Ask our team about current specials and 0% APR financing opportunities."
+    },
+    {
+      question: "What warranty do you provide?",
+      answer: "We provide comprehensive warranties including manufacturer warranties on materials (20-50 years depending on product) and our BRAVOS workmanship warranty for added protection and peace of mind."
     }
   ],
   accentColor = '#FFB800',
@@ -2042,8 +1985,9 @@ function FAQSection({
       paddingBottom: isMobile ? (isSmallMobile ? '40px' : '60px') : '80px',
       paddingLeft: isMobile ? (isSmallMobile ? '16px' : '20px') : '40px',
       paddingRight: isMobile ? (isSmallMobile ? '16px' : '20px') : '40px',
-      background: '#FFFFFF',
+      background: 'linear-gradient(180deg, #FFFFFF 0%, #F8FAFF 100%)',
       position: 'relative' as const,
+      backgroundColor: backgroundColor,
       ...containerStyle
     },
     container: {
@@ -2057,6 +2001,30 @@ function FAQSection({
     header: {
       textAlign: 'center' as const,
       marginBottom: isMobile ? (isSmallMobile ? '30px' : '40px') : '60px',
+      position: 'relative' as const,
+    },
+    badge: {
+      display: 'inline-flex' as const,
+      alignItems: 'center',
+      gap: '10px',
+      background: `rgba(255, 184, 0, 0.1)`,
+      padding: isMobile ? (isSmallMobile ? '6px 12px' : '8px 16px') : '10px 20px',
+      borderRadius: '50px',
+      border: `1px solid rgba(255, 184, 0, 0.3)`,
+      marginBottom: '20px',
+      transition: 'all 0.3s ease',
+      cursor: 'pointer',
+    },
+    badgeIcon: {
+      fontSize: isMobile ? (isSmallMobile ? '16px' : '18px') : '18px',
+      transition: 'all 0.3s ease',
+    },
+    badgeText: {
+      fontSize: isMobile ? (isSmallMobile ? '10px' : '12px') : '14px',
+      fontWeight: 600,
+      color: textColor,
+      letterSpacing: '1px',
+      transition: 'all 0.3s ease',
     },
     title: {
       fontSize: isMobile ? (isSmallMobile ? '1.75rem' : '2rem') : '2.5rem',
@@ -2064,7 +2032,13 @@ function FAQSection({
       color: textColor,
       lineHeight: 1.2,
       fontFamily: "'Inter', sans-serif",
+      marginTop: 0,
+      marginRight: 0,
       marginBottom: '20px',
+      marginLeft: 0,
+      maxWidth: '900px',
+      transition: 'all 0.3s ease',
+      cursor: 'pointer',
     },
     subtitle: {
       fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.125rem',
@@ -2072,19 +2046,25 @@ function FAQSection({
       color: '#666666',
       lineHeight: 1.6,
       maxWidth: '800px',
-      margin: '0 auto',
+      marginTop: 0,
+      marginRight: 'auto',
+      marginBottom: '30px',
+      marginLeft: 'auto',
+      transition: 'all 0.3s ease',
+      cursor: 'pointer',
     },
     faqContainer: {
       maxWidth: '900px',
       margin: '0 auto',
+      width: '100%',
     },
     faqItem: (isOpen: boolean) => ({
       background: '#FFFFFF',
       borderRadius: '16px',
       marginBottom: '12px',
-      overflow: 'hidden',
+      overflow: 'hidden' as const,
       boxShadow: '0 4px 20px rgba(10, 10, 12, 0.08)',
-      border: `1px solid ${isOpen ? accentColor : 'rgba(10, 10, 12, 0.1)'}`,
+      border: `1px solid ${isOpen ? '#FFB800' : 'rgba(10, 10, 12, 0.1)'}`,
       transition: 'all 0.3s ease',
       cursor: 'pointer',
       ...faqItemStyle
@@ -2094,37 +2074,49 @@ function FAQSection({
       background: isOpen ? 'rgba(255, 184, 0, 0.05)' : '#FFFFFF',
       border: 'none',
       padding: isMobile ? (isSmallMobile ? '14px' : '16px') : '20px',
-      display: 'flex',
+      display: 'flex' as const,
       alignItems: 'center',
       justifyContent: 'space-between',
       cursor: 'pointer',
       textAlign: 'left' as const,
+      transition: 'all 0.3s ease',
     }),
+    questionContent: {
+      display: 'flex' as const,
+      alignItems: 'center',
+      gap: isMobile ? '12px' : '16px',
+      flex: 1,
+    },
     questionNumber: {
       width: isMobile ? (isSmallMobile ? '28px' : '32px') : '32px',
       height: isMobile ? (isSmallMobile ? '28px' : '32px') : '32px',
-      background: `linear-gradient(135deg, ${accentColor} 0%, #E6A600 100%)`,
+      background: `linear-gradient(135deg, #FFB800 0%, #E6A600 100%)`,
       borderRadius: '50%',
-      display: 'flex',
+      display: 'flex' as const,
       alignItems: 'center',
       justifyContent: 'center',
       fontSize: isMobile ? (isSmallMobile ? '10px' : '12px') : '12px',
       fontWeight: 700,
       color: '#0A0A0C',
       flexShrink: 0,
-      marginRight: '16px',
+      transition: 'all 0.3s ease',
     },
     questionText: {
       fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.125rem',
       fontWeight: 600,
       color: textColor,
       fontFamily: "'Inter', sans-serif",
-      flex: 1,
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: 0,
+      marginLeft: 0,
+      lineHeight: 1.4,
+      transition: 'all 0.3s ease',
     },
     toggleIcon: (isOpen: boolean) => ({
       width: '20px',
       height: '20px',
-      display: 'flex',
+      display: 'flex' as const,
       alignItems: 'center',
       justifyContent: 'center',
       transition: 'transform 0.3s ease',
@@ -2134,27 +2126,59 @@ function FAQSection({
     }),
     answerContainer: (isOpen: boolean) => ({
       maxHeight: isOpen ? '500px' : '0',
-      overflow: 'hidden',
+      overflow: 'hidden' as const,
       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+      background: isOpen ? 'rgba(10, 10, 12, 0.02)' : 'transparent',
     }),
-    answerContent: {
-      padding: isMobile ? (isSmallMobile ? '0 14px 14px 60px' : '0 16px 16px 68px') : '0 20px 20px 68px',
-      opacity: 1,
+    answerContent: (isOpen: boolean) => ({
+      paddingTop: isOpen ? (isMobile ? (isSmallMobile ? '0' : '0') : '0') : (isMobile ? (isSmallMobile ? '0' : '0') : '0'),
+      paddingRight: isOpen ? (isMobile ? (isSmallMobile ? '14px' : '16px') : '20px') : (isMobile ? (isSmallMobile ? '14px' : '16px') : '20px'),
+      paddingBottom: isOpen ? (isMobile ? (isSmallMobile ? '14px' : '16px') : '20px') : (isMobile ? (isSmallMobile ? '0' : '0') : '0'),
+      paddingLeft: isOpen ? (isMobile ? (isSmallMobile ? '60px' : '68px') : '68px') : (isMobile ? (isSmallMobile ? '14px' : '16px') : '20px'),
+      opacity: isOpen ? 1 : 0,
+      transition: 'opacity 0.3s ease 0.2s',
+    }),
+    answerWrapper: {
+      display: 'flex' as const,
+      alignItems: 'flex-start',
+      gap: '16px',
+    },
+    answerIcon: {
+      width: '20px',
+      height: '20px',
+      background: 'rgba(10, 10, 12, 0.1)',
+      borderRadius: '50%',
+      display: 'flex' as const,
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: '10px',
+      fontWeight: 700,
+      color: '#0A0A0C',
+      flexShrink: 0,
+      marginTop: '3px',
+      transition: 'all 0.3s ease',
     },
     answerText: {
       fontSize: isMobile ? (isSmallMobile ? '0.85rem' : '0.9rem') : '1rem',
       fontWeight: 400,
       color: '#666666',
       lineHeight: 1.6,
-      margin: 0,
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: 0,
+      marginLeft: 0,
+      transition: 'all 0.3s ease',
+      cursor: 'pointer',
     },
     ctaContainer: {
-      textAlign: 'center' as const,
+      textAlign: 'center'  as const,
       marginTop: isMobile ? (isSmallMobile ? '30px' : '40px') : '60px',
       padding: isMobile ? (isSmallMobile ? '20px' : '30px 20px') : '40px 20px',
       background: `linear-gradient(135deg, rgba(10, 10, 12, 0.05) 0%, rgba(255, 184, 0, 0.05) 100%)`,
       borderRadius: '20px',
       border: `1px solid rgba(255, 184, 0, 0.3)`,
+      transition: 'all 0.3s ease',
+      cursor: 'pointer',
     },
     ctaTitle: {
       fontSize: isMobile ? (isSmallMobile ? '1.25rem' : '1.5rem') : '1.75rem',
@@ -2162,6 +2186,7 @@ function FAQSection({
       color: textColor,
       fontFamily: "'Inter', sans-serif",
       marginBottom: '20px',
+      transition: 'all 0.3s ease',
     },
     ctaDescription: {
       fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.125rem',
@@ -2169,17 +2194,21 @@ function FAQSection({
       color: '#666666',
       lineHeight: 1.6,
       maxWidth: '600px',
-      margin: '0 auto 24px',
+      marginTop: 0,
+      marginRight: 'auto',
+      marginBottom: '24px',
+      marginLeft: 'auto',
+      transition: 'all 0.3s ease',
     },
     buttonContainer: {
-      display: 'flex',
+      display: 'flex' as const,
       flexDirection: isMobile ? 'column' as const : 'row' as const,
       gap: '16px',
       justifyContent: 'center',
       alignItems: 'center',
     },
     primaryButton: {
-      background: `linear-gradient(135deg, ${accentColor} 0%, #E6A600 100%)`,
+      background: `linear-gradient(135deg, #FFB800 0%, #E6A600 100%)`,
       color: '#0A0A0C',
       border: 'none',
       padding: isMobile ? (isSmallMobile ? '14px 20px' : '16px 24px') : '16px 24px',
@@ -2213,15 +2242,55 @@ function FAQSection({
 
   return (
     <section style={baseStyles.faqSection}>
-      <StarPopper side="left" />
-      <StarPopper side="right" />
+      <StarRotationRing size={400} color="#FFB800" />
       <div style={baseStyles.container}>
         <div style={baseStyles.header}>
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-            <RotatingStarRing color={accentColor} size={50} />
+          <div style={baseStyles.badge}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-3px)';
+              e.currentTarget.style.background = 'rgba(255, 184, 0, 0.15)';
+              e.currentTarget.style.boxShadow = '0 8px 20px rgba(255, 184, 0, 0.2)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.background = 'rgba(255, 184, 0, 0.1)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}>
+            <div style={baseStyles.badgeIcon}>❓</div>
+            <span style={baseStyles.badgeText}>
+              Got Roofing Questions?
+            </span>
           </div>
-          <h2 style={baseStyles.title}>{title}</h2>
-          <p style={baseStyles.subtitle}>{subtitle}</p>
+          
+          <h2 style={baseStyles.title}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'scale(1.02)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+            }}>
+            {title.split(' ').map((word, index, array) => 
+              index === array.length - 1 ? (
+                <span key={index} style={{ color: accentColor, transition: 'all 0.3s ease' }}>
+                  {word}
+                </span>
+              ) : (
+                word + ' '
+              )
+            )}
+          </h2>
+          
+          <p style={baseStyles.subtitle}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = textColor;
+              e.currentTarget.style.transform = 'scale(1.01)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = '#666666';
+              e.currentTarget.style.transform = 'scale(1)';
+            }}>
+            {subtitle}
+          </p>
         </div>
 
         <div style={baseStyles.faqContainer}>
@@ -2229,17 +2298,58 @@ function FAQSection({
             <div 
               key={index}
               style={baseStyles.faqItem(openIndex === index)}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = '0 8px 30px rgba(10, 10, 12, 0.12)';
+                e.currentTarget.style.borderColor = `${accentColor}`;
+                e.currentTarget.style.transform = 'translateY(-3px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = '0 4px 20px rgba(10, 10, 12, 0.08)';
+                e.currentTarget.style.borderColor = openIndex === index ? accentColor : 'rgba(10, 10, 12, 0.1)';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
             >
               <button
                 onClick={() => toggleFAQ(index)}
                 style={baseStyles.questionButton(openIndex === index)}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(255, 184, 0, 0.08)';
+                  e.currentTarget.style.transform = 'scale(1.01)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = openIndex === index ? 'rgba(255, 184, 0, 0.05)' : '#FFFFFF';
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
-                  <div style={baseStyles.questionNumber}>Q{index + 1}</div>
-                  <span style={baseStyles.questionText}>{faq.question}</span>
+                <div style={baseStyles.questionContent}>
+                  <div style={baseStyles.questionNumber}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'scale(1.1)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}>
+                    Q{index + 1}
+                  </div>
+                  <h3 style={baseStyles.questionText}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = accentColor;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = textColor;
+                    }}>
+                    {faq.question}
+                  </h3>
                 </div>
+                
                 {showToggleIcon && (
-                  <div style={baseStyles.toggleIcon(openIndex === index)}>
+                  <div style={baseStyles.toggleIcon(openIndex === index)}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = openIndex === index ? 'rotate(45deg) scale(1.2)' : 'rotate(0deg) scale(1.2)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = openIndex === index ? 'rotate(45deg) scale(1)' : 'rotate(0deg) scale(1)';
+                    }}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                       <path d="M12 5V19M5 12H19" stroke={accentColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
@@ -2248,29 +2358,102 @@ function FAQSection({
               </button>
               
               <div style={baseStyles.answerContainer(openIndex === index)}>
-                <div style={baseStyles.answerContent}>
-                  <p style={baseStyles.answerText}>{faq.answer}</p>
+                <div style={baseStyles.answerContent(openIndex === index)}>
+                  <div style={baseStyles.answerWrapper}>
+                    <div style={baseStyles.answerIcon}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.1)';
+                        e.currentTarget.style.background = 'rgba(10, 10, 12, 0.2)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'scale(1)';
+                        e.currentTarget.style.background = 'rgba(10, 10, 12, 0.1)';
+                      }}>
+                      A
+                    </div>
+                    <p style={baseStyles.answerText}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = textColor;
+                        e.currentTarget.style.transform = 'scale(1.01)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = '#666666';
+                        e.currentTarget.style.transform = 'scale(1)';
+                      }}>
+                      {faq.answer}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        <div style={baseStyles.ctaContainer}>
-          <h3 style={baseStyles.ctaTitle}>Still Have Roofing Questions?</h3>
-          <p style={baseStyles.ctaDescription}>
+        <div style={baseStyles.ctaContainer}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-5px)';
+            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(10, 10, 12, 0.08) 0%, rgba(255, 184, 0, 0.08) 100%)';
+            e.currentTarget.style.boxShadow = '0 15px 35px rgba(10, 10, 12, 0.15)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(10, 10, 12, 0.05) 0%, rgba(255, 184, 0, 0.05) 100%)';
+            e.currentTarget.style.boxShadow = 'none';
+          }}>
+          <h3 style={baseStyles.ctaTitle}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = accentColor;
+              e.currentTarget.style.transform = 'scale(1.02)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = textColor;
+              e.currentTarget.style.transform = 'scale(1)';
+            }}>
+            Still Have Roofing Questions?
+          </h3>
+          <p style={baseStyles.ctaDescription}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = textColor;
+              e.currentTarget.style.transform = 'scale(1.01)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = '#666666';
+              e.currentTarget.style.transform = 'scale(1)';
+            }}>
             Our expert team is available 24/7 to answer any questions and schedule your free roof inspection.
           </p>
           <div style={baseStyles.buttonContainer}>
             <button 
               onClick={() => window.location.href = '/contact'}
               style={baseStyles.primaryButton}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-3px) scale(1.05)';
+                e.currentTarget.style.boxShadow = '0 12px 30px rgba(255, 184, 0, 0.4)';
+                e.currentTarget.style.background = 'linear-gradient(135deg, #E6A600 0%, #FFB800 100%)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                e.currentTarget.style.boxShadow = '0 8px 25px rgba(255, 184, 0, 0.3)';
+                e.currentTarget.style.background = 'linear-gradient(135deg, #FFB800 0%, #E6A600 100%)';
+              }}
             >
               Free Inspection
             </button>
             <button 
               onClick={() => window.location.href = 'tel:+12815551234'}
               style={baseStyles.secondaryButton}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 184, 0, 0.1)';
+                e.currentTarget.style.borderColor = accentColor;
+                e.currentTarget.style.transform = 'translateY(-3px) scale(1.05)';
+                e.currentTarget.style.color = accentColor;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'transparent';
+                e.currentTarget.style.borderColor = 'rgba(255, 184, 0, 0.5)';
+                e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                e.currentTarget.style.color = textColor;
+              }}
             >
               Call (281) 555-1234
             </button>
@@ -2345,7 +2528,7 @@ const BodySection = () => {
       title: "#1 Complete Roof Transformation",
       beforeImage: "/image/spoiledroof.jpg",
       afterImage: "/image/repairedroof.jpg",
-      description: "From severe storm damage to premium architectural shingle installation"
+      description: "From severe storm damage to premium architectural shingle installation with lifetime warranty"
     },
     {
       id: 2,
@@ -2362,27 +2545,30 @@ const BodySection = () => {
       name: "David & Susan Thompson",
       location: "River Oaks",
       role: "Verified Homeowner",
-      content: "BRAVOS replaced our roof after hail damage and the transformation was incredible.",
+      content: "BRAVOS replaced our roof after hail damage and the transformation was incredible. Their attention to detail and cleanup was exceptional.",
       videoThumbnail: "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       videoUrl: "/videos/roofing1.mp4",
+      avatar: "https://images.unsplash.com/photo-1494790108755-2616b786d4d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
     },
     {
       id: 2,
       name: "Michael Chen",
       location: "Memorial",
       role: "Verified Homeowner",
-      content: "The team was professional, punctual, and completed our new roof in just two days.",
+      content: "The team was professional, punctual, and completed our new roof in just two days. We couldn't be happier with the quality.",
       videoThumbnail: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       videoUrl: "/videos/roofing2.mp4",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
     },
     {
       id: 3,
       name: "Jennifer Williams",
       location: "West University",
       role: "Verified Homeowner",
-      content: "They helped us navigate the insurance claim process and got us a brand new roof.",
+      content: "They helped us navigate the insurance claim process and got us a brand new roof with minimal out-of-pocket expense. Highly recommend!",
       videoThumbnail: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       videoUrl: "/videos/roofing3.mp4",
+      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
     }
   ];
 
@@ -2393,7 +2579,7 @@ const BodySection = () => {
       location: "Sugar Land",
       service: "Complete Roof Replacement",
       rating: 5,
-      content: "BRAVOS exceeded our expectations in every way. Their crew was professional, the installation was flawless.",
+      content: "BRAVOS exceeded our expectations in every way. Their crew was professional, the installation was flawless, and they left our property spotless. Best roofing company in Houston!",
       avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
     },
     {
@@ -2402,7 +2588,7 @@ const BodySection = () => {
       location: "Katy",
       service: "Emergency Repair",
       rating: 5,
-      content: "Our roof was leaking during a storm and BRAVOS responded within hours. True professionals!",
+      content: "Our roof was leaking during a storm and BRAVOS responded within hours. They tarped our roof and completed the repair the next day. True professionals!",
       avatar: "https://images.unsplash.com/photo-1494790108755-2616b786d4d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
     },
     {
@@ -2411,7 +2597,7 @@ const BodySection = () => {
       location: "The Woodlands",
       service: "Insurance Claim Assistance",
       rating: 5,
-      content: "The team at BRAVOS handled our insurance claim from start to finish. We got a complete roof replacement with no stress.",
+      content: "The team at BRAVOS handled our insurance claim from start to finish. We got a complete roof replacement with no stress. Worth every penny!",
       avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
     },
     {
@@ -2420,7 +2606,7 @@ const BodySection = () => {
       location: "Pearland",
       service: "Metal Roof Installation",
       rating: 5,
-      content: "We upgraded to a standing seam metal roof and it's stunning. The crew was meticulous.",
+      content: "We upgraded to a standing seam metal roof and it's stunning. The crew was meticulous and the project manager kept us informed daily. Highly recommend!",
       avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
     }
   ];
@@ -2429,19 +2615,19 @@ const BodySection = () => {
     {
       number: '01',
       title: 'Master Craftsmen & GAF-Certified',
-      description: 'Our team consists of factory-trained, GAF-certified roofing professionals.',
+      description: 'Our team consists of factory-trained, GAF-certified roofing professionals with decades of combined experience. Each member undergoes rigorous safety training and continuous education on the latest installation techniques.',
       listItems: [
         'GAF Master Elite® Certification',
         'OSHA-Certified Safety Training',
         'Continuous Technical Education'
       ],
       image: '/image/team.jpg',
-      imageAlt: 'Professional roofing team'
+      imageAlt: 'Professional roofing team at work'
     },
     {
       number: '02',
       title: 'Precision Craftsmanship & Quality',
-      description: 'Every project follows our proprietary 127-point quality checklist.',
+      description: 'We don\'t just install roofs—we engineer protection systems. Every project follows our proprietary 127-point quality checklist, ensuring proper flashing, ventilation, and flawless installation down to the last nail.',
       listItems: [
         '127-Point Quality Inspection',
         'Premium Material Selection',
@@ -2453,19 +2639,19 @@ const BodySection = () => {
     {
       number: '03',
       title: 'Triple Protection Guarantee',
-      description: 'Every BRAVOS roof comes with our comprehensive protection package.',
+      description: 'Your peace of mind is our priority. Every BRAVOS roof comes with our comprehensive protection package: 25-year workmanship warranty, manufacturer materials warranty, and our exclusive leak-free guarantee.',
       listItems: [
         '25-Year Workmanship Warranty',
         '50-Year Material Coverage',
         'Leak-Free Installation Guarantee'
       ],
       image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      imageAlt: 'Satisfied homeowner'
+      imageAlt: 'Satisfied homeowner with warranty documents'
     },
     {
       number: '04',
       title: 'Insurance Claim Specialists',
-      description: 'Our dedicated claims team works directly with your adjuster.',
+      description: 'Navigating insurance claims is overwhelming. Our dedicated claims team works directly with your adjuster, providing detailed documentation and advocacy to maximize your coverage and minimize your stress.',
       listItems: [
         'Direct Adjuster Coordination',
         'Comprehensive Damage Documentation',
@@ -2483,7 +2669,7 @@ const BodySection = () => {
       title: "Complete Replacement",
       frequency: "Full Roof System",
       description: "Premium protection for your home",
-      details: "Complete tear-off, underlayment, premium shingles, flashing replacement.",
+      details: "Our comprehensive roof replacement service includes complete tear-off, underlayment installation, premium shingles, flashing replacement, and ridge vent installation for optimal performance.",
       features: [
         "Full tear-off & disposal",
         "Premium architectural shingles",
@@ -2499,7 +2685,7 @@ const BodySection = () => {
       title: "Roof Repair",
       frequency: "Targeted Solutions",
       description: "Fast, reliable repair service",
-      details: "From minor leaks to storm damage repair, we provide prompt, lasting repairs.",
+      details: "From minor leaks to storm damage repair, our team provides prompt, lasting repairs. We identify the root cause and deliver solutions that extend your roof's lifespan without unnecessary replacement.",
       features: [
         "Emergency leak repair",
         "Shingle replacement",
@@ -2515,7 +2701,7 @@ const BodySection = () => {
       title: "Free Roof Inspection",
       frequency: "Comprehensive Assessment",
       description: "Expert evaluation & recommendations",
-      details: "Drone and manual assessment, photo documentation, detailed report.",
+      details: "Our thorough roof inspection includes drone and manual assessment of all roof components, photo documentation, detailed report, and honest recommendations—no pressure, just expertise.",
       features: [
         "Drone & manual inspection",
         "Thermal imaging available",
@@ -2535,26 +2721,27 @@ const BodySection = () => {
       paddingBottom: isMobile ? '60px' : '120px',
       paddingLeft: isMobile ? '20px' : '40px',
       fontFamily: "'Inter', sans-serif",
-      position: 'relative',
     },
     
     differenceSection: {
       maxWidth: '1400px',
       margin: '0 auto',
       marginBottom: isMobile ? '80px' : '120px',
-      textAlign: 'center',
+      textAlign: 'center' as const,
+      paddingLeft: isMobile ? '20px' : '0',
+      paddingRight: isMobile ? '20px' : '0',
       background: colors.navy,
       borderRadius: '32px',
       paddingTop: isMobile ? '40px' : '80px',
       paddingBottom: isMobile ? '40px' : '80px',
       boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
       border: `1px solid ${colors.goldBorder}`,
-      position: 'relative',
-      overflow: 'hidden',
+      position: 'relative' as const,
+      overflow: 'hidden' as const,
     },
     
     differenceSectionBg: {
-      position: 'absolute',
+      position: 'absolute' as const,
       top: 0,
       left: 0,
       right: 0,
@@ -2564,7 +2751,7 @@ const BodySection = () => {
     },
     
     differenceBadge: {
-      display: 'inline-flex',
+      display: 'inline-flex' as const,
       alignItems: 'center',
       gap: isMobile ? '8px' : '12px',
       backgroundColor: 'rgba(255, 184, 0, 0.15)',
@@ -2572,7 +2759,8 @@ const BodySection = () => {
       borderRadius: '50px',
       marginBottom: isMobile ? '30px' : '40px',
       border: `2px solid ${colors.goldBorder}`,
-      position: 'relative',
+      backdropFilter: 'blur(10px)',
+      position: 'relative' as const,
       zIndex: 2,
     },
     
@@ -2587,7 +2775,7 @@ const BodySection = () => {
       fontWeight: '700',
       color: colors.white,
       letterSpacing: '3px',
-      textTransform: 'uppercase',
+      textTransform: 'uppercase' as const,
       fontFamily: "'Inter', sans-serif",
     },
     
@@ -2603,7 +2791,7 @@ const BodySection = () => {
       lineHeight: '1',
       letterSpacing: '-0.5px',
       textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
-      position: 'relative',
+      position: 'relative' as const,
       zIndex: 2,
     },
     
@@ -2618,7 +2806,7 @@ const BodySection = () => {
       fontFamily: "'Inter', sans-serif",
       textShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
       letterSpacing: '-0.5px',
-      position: 'relative',
+      position: 'relative' as const,
       zIndex: 2,
     },
     
@@ -2627,25 +2815,31 @@ const BodySection = () => {
       color: colors.softWhite90,
       lineHeight: '1.7',
       maxWidth: '900px',
-      margin: '0 auto 40px',
+      marginTop: 0,
+      marginRight: 'auto',
+      marginBottom: isMobile ? '60px' : isTablet ? '80px' : '80px',
+      marginLeft: 'auto',
       fontWeight: '400',
       fontFamily: "'Inter', sans-serif",
-      position: 'relative',
+      position: 'relative' as const,
       zIndex: 2,
     },
     
     featuresGrid: {
-      display: 'grid',
+      display: 'grid' as const,
       gridTemplateColumns: isMobile ? '1fr' : isTablet ? '1fr' : 'repeat(2, 1fr)',
       gap: isMobile ? '32px' : isTablet ? '48px' : '64px',
       maxWidth: '1400px',
-      margin: '0 auto 80px',
+      margin: '0 auto',
+      marginBottom: isMobile ? '80px' : '120px',
+      paddingLeft: isMobile ? '20px' : '0',
+      paddingRight: isMobile ? '20px' : '0',
     },
     
     featureCard: (active: boolean) => ({
       backgroundColor: active ? colors.navyLight : colors.gray,
       borderRadius: '32px',
-      overflow: 'hidden',
+      overflow: 'hidden' as const,
       boxShadow: active 
         ? '0 40px 80px rgba(0, 0, 0, 0.4)' 
         : '0 20px 60px rgba(0, 0, 0, 0.3)',
@@ -2654,42 +2848,50 @@ const BodySection = () => {
         : `1px solid ${colors.goldBorder}`,
       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
       transform: active ? 'translateY(-15px) scale(1.02)' : 'translateY(0) scale(1)',
-      position: 'relative',
+      position: 'relative' as const,
     }),
     
     featureImageContainer: {
+      position: 'relative' as const,
       height: isMobile ? '200px' : isTablet ? '250px' : '300px',
-      overflow: 'hidden',
+      overflow: 'hidden' as const,
     },
     
     featureImage: {
       width: '100%',
       height: '100%',
-      objectFit: 'cover',
+      objectFit: 'cover' as const,
       transition: 'transform 0.5s ease',
     },
     
     featureNumberBadge: {
+      display: 'inline-flex' as const,
+      alignItems: 'center',
+      justifyContent: 'center',
       backgroundColor: colors.gold,
       color: colors.navyDark,
       width: isMobile ? '50px' : '60px',
       height: isMobile ? '50px' : '60px',
       borderRadius: '50%',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
       fontSize: isMobile ? '1.25rem' : '1.5rem',
       fontWeight: '700',
+      fontFamily: "'Inter', sans-serif",
+      boxShadow: '0 8px 20px rgba(0, 0, 0, 0.3)',
       marginRight: isMobile ? '12px' : '20px',
       flexShrink: 0,
+      transition: 'all 0.3s ease',
     },
     
     featureContent: {
-      padding: isMobile ? '24px 20px' : '48px 40px',
+      paddingTop: isMobile ? '24px' : '48px',
+      paddingRight: isMobile ? '20px' : '40px',
+      paddingBottom: isMobile ? '24px' : '48px',
+      paddingLeft: isMobile ? '20px' : '40px',
+      background: 'transparent',
     },
     
     featureTitleContainer: {
-      display: 'flex',
+      display: 'flex' as const,
       alignItems: 'center',
       marginBottom: isMobile ? '16px' : '24px',
     },
@@ -2698,32 +2900,46 @@ const BodySection = () => {
       fontSize: isMobile ? '1.5rem' : isTablet ? '1.75rem' : '2rem',
       fontWeight: '700',
       color: colors.white,
-      margin: 0,
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: 0,
+      marginLeft: 0,
       lineHeight: '1.2',
       fontFamily: "'Inter', sans-serif",
+      letterSpacing: '-0.25px',
     },
     
     featureDescription: {
       fontSize: isMobile ? '1rem' : isTablet ? '1.125rem' : '1.125rem',
       color: colors.softWhite90,
       lineHeight: '1.8',
+      marginTop: 0,
+      marginRight: 0,
       marginBottom: isMobile ? '24px' : '32px',
+      marginLeft: 0,
+      fontWeight: '400',
+      fontFamily: "'Inter', sans-serif",
     },
     
     featureList: {
-      display: 'flex',
-      flexDirection: 'column',
+      display: 'flex' as const,
+      flexDirection: 'column' as const,
       gap: isMobile ? '12px' : '20px',
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: isMobile ? '30px' : '40px',
+      marginLeft: 0,
     },
     
     featureListItem: {
-      display: 'flex',
+      display: 'flex' as const,
       alignItems: 'flex-start',
       gap: '16px',
       padding: '12px 16px',
       backgroundColor: 'rgba(255, 184, 0, 0.15)',
       borderRadius: '12px',
       border: `1px solid ${colors.goldBorder}`,
+      transition: 'all 0.3s ease',
     },
     
     checkIcon: {
@@ -2731,37 +2947,53 @@ const BodySection = () => {
       fontWeight: '700',
       fontSize: isMobile ? '20px' : '24px',
       flexShrink: 0,
+      marginTop: '2px',
     },
     
     featureListItemText: {
       fontSize: isMobile ? '0.95rem' : '1.1rem',
       color: colors.white,
       lineHeight: '1.6',
+      fontWeight: '400',
+      fontFamily: "'Inter', sans-serif",
     },
 
     transformationsSection: {
       maxWidth: '1400px',
-      margin: '0 auto 120px',
-      textAlign: 'center',
+      margin: '0 auto',
+      marginBottom: isMobile ? '80px' : '120px',
+      textAlign: 'center' as const,
+      paddingLeft: isMobile ? '20px' : '0',
+      paddingRight: isMobile ? '20px' : '0',
       background: colors.beige,
       borderRadius: '32px',
       paddingTop: isMobile ? '40px' : '80px',
       paddingBottom: isMobile ? '40px' : '80px',
       boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
       border: `1px solid ${colors.goldBorder}`,
-      position: 'relative',
-      overflow: 'hidden',
+      position: 'relative' as const,
+      overflow: 'hidden' as const,
+    },
+    
+    transformationsSectionBg: {
+      position: 'absolute' as const,
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: `radial-gradient(circle at 10% 10%, ${colors.goldLight} 0%, transparent 40%), radial-gradient(circle at 90% 90%, rgba(0, 0, 0, 0.05) 0%, transparent 40%)`,
+      zIndex: 1,
     },
     
     transformationsHeader: {
       marginBottom: isMobile ? '40px' : '60px',
-      position: 'relative',
+      position: 'relative' as const,
       zIndex: 2,
     },
     
     transformationsTitleContainer: {
-      display: 'flex',
-      flexDirection: 'column',
+      display: 'flex' as const,
+      flexDirection: 'column' as const,
       alignItems: 'center',
       marginBottom: '20px',
     },
@@ -2796,23 +3028,28 @@ const BodySection = () => {
       color: colors.navyDark,
       lineHeight: '1.6',
       maxWidth: '800px',
-      margin: '0 auto',
+      marginTop: 0,
+      marginRight: 'auto',
+      marginBottom: 0,
+      marginLeft: 'auto',
+      fontWeight: '400',
+      fontFamily: "'Inter', sans-serif",
     },
     
     beforeAfterContainer: {
-      display: 'flex',
-      flexDirection: 'column',
+      display: 'flex' as const,
+      flexDirection: 'column' as const,
       gap: isMobile ? '24px' : '40px',
       maxWidth: '1200px',
       margin: '0 auto',
-      position: 'relative',
+      position: 'relative' as const,
       zIndex: 2,
     },
     
     transformationCard: (active: boolean) => ({
       backgroundColor: active ? colors.beigeLight : colors.white,
       borderRadius: '32px',
-      overflow: 'hidden',
+      overflow: 'hidden' as const,
       boxShadow: active 
         ? '0 40px 80px rgba(0, 0, 0, 0.25)' 
         : '0 20px 60px rgba(0, 0, 0, 0.15)',
@@ -2827,37 +3064,53 @@ const BodySection = () => {
       fontSize: isMobile ? '1.5rem' : '1.75rem',
       fontWeight: '700',
       color: colors.navyDark,
-      margin: 0,
-      padding: isMobile ? '30px 20px 0' : '40px 40px 0',
-      textAlign: 'center',
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: isMobile ? '20px' : '30px',
+      marginLeft: 0,
+      textAlign: 'center' as const,
+      fontFamily: "'Inter', sans-serif",
+      paddingTop: isMobile ? '30px' : '40px',
+      paddingRight: isMobile ? '20px' : '40px',
+      paddingBottom: 0,
+      paddingLeft: isMobile ? '20px' : '40px',
     },
     
     beforeAfterGrid: {
-      display: 'grid',
+      display: 'grid' as const,
       gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
       gap: isMobile ? '20px' : '30px',
-      padding: isMobile ? '20px' : '40px',
+      paddingTop: 0,
+      paddingRight: isMobile ? '20px' : '40px',
+      paddingBottom: isMobile ? '30px' : '40px',
+      paddingLeft: isMobile ? '20px' : '40px',
     },
     
     imageContainer: {
-      position: 'relative',
+      position: 'relative' as const,
       borderRadius: '24px',
-      overflow: 'hidden',
+      overflow: 'hidden' as const,
       height: isMobile ? '250px' : isTablet ? '300px' : '350px',
       boxShadow: '0 15px 40px rgba(0, 0, 0, 0.2)',
+      transition: 'all 0.3s ease',
     },
     
     imageLabel: {
-      position: 'absolute',
+      position: 'absolute' as const,
       top: '20px',
       left: '20px',
       backgroundColor: colors.navyDark,
       color: colors.white,
-      padding: '8px 20px',
+      paddingTop: '8px',
+      paddingRight: '20px',
+      paddingBottom: '8px',
+      paddingLeft: '20px',
       borderRadius: '30px',
       fontSize: isMobile ? '0.9rem' : '1rem',
       fontWeight: '600',
+      fontFamily: "'Inter', sans-serif",
       zIndex: 2,
+      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
     },
     
     beforeLabel: {
@@ -2871,7 +3124,7 @@ const BodySection = () => {
     transformationImage: {
       width: '100%',
       height: '100%',
-      objectFit: 'cover',
+      objectFit: 'cover' as const,
       transition: 'transform 0.5s ease',
     },
     
@@ -2879,30 +3132,53 @@ const BodySection = () => {
       fontSize: isMobile ? '1rem' : '1.125rem',
       color: colors.navyDark,
       lineHeight: '1.6',
-      margin: 0,
-      padding: isMobile ? '0 20px 30px' : '0 40px 40px',
-      textAlign: 'center',
+      marginTop: isMobile ? '20px' : '30px',
+      marginRight: isMobile ? '20px' : '40px',
+      marginBottom: isMobile ? '30px' : '40px',
+      marginLeft: isMobile ? '20px' : '40px',
+      fontWeight: '400',
+      fontFamily: "'Inter', sans-serif",
+      textAlign: 'center' as const,
       borderTop: `2px solid ${colors.goldBorder}`,
       paddingTop: isMobile ? '20px' : '30px',
     },
 
     videoTestimonialsSection: {
       maxWidth: '1400px',
-      margin: '0 auto 120px',
-      textAlign: 'center',
+      margin: '0 auto',
+      marginBottom: isMobile ? '80px' : '120px',
+      textAlign: 'center' as const,
+      paddingLeft: isMobile ? '20px' : '0',
+      paddingRight: isMobile ? '20px' : '0',
       background: colors.gray,
       borderRadius: '32px',
       paddingTop: isMobile ? '40px' : '80px',
       paddingBottom: isMobile ? '40px' : '80px',
       boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
       border: `1px solid ${colors.goldBorder}`,
-      position: 'relative',
-      overflow: 'hidden',
+      position: 'relative' as const,
+      overflow: 'hidden' as const,
+    },
+    
+    videoTestimonialsSectionBg: {
+      position: 'absolute' as const,
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: `radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.05) 0%, transparent 50%), radial-gradient(circle at 70% 70%, ${colors.goldLight} 0%, transparent 50%)`,
+      zIndex: 1,
+    },
+    
+    videoTestimonialsHeader: {
+      marginBottom: isMobile ? '40px' : '60px',
+      position: 'relative' as const,
+      zIndex: 2,
     },
     
     videoTitleContainer: {
-      display: 'flex',
-      flexDirection: 'column',
+      display: 'flex' as const,
+      flexDirection: 'column' as const,
       alignItems: 'center',
       marginBottom: '20px',
     },
@@ -2937,31 +3213,56 @@ const BodySection = () => {
       color: colors.softWhite90,
       lineHeight: '1.6',
       maxWidth: '800px',
-      margin: '0 auto',
+      marginTop: 0,
+      marginRight: 'auto',
+      marginBottom: 0,
+      marginLeft: 'auto',
+      fontWeight: '400',
+      fontFamily: "'Inter', sans-serif",
     },
     
     videoGrid: {
-      display: 'grid',
+      display: 'grid' as const,
       gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
       gap: isMobile ? '20px' : isTablet ? '24px' : '32px',
       maxWidth: '1200px',
-      margin: '40px auto 60px',
-      position: 'relative',
+      margin: '0 auto',
+      marginBottom: isMobile ? '60px' : '80px',
+      position: 'relative' as const,
       zIndex: 2,
     },
-
+    
     reviewsSection: {
       maxWidth: '1400px',
-      margin: '0 auto 120px',
-      textAlign: 'center',
+      margin: '0 auto',
+      marginBottom: isMobile ? '80px' : '120px',
+      textAlign: 'center' as const,
+      paddingLeft: isMobile ? '20px' : '0',
+      paddingRight: isMobile ? '20px' : '0',
       background: colors.navyLight,
       borderRadius: '32px',
       paddingTop: isMobile ? '40px' : '80px',
       paddingBottom: isMobile ? '40px' : '80px',
       boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
       border: `1px solid ${colors.goldBorder}`,
-      position: 'relative',
-      overflow: 'hidden',
+      position: 'relative' as const,
+      overflow: 'hidden' as const,
+    },
+    
+    reviewsSectionBg: {
+      position: 'absolute' as const,
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: `radial-gradient(circle at 20% 20%, ${colors.goldLight} 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)`,
+      zIndex: 1,
+    },
+    
+    reviewsHeader: {
+      marginBottom: isMobile ? '40px' : '60px',
+      position: 'relative' as const,
+      zIndex: 2,
     },
     
     reviewsTitle: {
@@ -2981,24 +3282,32 @@ const BodySection = () => {
       color: colors.softWhite90,
       lineHeight: '1.6',
       maxWidth: '800px',
-      margin: '0 auto',
+      marginTop: 0,
+      marginRight: 'auto',
+      marginBottom: 0,
+      marginLeft: 'auto',
+      fontWeight: '400',
+      fontFamily: "'Inter', sans-serif",
     },
     
     reviewsGrid: {
-      display: 'grid',
+      display: 'grid' as const,
       gridTemplateColumns: isMobile ? '1fr' : isTablet ? '1fr' : 'repeat(2, 1fr)',
       gap: isMobile ? '20px' : isTablet ? '24px' : '32px',
       maxWidth: '1200px',
-      margin: '40px auto 0',
-      position: 'relative',
+      margin: '0 auto',
+      position: 'relative' as const,
       zIndex: 2,
     },
     
     reviewCard: (active: boolean) => ({
       backgroundColor: active ? colors.grayLight : colors.white,
       borderRadius: '32px',
-      padding: isMobile ? '30px 20px' : '40px 32px',
-      textAlign: 'left',
+      paddingTop: isMobile ? '30px' : '40px',
+      paddingRight: isMobile ? '20px' : '32px',
+      paddingBottom: isMobile ? '30px' : '40px',
+      paddingLeft: isMobile ? '20px' : '32px',
+      textAlign: 'left' as const,
       border: active 
         ? `2px solid ${colors.gold}` 
         : `2px solid ${colors.goldBorder}`,
@@ -3010,7 +3319,7 @@ const BodySection = () => {
     }),
     
     reviewHeader: {
-      display: 'flex',
+      display: 'flex' as const,
       alignItems: 'center',
       gap: isMobile ? '16px' : '20px',
       marginBottom: '24px',
@@ -3020,8 +3329,9 @@ const BodySection = () => {
       width: isMobile ? '60px' : '80px',
       height: isMobile ? '60px' : '80px',
       borderRadius: '50%',
-      objectFit: 'cover',
+      objectFit: 'cover' as const,
       border: `3px solid ${colors.gold}`,
+      boxShadow: `0 4px 12px ${colors.goldLight}`,
     },
     
     reviewerInfo: {
@@ -3032,62 +3342,179 @@ const BodySection = () => {
       fontSize: isMobile ? '1.25rem' : '1.5rem',
       fontWeight: '700',
       color: colors.navyDark,
-      margin: '0 0 8px 0',
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: '8px',
+      marginLeft: 0,
+      fontFamily: "'Inter', sans-serif",
     },
     
     reviewerDetails: {
       fontSize: isMobile ? '0.9rem' : '1rem',
       color: colors.grayDark,
-      margin: '0 0 8px 0',
+      fontWeight: '400',
+      fontFamily: "'Inter', sans-serif",
+      marginBottom: '8px',
     },
     
     starsContainer: {
-      display: 'flex',
+      display: 'flex' as const,
       gap: '4px',
     },
     
     starIcon: {
       color: colors.gold,
       fontSize: isMobile ? '1rem' : '1.25rem',
+      fontWeight: '700',
     },
     
     reviewContent: {
       fontSize: isMobile ? '0.95rem' : '1.1rem',
       color: colors.grayDark,
       lineHeight: '1.7',
-      margin: 0,
-      fontStyle: 'italic',
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: 0,
+      marginLeft: 0,
+      fontWeight: '400',
+      fontFamily: "'Inter', sans-serif",
+      fontStyle: 'italic' as const,
     },
-
+    
+    ourStorySection: {
+      maxWidth: '1400px',
+      margin: '0 auto',
+      marginBottom: isMobile ? '80px' : '120px',
+      textAlign: 'center' as const,
+      paddingLeft: isMobile ? '20px' : '0',
+      paddingRight: isMobile ? '20px' : '0',
+      background: colors.grayDark,
+      borderRadius: '32px',
+      paddingTop: isMobile ? '40px' : '80px',
+      paddingBottom: isMobile ? '40px' : '80px',
+      boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+      border: `1px solid ${colors.goldBorder}`,
+      position: 'relative' as const,
+      overflow: 'hidden' as const,
+    },
+    
+    ourStorySectionBg: {
+      position: 'absolute' as const,
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: `radial-gradient(circle at 20% 30%, ${colors.goldLight} 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)`,
+      zIndex: 1,
+    },
+    
+    ourStoryContent: {
+      maxWidth: '1000px',
+      margin: '0 auto',
+      position: 'relative' as const,
+      zIndex: 2,
+    },
+    
+    ourStoryTitle: {
+      fontSize: isMobile ? '2rem' : isTablet ? '2.25rem' : '2.5rem',
+      fontWeight: '700',
+      color: colors.white,
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: '30px',
+      marginLeft: 0,
+      fontFamily: "'Inter', sans-serif",
+      lineHeight: '1.2',
+    },
+    
+    ourStoryDescription: {
+      fontSize: isMobile ? '1.125rem' : isTablet ? '1.25rem' : '1.375rem',
+      color: colors.softWhite90,
+      lineHeight: '1.8',
+      marginTop: 0,
+      marginRight: 'auto',
+      marginBottom: isMobile ? '40px' : '60px',
+      marginLeft: 'auto',
+      fontWeight: '400',
+      fontFamily: "'Inter', sans-serif",
+      maxWidth: '900px',
+      padding: isMobile ? '20px' : '40px',
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      borderRadius: '24px',
+      boxShadow: '0 10px 40px rgba(0, 0, 0, 0.2)',
+      border: `1px solid ${colors.goldBorder}`,
+    },
+    
+    ourStoryButton: (active: boolean) => ({
+      display: 'inline-flex' as const,
+      alignItems: 'center',
+      gap: '12px',
+      backgroundColor: active ? colors.gold : colors.navy,
+      color: active ? colors.navyDark : colors.white,
+      border: 'none',
+      paddingTop: isMobile ? '16px' : '20px',
+      paddingRight: isMobile ? '24px' : '40px',
+      paddingBottom: isMobile ? '16px' : '20px',
+      paddingLeft: isMobile ? '24px' : '40px',
+      borderRadius: '50px',
+      fontSize: isMobile ? '0.95rem' : '1rem',
+      fontWeight: '700',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      textDecoration: 'none',
+      fontFamily: "'Inter', sans-serif",
+      transform: active ? 'translateY(-3px)' : 'translateY(0)',
+      boxShadow: active 
+        ? '0 15px 30px rgba(255, 184, 0, 0.4)' 
+        : '0 10px 25px rgba(0, 0, 0, 0.3)',
+    }),
+    
     flexibleSolutionsSection: {
       maxWidth: '1400px',
-      margin: '0 auto 120px',
-      textAlign: 'center',
+      margin: '0 auto',
+      marginBottom: isMobile ? '80px' : '120px',
+      textAlign: 'center' as const,
+      paddingLeft: isMobile ? '20px' : '0',
+      paddingRight: isMobile ? '20px' : '0',
       background: colors.navy,
       borderRadius: '32px',
       paddingTop: isMobile ? '40px' : '80px',
       paddingBottom: isMobile ? '40px' : '80px',
       boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
       border: `1px solid ${colors.goldBorder}`,
-      position: 'relative',
-      overflow: 'hidden',
+      position: 'relative' as const,
+      overflow: 'hidden' as const,
+    },
+    
+    flexibleSolutionsSectionBg: {
+      position: 'absolute' as const,
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: `radial-gradient(circle at 10% 90%, ${colors.goldLight} 0%, transparent 50%), radial-gradient(circle at 90% 10%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)`,
+      zIndex: 1,
     },
     
     flexibleSolutionsHeader: {
       marginBottom: isMobile ? '40px' : '60px',
-      position: 'relative',
+      position: 'relative' as const,
       zIndex: 2,
     },
     
     flexibleSolutionsBadge: {
-      display: 'inline-flex',
+      display: 'inline-flex' as const,
       alignItems: 'center',
       gap: isMobile ? '8px' : '12px',
       backgroundColor: 'rgba(255, 184, 0, 0.15)',
-      padding: isMobile ? '12px 20px' : '16px 32px',
+      paddingTop: isMobile ? '12px' : '16px',
+      paddingRight: isMobile ? '20px' : '32px',
+      paddingBottom: isMobile ? '12px' : '16px',
+      paddingLeft: isMobile ? '20px' : '32px',
       borderRadius: '50px',
       marginBottom: isMobile ? '20px' : '30px',
       border: `2px solid ${colors.goldBorder}`,
+      backdropFilter: 'blur(10px)',
     },
     
     flexibleSolutionsBadgeText: {
@@ -3095,7 +3522,7 @@ const BodySection = () => {
       fontWeight: '700',
       color: colors.white,
       letterSpacing: '3px',
-      textTransform: 'uppercase',
+      textTransform: 'uppercase' as const,
       fontFamily: "'Inter', sans-serif",
     },
     
@@ -3103,17 +3530,24 @@ const BodySection = () => {
       fontSize: isMobile ? '2.5rem' : isTablet ? '3rem' : '3.5rem',
       fontWeight: '700',
       color: colors.white,
-      margin: '0 0 20px 0',
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: '20px',
+      marginLeft: 0,
       lineHeight: '1',
       fontFamily: "'Inter', sans-serif",
       letterSpacing: '-1px',
+      textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
     },
     
     flexibleSolutionsSubtitle: {
       fontSize: isMobile ? '1.75rem' : isTablet ? '2rem' : '2rem',
       fontWeight: '700',
       color: colors.white,
-      margin: '0 0 16px 0',
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: '16px',
+      marginLeft: 0,
       fontFamily: "'Inter', sans-serif",
       lineHeight: '1.2',
     },
@@ -3123,23 +3557,29 @@ const BodySection = () => {
       color: colors.softWhite90,
       lineHeight: '1.7',
       maxWidth: '900px',
-      margin: '0 auto 60px',
+      marginTop: 0,
+      marginRight: 'auto',
+      marginBottom: isMobile ? '40px' : '60px',
+      marginLeft: 'auto',
+      fontWeight: '400',
+      fontFamily: "'Inter', sans-serif",
     },
     
     cleaningPlansGrid: {
-      display: 'grid',
+      display: 'grid' as const,
       gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
       gap: isMobile ? '32px' : isTablet ? '24px' : '32px',
       maxWidth: '1400px',
-      margin: '0 auto 60px',
-      position: 'relative',
+      margin: '0 auto',
+      marginBottom: isMobile ? '60px' : '80px',
+      position: 'relative' as const,
       zIndex: 2,
     },
     
     cleaningPlanCard: (active: boolean, color: string) => ({
       backgroundColor: active ? colors.grayLight : colors.white,
       borderRadius: '32px',
-      overflow: 'hidden',
+      overflow: 'hidden' as const,
       boxShadow: active 
         ? '0 40px 80px rgba(0, 0, 0, 0.3)' 
         : '0 20px 60px rgba(0, 0, 0, 0.2)',
@@ -3148,72 +3588,101 @@ const BodySection = () => {
         : `2px solid ${colors.goldBorder}`,
       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
       transform: active ? 'translateY(-20px)' : 'translateY(0)',
-      display: 'flex',
-      flexDirection: 'column',
+      display: 'flex' as const,
+      flexDirection: 'column' as const,
     }),
     
     planHeader: (color: string) => ({
       backgroundColor: color,
-      padding: isMobile ? '30px 24px' : '40px 32px',
-      textAlign: 'center',
+      paddingTop: isMobile ? '30px' : '40px',
+      paddingRight: isMobile ? '24px' : '32px',
+      paddingBottom: isMobile ? '30px' : '40px',
+      paddingLeft: isMobile ? '24px' : '32px',
+      textAlign: 'center' as const,
       color: color === colors.beige ? colors.navyDark : colors.white,
     }),
     
     planBadge: {
-      display: 'inline-block',
+      display: 'inline-block' as const,
       backgroundColor: 'rgba(255, 255, 255, 0.2)',
-      padding: '8px 20px',
+      paddingTop: '8px',
+      paddingRight: '20px',
+      paddingBottom: '8px',
+      paddingLeft: '20px',
       borderRadius: '30px',
       fontSize: '14px',
       fontWeight: '700',
       marginBottom: '20px',
       letterSpacing: '2px',
-      textTransform: 'uppercase',
+      textTransform: 'uppercase' as const,
+      fontFamily: "'Inter', sans-serif",
     },
     
     planTitle: {
       fontSize: isMobile ? '1.75rem' : '2rem',
       fontWeight: '700',
-      margin: '0 0 12px 0',
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: '12px',
+      marginLeft: 0,
+      fontFamily: "'Inter', sans-serif",
       lineHeight: '1.1',
     },
     
     planFrequency: {
       fontSize: isMobile ? '1.125rem' : '1.25rem',
       fontWeight: '600',
-      margin: '0 0 8px 0',
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: '8px',
+      marginLeft: 0,
+      fontFamily: "'Inter', sans-serif",
       opacity: 0.9,
     },
     
     planDescription: {
       fontSize: isMobile ? '1rem' : '1.125rem',
-      margin: 0,
+      fontWeight: '400',
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: 0,
+      marginLeft: 0,
+      fontFamily: "'Inter', sans-serif",
     },
     
     planContent: {
-      padding: isMobile ? '30px 24px' : '40px 32px',
+      paddingTop: isMobile ? '30px' : '40px',
+      paddingRight: isMobile ? '24px' : '32px',
+      paddingBottom: isMobile ? '30px' : '40px',
+      paddingLeft: isMobile ? '24px' : '32px',
       flex: 1,
-      display: 'flex',
-      flexDirection: 'column',
+      display: 'flex' as const,
+      flexDirection: 'column' as const,
+      background: 'transparent',
     },
     
     planDetails: {
       fontSize: isMobile ? '0.95rem' : '1rem',
       color: colors.grayDark,
       lineHeight: '1.7',
-      margin: '0 0 32px 0',
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: '32px',
+      marginLeft: 0,
+      fontWeight: '400',
+      fontFamily: "'Inter', sans-serif",
       flex: 1,
     },
     
     planFeatures: {
-      display: 'flex',
-      flexDirection: 'column',
+      display: 'flex' as const,
+      flexDirection: 'column' as const,
       gap: isMobile ? '12px' : '16px',
       marginBottom: isMobile ? '30px' : '40px',
     },
     
     planFeature: {
-      display: 'flex',
+      display: 'flex' as const,
       alignItems: 'flex-start',
       gap: '12px',
       padding: '12px 16px',
@@ -3224,45 +3693,58 @@ const BodySection = () => {
     
     planFeatureIcon: {
       color: colors.gold,
+      fontWeight: '700',
       fontSize: '20px',
       flexShrink: 0,
+      marginTop: '2px',
     },
     
     planFeatureText: {
       fontSize: isMobile ? '0.9rem' : '1rem',
       color: colors.navyDark,
       lineHeight: '1.5',
+      fontWeight: '400',
+      fontFamily: "'Inter', sans-serif",
     },
     
     planButton: (active: boolean, color: string) => ({
-      display: 'inline-flex',
+      display: 'inline-flex' as const,
       alignItems: 'center',
       justifyContent: 'center',
       gap: '12px',
       backgroundColor: active ? color : 'transparent',
       color: active ? (color === colors.beige ? colors.navyDark : colors.white) : color,
       border: `3px solid ${color}`,
-      padding: isMobile ? '16px 24px' : '20px 32px',
+      paddingTop: isMobile ? '16px' : '20px',
+      paddingRight: isMobile ? '24px' : '32px',
+      paddingBottom: isMobile ? '16px' : '20px',
+      paddingLeft: isMobile ? '24px' : '32px',
       borderRadius: '50px',
       fontSize: isMobile ? '0.95rem' : '1rem',
       fontWeight: '700',
       cursor: 'pointer',
       transition: 'all 0.3s ease',
+      textDecoration: 'none',
+      fontFamily: "'Inter', sans-serif",
       transform: active ? 'translateY(-3px)' : 'translateY(0)',
       boxShadow: active ? '0 15px 30px rgba(0, 0, 0, 0.2)' : 'none',
       width: '100%',
     }),
-
+    
     consultationSection: {
       backgroundColor: colors.beigeDark,
       borderRadius: '24px',
-      padding: isMobile ? '40px 24px' : '60px 40px',
-      textAlign: 'center',
+      paddingTop: isMobile ? '40px' : '60px',
+      paddingRight: isMobile ? '24px' : '40px',
+      paddingBottom: isMobile ? '40px' : '60px',
+      paddingLeft: isMobile ? '24px' : '40px',
+      textAlign: 'center' as const,
       border: `2px solid ${colors.goldBorder}`,
       maxWidth: '1000px',
       margin: '0 auto',
-      position: 'relative',
+      position: 'relative' as const,
       zIndex: 2,
+      backdropFilter: 'blur(10px)',
       background: `linear-gradient(135deg, ${colors.beigeDark} 0%, ${colors.beige} 100%)`,
       boxShadow: '0 20px 60px rgba(0, 0, 0, 0.2)',
     },
@@ -3271,7 +3753,11 @@ const BodySection = () => {
       fontSize: isMobile ? '1.75rem' : isTablet ? '2rem' : '2.25rem',
       fontWeight: '700',
       color: colors.navyDark,
-      margin: '0 0 24px 0',
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: '24px',
+      marginLeft: 0,
+      fontFamily: "'Inter', sans-serif",
       lineHeight: '1.2',
     },
     
@@ -3279,37 +3765,72 @@ const BodySection = () => {
       fontSize: isMobile ? '1.125rem' : isTablet ? '1.25rem' : '1.375rem',
       color: colors.navyDark,
       lineHeight: '1.7',
-      margin: '0 auto 40px',
+      marginTop: 0,
+      marginRight: 'auto',
+      marginBottom: '40px',
+      marginLeft: 'auto',
+      fontWeight: '400',
+      fontFamily: "'Inter', sans-serif",
       maxWidth: '800px',
     },
     
     consultationButton: (active: boolean) => ({
-      display: 'inline-flex',
+      display: 'inline-flex' as const,
       alignItems: 'center',
       gap: '12px',
       backgroundColor: active ? colors.gold : colors.navy,
       color: active ? colors.navyDark : colors.white,
       border: 'none',
-      padding: isMobile ? '16px 32px' : '20px 48px',
+      paddingTop: isMobile ? '16px' : '20px',
+      paddingRight: isMobile ? '32px' : '48px',
+      paddingBottom: isMobile ? '16px' : '20px',
+      paddingLeft: isMobile ? '32px' : '48px',
       borderRadius: '50px',
       fontSize: isMobile ? '1rem' : '1.125rem',
       fontWeight: '700',
       cursor: 'pointer',
       transition: 'all 0.3s ease',
+      textDecoration: 'none',
+      fontFamily: "'Inter', sans-serif",
       transform: active ? 'translateY(-3px)' : 'translateY(0)',
       boxShadow: active 
         ? '0 20px 40px rgba(255, 184, 0, 0.4)' 
         : '0 15px 30px rgba(0, 0, 0, 0.3)',
     }),
+    
+    beforeAfterCTA: (active: boolean) => ({
+      display: 'inline-flex' as const,
+      alignItems: 'center',
+      gap: '12px',
+      backgroundColor: active ? colors.gold : colors.navyDark,
+      color: active ? colors.navyDark : colors.white,
+      border: 'none',
+      paddingTop: isMobile ? '16px' : '20px',
+      paddingRight: isMobile ? '24px' : '40px',
+      paddingBottom: isMobile ? '16px' : '20px',
+      paddingLeft: isMobile ? '24px' : '40px',
+      borderRadius: '50px',
+      fontSize: isMobile ? '0.95rem' : '1rem',
+      fontWeight: '700',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      textDecoration: 'none',
+      fontFamily: "'Inter', sans-serif",
+      transform: active ? 'translateY(-3px)' : 'translateY(0)',
+      boxShadow: active 
+        ? '0 15px 30px rgba(255, 184, 0, 0.4)' 
+        : '0 10px 25px rgba(0, 0, 0, 0.3)',
+      marginTop: '40px',
+      position: 'relative' as const,
+      zIndex: 2,
+    }),
   };
 
   return (
     <section style={baseBodyStyles.bodyContainer}>
-      <StarPopper side="left" />
-      <StarPopper side="right" />
-      
       {/* Section 1: The BRAVOS Difference */}
       <div style={baseBodyStyles.differenceSection}>
+        <StarRotationRing size={400} color="#FFB800" />
         <div style={baseBodyStyles.differenceSectionBg}></div>
         <div style={baseBodyStyles.differenceBadge}>
           <span style={baseBodyStyles.diamondIcon}>✦</span>
@@ -3317,9 +3838,6 @@ const BodySection = () => {
         </div>
         
         <div>
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-            <RotatingStarRing color="#FFB800" size={60} />
-          </div>
           <h2 style={baseBodyStyles.navySubtitle}>
             What You Can Expect from BRAVOS
           </h2>
@@ -3332,10 +3850,9 @@ const BodySection = () => {
           With over 25 years of industry experience, BRAVOS has earned its reputation as Houston's most trusted roofing contractor. 
           We combine master craftsmanship with premium materials to deliver roofs that protect your home and enhance its beauty.
         </p>
+        
+        <LogoCarousel autoRotate={true} showNavigation={true} />
       </div>
-
-      {/* Logo Carousel between Section 1 and Section 2 */}
-      <LogoCarousel backgroundColor={colors.navyDark} />
 
       {/* Section 2: Features Grid */}
       <div style={baseBodyStyles.featuresGrid}>
@@ -3388,17 +3905,14 @@ const BodySection = () => {
         ))}
       </div>
 
-      {/* Logo Carousel between Section 2 and Section 3 */}
-      <LogoCarousel backgroundColor={colors.navyDark} />
+      <LogoCarousel autoRotate={true} showNavigation={true} />
 
-      {/* Section 3: Before & After */}
+      {/* Section 3: Before & After Transformations */}
       <div style={baseBodyStyles.transformationsSection}>
+        <StarRotationRing size={400} color="#FFB800" />
         <div style={baseBodyStyles.transformationsSectionBg}></div>
         <div style={baseBodyStyles.transformationsHeader}>
           <div style={baseBodyStyles.transformationsTitleContainer}>
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-              <RotatingStarRing color="#3C3B6E" size={60} />
-            </div>
             <h2 style={baseBodyStyles.navyTitle}>
               See the BRAVOS Difference:
             </h2>
@@ -3461,19 +3975,47 @@ const BodySection = () => {
             </div>
           ))}
         </div>
+        
+        <button
+          style={baseBodyStyles.beforeAfterCTA(activeBeforeAfterButton)}
+          onMouseEnter={() => setActiveBeforeAfterButton(true)}
+          onMouseLeave={() => setActiveBeforeAfterButton(false)}
+          onTouchStart={() => handleTouchStart(setActiveBeforeAfterButton, true)}
+          onTouchEnd={() => handleTouchEnd(setActiveBeforeAfterButton, false)}
+          onClick={() => {
+            window.location.href = '/gallery';
+          }}
+        >
+          See More Transformations
+          <svg 
+            width="20" 
+            height="20" 
+            viewBox="0 0 24 24" 
+            fill="none"
+            style={{
+              transition: 'transform 0.3s ease',
+              transform: activeBeforeAfterButton ? 'translateX(5px)' : 'translateX(0)'
+            }}
+          >
+            <path 
+              d="M5 12H19M19 12L12 5M19 12L12 19" 
+              stroke="currentColor" 
+              strokeWidth="2" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
       </div>
 
-      {/* Logo Carousel between Section 3 and Section 4 */}
-      <LogoCarousel backgroundColor={colors.navyDark} />
+      <LogoCarousel autoRotate={true} showNavigation={true} />
 
       {/* Section 4: Video Testimonials */}
       <div style={baseBodyStyles.videoTestimonialsSection}>
+        <StarRotationRing size={400} color="#FFB800" />
         <div style={baseBodyStyles.videoTestimonialsSectionBg}></div>
-        <div style={baseBodyStyles.transformationsHeader}>
+        <div style={baseBodyStyles.videoTestimonialsHeader}>
           <div style={baseBodyStyles.videoTitleContainer}>
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-              <RotatingStarRing color="#FFB800" size={60} />
-            </div>
             <h2 style={baseBodyStyles.videoNavyTitle}>
               Video Testimonials
             </h2>
@@ -3501,16 +4043,13 @@ const BodySection = () => {
         </div>
       </div>
 
-      {/* Logo Carousel between Section 4 and Section 5 */}
-      <LogoCarousel backgroundColor={colors.navyDark} />
+      <LogoCarousel autoRotate={true} showNavigation={true} />
 
       {/* Section 5: Customer Reviews */}
       <div style={baseBodyStyles.reviewsSection}>
+        <StarRotationRing size={400} color="#FFB800" />
         <div style={baseBodyStyles.reviewsSectionBg}></div>
-        <div style={baseBodyStyles.transformationsHeader}>
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-            <RotatingStarRing color="#FFB800" size={60} />
-          </div>
+        <div style={baseBodyStyles.reviewsHeader}>
           <h2 style={baseBodyStyles.reviewsTitle}>
             Real Reviews from Real Homeowners
           </h2>
@@ -3558,20 +4097,386 @@ const BodySection = () => {
         </div>
       </div>
 
-      {/* Logo Carousel between Section 5 and Section 6 */}
-      <LogoCarousel backgroundColor={colors.navyDark} />
+      <LogoCarousel autoRotate={true} showNavigation={true} />
 
-      {/* Section 6: Roofing Services */}
+      {/* Section 6: Meet the Founders */}
+      <div style={{
+        maxWidth: '1400px',
+        margin: '0 auto',
+        marginBottom: isMobile ? '80px' : '120px',
+        paddingTop: isMobile ? '0' : '0',
+        paddingRight: isMobile ? '20px' : '40px',
+        paddingBottom: isMobile ? '0' : '0',
+        paddingLeft: isMobile ? '20px' : '40px',
+        background: colors.beigeDark,
+        borderRadius: '32px',
+        padding: isMobile ? '40px 20px' : '80px 40px',
+        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+        border: `1px solid ${colors.goldBorder}`,
+        position: 'relative' as const,
+        overflow: 'hidden' as const,
+      }}>
+        <StarRotationRing size={400} color="#FFB800" />
+        <div style={{
+          position: 'absolute' as const,
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: `radial-gradient(circle at 20% 80%, ${colors.goldLight} 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(0, 0, 0, 0.05) 0%, transparent 50%)`,
+          zIndex: 1,
+        }}></div>
+        
+        <div style={{
+          display: 'flex' as const,
+          flexDirection: isMobile ? 'column' as const : 'row' as const,
+          gap: isMobile ? '40px' : isTablet ? '50px' : '80px',
+          alignItems: 'center',
+          position: 'relative' as const,
+          zIndex: 2,
+        }}>
+          
+          <div style={{
+            flex: 1,
+            position: 'relative' as const,
+          }}>
+            <div style={{
+              backgroundColor: colors.navyDark,
+              borderRadius: '30px',
+              padding: '8px',
+              position: 'relative' as const,
+              boxShadow: '0 40px 80px rgba(0, 0, 0, 0.4)',
+            }}>
+              <img 
+                src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                alt="BRAVOS Founders"
+                style={{
+                  width: '100%',
+                  height: isMobile ? '400px' : isTablet ? '500px' : '600px',
+                  objectFit: 'cover' as const,
+                  borderRadius: '24px',
+                  border: `4px solid ${colors.gold}`,
+                }}
+              />
+              
+              <div style={{
+                position: 'absolute' as const,
+                bottom: isMobile ? '-20px' : isTablet ? '-25px' : '-30px',
+                left: isMobile ? '20px' : '40px',
+                right: isMobile ? '20px' : '40px',
+                backgroundColor: colors.gold,
+                paddingTop: isMobile ? '20px' : '30px',
+                paddingRight: isMobile ? '20px' : '30px',
+                paddingBottom: isMobile ? '20px' : '30px',
+                paddingLeft: isMobile ? '20px' : '30px',
+                borderRadius: '20px',
+                textAlign: 'center' as const,
+                boxShadow: '0 20px 40px rgba(255, 184, 0, 0.4)',
+                transform: 'rotate(-2deg)',
+                zIndex: 3,
+              }}>
+                <div style={{
+                  fontSize: isMobile ? '18px' : isTablet ? '20px' : '24px',
+                  fontWeight: '700',
+                  color: colors.navyDark,
+                  fontFamily: "'Inter', sans-serif",
+                }}>
+                  Quality Inspectors & Founders
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div style={{
+            flex: 1,
+            textAlign: isMobile ? 'center' as const : 'left' as const,
+          }}>
+            <div style={{
+              display: 'inline-flex' as const,
+              alignItems: 'center',
+              gap: isMobile ? '8px' : '12px',
+              backgroundColor: 'rgba(255, 184, 0, 0.15)',
+              paddingTop: isMobile ? '12px' : '16px',
+              paddingRight: isMobile ? '20px' : '32px',
+              paddingBottom: isMobile ? '12px' : '16px',
+              paddingLeft: isMobile ? '20px' : '32px',
+              borderRadius: '50px',
+              marginBottom: isMobile ? '30px' : '40px',
+              border: `2px solid ${colors.goldBorder}`,
+              backdropFilter: 'blur(10px)',
+            }}>
+              <span style={{
+                color: colors.gold,
+                fontWeight: '700',
+                fontSize: isMobile ? '20px' : '24px',
+                fontFamily: "'Inter', sans-serif",
+              }}>
+                ✦
+              </span>
+              <span style={{
+                fontSize: isMobile ? '14px' : '18px',
+                fontWeight: '700',
+                color: colors.navyDark,
+                letterSpacing: '3px',
+                textTransform: 'uppercase' as const,
+                fontFamily: "'Inter', sans-serif",
+              }}>
+                Meet The Visionaries
+              </span>
+            </div>
+            
+            <div style={{
+              marginBottom: isMobile ? '20px' : '30px',
+            }}>
+              <h2 style={{
+                fontSize: isMobile ? '2rem' : isTablet ? '2.5rem' : '3rem',
+                fontWeight: '700',
+                color: colors.navyDark,
+                marginTop: 0,
+                marginRight: 0,
+                marginBottom: '8px',
+                marginLeft: 0,
+                fontFamily: "'Inter', sans-serif",
+                lineHeight: '1',
+                letterSpacing: '-1px',
+                textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+              }}>
+                Meet The Founders:
+              </h2>
+              <h2 style={{
+                fontSize: isMobile ? '3rem' : isTablet ? '4rem' : '5rem',
+                fontWeight: '700',
+                color: colors.navyDark,
+                marginTop: 0,
+                marginRight: 0,
+                marginBottom: '8px',
+                marginLeft: 0,
+                fontFamily: "'Inter', sans-serif",
+                lineHeight: '0.9',
+              }}>
+                David{" "}
+                <span style={{
+                  color: colors.gold,
+                  fontSize: isMobile ? '3.5rem' : isTablet ? '4.5rem' : '6rem',
+                  display: 'inline-block' as const,
+                  margin: '0 20px',
+                  transform: 'translateY(5px)',
+                }}>
+                  &
+                </span>
+                {" "}Sarah
+              </h2>
+            </div>
+            
+            <p style={{
+              fontSize: isMobile ? '1.125rem' : isTablet ? '1.25rem' : '1.375rem',
+              color: colors.navyDark,
+              lineHeight: '1.7',
+              marginTop: 0,
+              marginRight: 0,
+              marginBottom: isMobile ? '20px' : '30px',
+              marginLeft: 0,
+              fontWeight: '400',
+              fontFamily: "'Inter', sans-serif",
+            }}>
+              The husband-and-wife team behind Houston's most trusted roofing company. 
+              Their commitment to craftsmanship and integrity has built BRAVOS into the region's premier roofing contractor.
+            </p>
+            
+            <div style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.2)',
+              padding: isMobile ? '30px' : '40px',
+              borderRadius: '20px',
+              border: `2px solid ${colors.goldBorder}`,
+              marginBottom: isMobile ? '30px' : '40px',
+              backdropFilter: 'blur(10px)',
+              background: 'rgba(255, 255, 255, 0.1)',
+              boxShadow: '0 10px 40px rgba(0, 0, 0, 0.1)',
+            }}>
+              <h3 style={{
+                fontSize: isMobile ? '1.5rem' : isTablet ? '1.75rem' : '2rem',
+                fontWeight: '700',
+                color: colors.navyDark,
+                marginTop: 0,
+                marginRight: 0,
+                marginBottom: isMobile ? '16px' : '20px',
+                marginLeft: 0,
+                fontFamily: "'Inter', sans-serif",
+              }}>
+                Our Story of Excellence
+              </h3>
+              <p style={{
+                fontSize: isMobile ? '0.95rem' : '1rem',
+                color: colors.navyDark,
+                lineHeight: '1.8',
+                marginTop: 0,
+                marginRight: 0,
+                marginBottom: isMobile ? '16px' : '20px',
+                marginLeft: 0,
+                fontWeight: '400',
+                fontFamily: "'Inter', sans-serif",
+              }}>
+                With over 25 years of combined experience in the roofing industry, David and Sarah founded BRAVOS with one mission: 
+                to provide Houston homeowners with honest, high-quality roofing solutions backed by exceptional customer service.
+              </p>
+              <p style={{
+                fontSize: isMobile ? '0.95rem' : '1rem',
+                color: colors.navyDark,
+                lineHeight: '1.8',
+                marginTop: 0,
+                marginRight: 0,
+                marginBottom: 0,
+                marginLeft: 0,
+                fontWeight: '400',
+                fontFamily: "'Inter', sans-serif",
+              }}>
+                What started as a family operation has grown into Houston's #1 rated roofing company, serving over 3,500 homeowners 
+                and maintaining a 99.7% satisfaction rate. Their hands-on approach means they're personally invested in every project.
+              </p>
+            </div>
+            
+            <button
+              style={{
+                display: 'inline-flex' as const,
+                alignItems: 'center',
+                gap: '12px',
+                backgroundColor: colors.navyDark,
+                color: colors.white,
+                border: 'none',
+                paddingTop: isMobile ? '16px' : '20px',
+                paddingRight: isMobile ? '24px' : '40px',
+                paddingBottom: isMobile ? '16px' : '20px',
+                paddingLeft: isMobile ? '24px' : '40px',
+                borderRadius: '50px',
+                fontSize: isMobile ? '0.95rem' : '1rem',
+                fontWeight: '700',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                textDecoration: 'none',
+                fontFamily: "'Inter', sans-serif",
+                transform: activeButton === 'learnMore' ? 'translateY(-3px)' : 'translateY(0)',
+                boxShadow: activeButton === 'learnMore' 
+                  ? '0 20px 40px rgba(0, 0, 0, 0.4)' 
+                  : '0 10px 30px rgba(0, 0, 0, 0.3)',
+              }}
+              onMouseEnter={() => setActiveButton('learnMore')}
+              onMouseLeave={() => setActiveButton(null)}
+              onTouchStart={() => handleTouchStart(setActiveButton, 'learnMore')}
+              onTouchEnd={() => handleTouchEnd(setActiveButton, null)}
+              onClick={() => {
+                window.location.href = '/about';
+              }}
+            >
+              Learn More About Us
+              <svg 
+                width="20" 
+                height="20" 
+                viewBox="0 0 24 24" 
+                fill="none"
+                style={{
+                  transition: 'transform 0.3s ease',
+                  transform: activeButton === 'learnMore' ? 'translateX(5px)' : 'translateX(0)'
+                }}
+              >
+                <path 
+                  d="M5 12H19M19 12L12 5M19 12L12 19" 
+                  stroke="currentColor" 
+                  strokeWidth="2" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <LogoCarousel autoRotate={true} showNavigation={true} />
+
+      {/* Section 7: Our Story */}
+      <div style={baseBodyStyles.ourStorySection}>
+        <StarRotationRing size={400} color="#FFB800" />
+        <div style={baseBodyStyles.ourStorySectionBg}></div>
+        <div style={baseBodyStyles.ourStoryContent}>
+          <h2 style={baseBodyStyles.ourStoryTitle}>
+            The BRAVOS Commitment
+          </h2>
+          
+          <div style={baseBodyStyles.ourStoryDescription}>
+            <p style={{
+              marginTop: 0,
+              marginBottom: '30px',
+              fontSize: isMobile ? '1.125rem' : '1.25rem',
+              lineHeight: 1.7,
+              fontWeight: '400',
+              color: colors.white,
+              fontFamily: "'Inter', sans-serif",
+            }}>
+              While other contractors focus on speed, we focus on precision. Every BRAVOS roof is engineered for maximum 
+              protection, optimal ventilation, and lasting beauty. We don't just install roofs—we create lasting relationships 
+              built on trust, quality, and unparalleled customer service.
+            </p>
+            
+            <StatsCounter />
+            
+            <p style={{
+              marginTop: '40px',
+              marginBottom: 0,
+              fontSize: isMobile ? '1.125rem' : '1.25rem',
+              lineHeight: 1.7,
+              fontWeight: '400',
+              color: colors.white,
+              fontFamily: "'Inter', sans-serif",
+            }}>
+              Join thousands of satisfied homeowners who trust BRAVOS with their most valuable investment. 
+              From our meticulous installation process to our comprehensive warranties, we're redefining 
+              what it means to be a roofing contractor in Houston.
+            </p>
+          </div>
+          
+          <button
+            style={baseBodyStyles.ourStoryButton(activeOurStory)}
+            onMouseEnter={() => setActiveOurStory(true)}
+            onMouseLeave={() => setActiveOurStory(false)}
+            onTouchStart={() => handleTouchStart(setActiveOurStory, true)}
+            onTouchEnd={() => handleTouchEnd(setActiveOurStory, false)}
+            onClick={() => {
+              window.location.href = '/about';
+            }}
+          >
+            Discover Our Story
+            <svg 
+              width="20" 
+              height="20" 
+              viewBox="0 0 24 24" 
+              fill="none"
+              style={{
+                transition: 'transform 0.3s ease',
+                transform: activeOurStory ? 'translateX(5px)' : 'translateX(0)'
+              }}
+            >
+              <path 
+                d="M5 12H19M19 12L12 5M19 12L12 19" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <LogoCarousel autoRotate={true} showNavigation={true} />
+
+      {/* Section 8: Roofing Services */}
       <div style={baseBodyStyles.flexibleSolutionsSection}>
+        <StarRotationRing size={400} color="#FFB800" />
         <div style={baseBodyStyles.flexibleSolutionsSectionBg}></div>
         <div style={baseBodyStyles.flexibleSolutionsHeader}>
           <div style={baseBodyStyles.flexibleSolutionsBadge}>
             <span style={baseBodyStyles.diamondIcon}>✦</span>
             <span style={baseBodyStyles.flexibleSolutionsBadgeText}>Roofing Services</span>
-          </div>
-          
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-            <RotatingStarRing color="#FFB800" size={70} />
           </div>
           
           <h2 style={baseBodyStyles.flexibleSolutionsTitle}>
@@ -3666,11 +4571,8 @@ const BodySection = () => {
           ))}
         </div>
         
-        {/* Consultation Card */}
+        {/* Section 9: Consultation Card */}
         <div style={baseBodyStyles.consultationSection}>
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-            <RotatingStarRing color="#3C3B6E" size={50} />
-          </div>
           <h3 style={baseBodyStyles.consultationTitle}>
             Not Sure What Your Roof Needs?
           </h3>
@@ -3711,8 +4613,7 @@ const BodySection = () => {
         </div>
       </div>
 
-      {/* Logo Carousel before FAQ */}
-      <LogoCarousel backgroundColor={colors.navyDark} />
+      <LogoCarousel autoRotate={true} showNavigation={true} />
 
       {/* FAQ Section */}
       <FAQSection 
@@ -3732,8 +4633,8 @@ const BodySection = () => {
           borderRadius: '32px',
           boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
           border: `1px solid ${colors.goldBorder}`,
-          position: 'relative',
-          overflow: 'hidden',
+          position: 'relative' as const,
+          overflow: 'hidden' as const,
         }}
       />
     </section>
