@@ -290,7 +290,7 @@ function LogoCarousel({
   const [isHovered, setIsHovered] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const autoRotateRef = useRef<NodeJS.Timeout>();
+  const autoRotateRef = useRef<NodeJS.Timeout>(undefined);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -2020,6 +2020,7 @@ const StatsCounter = () => {
 };
 
 // FAQ Section Component
+// FAQ Section Component (FIXED VERSION)
 interface FAQItem {
   question: string;
   answer: string;
@@ -2138,7 +2139,7 @@ function FAQSection({
       marginBottom: '20px',
       transition: 'all 0.3s ease',
       cursor: 'pointer',
-      position: 'relative',
+      position: 'relative' as const,
       zIndex: 2,
     },
     badgeIcon: {
@@ -2165,7 +2166,7 @@ function FAQSection({
       maxWidth: '900px',
       transition: 'all 0.3s ease',
       cursor: 'pointer',
-      position: 'relative',
+      position: 'relative' as const,
       zIndex: 2,
     },
     subtitle: {
@@ -2180,14 +2181,14 @@ function FAQSection({
       marginLeft: 'auto',
       transition: 'all 0.3s ease',
       cursor: 'pointer',
-      position: 'relative',
+      position: 'relative' as const,
       zIndex: 2,
     },
     faqContainer: {
       maxWidth: '900px',
       margin: '0 auto',
       width: '100%',
-      position: 'relative',
+      position: 'relative' as const,
       zIndex: 2,
     },
     faqItem: (isOpen: boolean) => ({
@@ -2311,7 +2312,7 @@ function FAQSection({
       border: `1px solid rgba(255, 184, 0, 0.3)`,
       transition: 'all 0.3s ease',
       cursor: 'pointer',
-      position: 'relative',
+      position: 'relative' as const,
       zIndex: 2,
     },
     ctaTitle: {
