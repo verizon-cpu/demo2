@@ -3,28 +3,26 @@
 import { useState, useEffect, FormEvent, ChangeEvent, useRef } from 'react';
 import { useForm, ValidationError } from '@formspree/react';
 
-// MicroInteraction Component - Image Flag on Hero Section
+// MicroInteraction Component - Image Logo for attention grabbing
 const MicroInteraction = ({ 
-  src = "/image/pointer1.png",
-  width = 200, 
-  height = 220,
+  src = "/image/pointer1.png", // Default path - replace with your actual logo
+  width = 32, 
+  height = 32,
   style = {}
 }) => {
   return (
     <img
       src={src}
-      alt="BRAVOS Flag"
+      alt="BRAVOS Logo"
       style={{
-        position: 'absolute' as const,
-        top: '-30px',
-        right: '-20px',
-        zIndex: 30,
-        pointerEvents: 'none' as const,
+        position: 'absolute',
+        top: '0px',
+        right: '0px',
+        zIndex: 20,
+        pointerEvents: 'none',
         width: `${width}px`,
         height: `${height}px`,
-        objectFit: 'contain' as const,
-        filter: 'drop-shadow(0 15px 25px rgba(255, 0, 0, 0.5))',
-        transform: 'rotate(8deg)',
+        objectFit: 'contain',
         ...style
       }}
     />
@@ -32,29 +30,270 @@ const MicroInteraction = ({
 };
 
 // Logo Carousel Component
-const LogoCarousel = ({ autoRotate = true, showNavigation = true }) => {
+interface LogoCarouselProps {
+  autoplaySpeed?: number;
+  containerStyle?: React.CSSProperties;
+}
+
+const LogoCarousel = ({ autoplaySpeed = 3000, containerStyle = {} }: LogoCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const autoRotateRef = useRef<NodeJS.Timeout>(undefined);
+  const [isSmallMobile, setIsSmallMobile] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+  const autoplayRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Logo images - 10 logos without backgrounds
   const logos = [
-    { id: 1, src: "/image/gaf.png", alt: "GAF Certified" },
-    { id: 2, src: "/image/ CertainTeed.png", alt: "CertainTeed" },
-    { id: 3, src: "/image/owens-corning.png", alt: "Owens Corning" },
-    { id: 4, src: "/image/malarkey.png", alt: "Malarkey" },
-    { id: 5, src: "/image/iko.png", alt: "IKO" },
-    { id: 6, src: "/image/tamko.png", alt: "TAMKO" },
-    { id: 7, src: "/image/atlas.png", alt: "Atlas" },
-    { id: 8, src: "/image/ CertainTeed.png", alt: "GAF" },
-    { id: 9, src: "/image/owens-corning.png", alt: "CertainTeed" },
-    { id: 10, src: "/image/gaf.png", alt: "Owens Corning" },
+    { id: 1, src: "/image/logo1.png", alt: "Logo 1" },
+    { id: 2, src: "/image/logo2.png", alt: "Logo 2" },
+    { id: 3, src: "/image/logo3.png", alt: "Logo 3" },
+    { id: 4, src: "/image/logo4.png", alt: "Logo 4" },
+    { id: 5, src: "/image/logo5.png", alt: "Logo 5" },
+    { id: 6, src: "/image/logo6.png", alt: "Logo 6" },
+    { id: 7, src: "/image/logo7.png", alt: "Logo 7" },
+    { id: 8, src: "/image/logo8.png", alt: "Logo 8" },
+    { id: 9, src: "/image/logo9.png", alt: "Logo 9" },
+    { id: 10, src: "/image/logo10.png", alt: "Logo 10" },
   ];
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      const width = window.innerWidth;
+      setIsMobile(width < 768);
+      setIsSmallMobile(width < 480);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Autoplay functionality
+  useEffect(() => {
+    if (isPaused) return;
+    
+    autoplayRef.current = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % logos.length);
+    }, autoplaySpeed);
+    
+    return () => {
+      if (autoplayRef.current) {
+        clearInterval(autoplayRef.current);
+      }
+    };
+  }, [autoplaySpeed, logos.length, isPaused]);
+
+  const goToNext = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % logos.length);
+  };
+
+  const goToPrev = () => {
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + logos.length) % logos.length);
+  };
+
+  const goToSlide = (index: number) => {
+    setCurrentIndex(index);
+  };
+
+  const handleMouseEnter = () => {
+    setIsPaused(true);
+    setIsHovering(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsPaused(false);
+    setIsHovering(false);
+  };
+
+  return (
+    <div 
+      style={{
+        width: '100%',
+        maxWidth: '1200px',
+        margin: isMobile ? '20px auto' : '30px auto',
+        position: 'relative',
+        ...containerStyle
+      }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: isMobile ? '10px' : '20px',
+      }}>
+        {/* Previous Button */}
+        <button
+          onClick={goToPrev}
+          style={{
+            width: isMobile ? '32px' : '40px',
+            height: isMobile ? '32px' : '40px',
+            borderRadius: '50%',
+            backgroundColor: 'rgba(255, 184, 0, 0.2)',
+            border: `2px solid #FFB800`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+            color: '#FFB800',
+            fontSize: isMobile ? '16px' : '20px',
+            fontWeight: '700',
+            flexShrink: 0,
+            transform: isHovering ? 'scale(1.1)' : 'scale(1)',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = '#FFB800';
+            e.currentTarget.style.color = '#0A0A0C';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'rgba(255, 184, 0, 0.2)';
+            e.currentTarget.style.color = '#FFB800';
+          }}
+        >
+          ←
+        </button>
+
+        {/* Logo Display */}
+        <div style={{
+          flex: 1,
+          overflow: 'hidden',
+          position: 'relative',
+          height: isMobile ? '80px' : isSmallMobile ? '60px' : '100px',
+        }}>
+          <div style={{
+            display: 'flex',
+            transition: 'transform 0.5s ease',
+            transform: `translateX(-${currentIndex * 100}%)`,
+            height: '100%',
+          }}>
+            {logos.map((logo) => (
+              <div
+                key={logo.id}
+                style={{
+                  minWidth: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <img
+                  src={logo.src}
+                  alt={logo.alt}
+                  style={{
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                    width: 'auto',
+                    height: 'auto',
+                    objectFit: 'contain',
+                    filter: 'brightness(0.9)',
+                    transition: 'all 0.3s ease',
+                    opacity: isHovering ? 1 : 0.8,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.filter = 'brightness(1)';
+                    e.currentTarget.style.transform = 'scale(1.05)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.filter = 'brightness(0.9)';
+                    e.currentTarget.style.transform = 'scale(1)';
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Next Button */}
+        <button
+          onClick={goToNext}
+          style={{
+            width: isMobile ? '32px' : '40px',
+            height: isMobile ? '32px' : '40px',
+            borderRadius: '50%',
+            backgroundColor: 'rgba(255, 184, 0, 0.2)',
+            border: `2px solid #FFB800`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+            color: '#FFB800',
+            fontSize: isMobile ? '16px' : '20px',
+            fontWeight: '700',
+            flexShrink: 0,
+            transform: isHovering ? 'scale(1.1)' : 'scale(1)',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = '#FFB800';
+            e.currentTarget.style.color = '#0A0A0C';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'rgba(255, 184, 0, 0.2)';
+            e.currentTarget.style.color = '#FFB800';
+          }}
+        >
+          →
+        </button>
+      </div>
+
+      {/* Dots Navigation */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        gap: '8px',
+        marginTop: isMobile ? '10px' : '15px',
+      }}>
+        {logos.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => goToSlide(index)}
+            style={{
+              width: isMobile ? '8px' : '10px',
+              height: isMobile ? '8px' : '10px',
+              borderRadius: '50%',
+              backgroundColor: index === currentIndex ? '#FFB800' : 'rgba(255, 184, 0, 0.3)',
+              border: 'none',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              padding: 0,
+              transform: index === currentIndex ? 'scale(1.2)' : 'scale(1)',
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Rotating Star Ring Component
+interface StarRingProps {
+  size?: number;
+  color?: string;
+  backgroundColor?: string;
+  text?: string;
+  style?: React.CSSProperties;
+}
+
+const StarRing = ({ 
+  size = 300, 
+  color = '#FFB800', 
+  backgroundColor = 'rgba(255, 184, 0, 0.05)',
+  text = '★★★★★',
+  style = {}
+}: StarRingProps) => {
+  const [rotation, setRotation] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isSmallMobile, setIsSmallMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const width = window.innerWidth;
+      setIsMobile(width < 768);
+      setIsSmallMobile(width < 480);
     };
     
     checkMobile();
@@ -63,260 +302,53 @@ const LogoCarousel = ({ autoRotate = true, showNavigation = true }) => {
   }, []);
 
   useEffect(() => {
-    if (autoRotate && !isHovered) {
-      autoRotateRef.current = setInterval(() => {
-        setCurrentIndex((prev) => (prev + 1) % Math.max(1, logos.length - (isMobile ? 2 : 4)));
-      }, 3000);
-    }
-    return () => {
-      if (autoRotateRef.current) {
-        clearInterval(autoRotateRef.current);
-      }
-    };
-  }, [autoRotate, isHovered, isMobile, logos.length]);
-
-  const handlePrev = () => {
-    setCurrentIndex((prev) => Math.max(0, prev - 1));
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((prev) => 
-      Math.min(logos.length - (isMobile ? 2 : 4), prev + 1)
-    );
-  };
-
-  return (
-    <div 
-      style={{
-        width: '100%',
-        maxWidth: '1200px',
-        margin: '0 auto',
-        position: 'relative' as const,
-        padding: isMobile ? '15px 0' : '20px 0',
-      }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <div
-        ref={carouselRef}
-        style={{
-          overflow: 'hidden' as const,
-          width: '100%',
-        }}
-      >
-        <div
-          style={{
-            display: 'flex' as const,
-            gap: isMobile ? '20px' : '40px',
-            transition: 'transform 0.5s ease-in-out',
-            transform: `translateX(-${currentIndex * (isMobile ? 160 : 200)}px)`,
-          }}
-        >
-          {logos.map((logo) => (
-            <div
-              key={logo.id}
-              style={{
-                flex: '0 0 auto',
-                width: isMobile ? '140px' : '180px',
-                height: isMobile ? '70px' : '90px',
-                display: 'flex' as const,
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'transparent',
-                transition: 'all 0.3s ease',
-              }}
-            >
-              <img
-                src={logo.src}
-                alt={logo.alt}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'contain' as const,
-                  filter: 'brightness(1) contrast(1)',
-                  opacity: 0.9,
-                  transition: 'all 0.3s ease',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.opacity = '1';
-                  e.currentTarget.style.transform = 'scale(1.05)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.opacity = '0.9';
-                  e.currentTarget.style.transform = 'scale(1)';
-                }}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {showNavigation && (
-        <>
-          <button
-            onClick={handlePrev}
-            disabled={currentIndex === 0}
-            style={{
-              position: 'absolute' as const,
-              left: isMobile ? '-10px' : '-20px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              width: isMobile ? '30px' : '40px',
-              height: isMobile ? '30px' : '40px',
-              borderRadius: '50%',
-              background: 'rgba(255, 0, 0, 0.2)',
-              border: '2px solid rgba(255, 0, 0, 0.5)',
-              color: '#FF0000',
-              fontSize: isMobile ? '16px' : '20px',
-              display: 'flex' as const,
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: currentIndex === 0 ? 'default' : 'pointer',
-              opacity: currentIndex === 0 ? 0.3 : 1,
-              transition: 'all 0.3s ease',
-              zIndex: 10,
-              backdropFilter: 'blur(5px)',
-            }}
-            onMouseEnter={(e) => {
-              if (currentIndex !== 0) {
-                e.currentTarget.style.background = 'rgba(255, 0, 0, 0.3)';
-                e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 0, 0, 0.2)';
-              e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
-            }}
-          >
-            ←
-          </button>
-          <button
-            onClick={handleNext}
-            disabled={currentIndex >= logos.length - (isMobile ? 2 : 4)}
-            style={{
-              position: 'absolute' as const,
-              right: isMobile ? '-10px' : '-20px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              width: isMobile ? '30px' : '40px',
-              height: isMobile ? '30px' : '40px',
-              borderRadius: '50%',
-              background: 'rgba(255, 0, 0, 0.2)',
-              border: '2px solid rgba(255, 0, 0, 0.5)',
-              color: '#FF0000',
-              fontSize: isMobile ? '16px' : '20px',
-              display: 'flex' as const,
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: currentIndex >= logos.length - (isMobile ? 2 : 4) ? 'default' : 'pointer',
-              opacity: currentIndex >= logos.length - (isMobile ? 2 : 4) ? 0.3 : 1,
-              transition: 'all 0.3s ease',
-              zIndex: 10,
-              backdropFilter: 'blur(5px)',
-            }}
-            onMouseEnter={(e) => {
-              if (currentIndex < logos.length - (isMobile ? 2 : 4)) {
-                e.currentTarget.style.background = 'rgba(255, 0, 0, 0.3)';
-                e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 0, 0, 0.2)';
-              e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
-            }}
-          >
-            →
-          </button>
-        </>
-      )}
-    </div>
-  );
-};
-
-// Star Rotation Ring Component - BIGGER and BRIGHT RED
-const StarRotationRing = ({ size = 600, color = '#FF0000' }) => {
-  const [rotation, setRotation] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-
     const interval = setInterval(() => {
-      setRotation(prev => (prev + 1) % 360);
+      setRotation((prev) => (prev + 1) % 360);
     }, 50);
-
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener('resize', checkMobile);
-    };
+    
+    return () => clearInterval(interval);
   }, []);
 
-  const stars = Array.from({ length: 36 }, (_, i) => i); // More stars
+  const mobileSize = isMobile ? (isSmallMobile ? 150 : 200) : size;
 
   return (
     <div
       style={{
-        position: 'absolute' as const,
+        position: 'absolute',
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: isMobile ? size * 0.8 : size,
-        height: isMobile ? size * 0.8 : size,
-        pointerEvents: 'none' as const,
+        width: mobileSize,
+        height: mobileSize,
+        borderRadius: '50%',
+        backgroundColor: backgroundColor,
+        border: `2px dashed ${color}`,
         zIndex: 0,
-        opacity: 0.8,
+        pointerEvents: 'none',
+        ...style
       }}
     >
       <div
         style={{
-          position: 'relative' as const,
-          width: '100%',
-          height: '100%',
-          animation: 'spin 15s linear infinite', // Faster spin
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: `translate(-50%, -50%) rotate(${rotation}deg)`,
+          width: mobileSize * 1.2,
+          height: mobileSize * 1.2,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: isMobile ? (isSmallMobile ? '2rem' : '2.5rem') : '3rem',
+          color: color,
+          opacity: 0.3,
+          fontWeight: '700',
+          whiteSpace: 'nowrap',
+          fontFamily: "'Inter', sans-serif",
         }}
       >
-        {stars.map((_, index) => {
-          const angle = (index / stars.length) * 360;
-          const radian = (angle * Math.PI) / 180;
-          const x = 50 + 48 * Math.cos(radian);
-          const y = 50 + 48 * Math.sin(radian);
-
-          return (
-            <div
-              key={index}
-              style={{
-                position: 'absolute' as const,
-                left: `${x}%`,
-                top: `${y}%`,
-                transform: 'translate(-50%, -50%)',
-                color: color,
-                fontSize: isMobile ? '20px' : '28px',
-                fontWeight: 'bold',
-                opacity: 0.4 + (index % 5) * 0.15,
-                filter: `drop-shadow(0 0 10px ${color}) drop-shadow(0 0 20px ${color})`,
-                textShadow: `0 0 15px ${color}`,
-              }}
-            >
-              ★
-            </div>
-          );
-        })}
+        {text}
       </div>
-      <style jsx>{`
-        @keyframes spin {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
-        }
-      `}</style>
     </div>
   );
 };
@@ -397,23 +429,23 @@ function BottomCTAButtons({
     justifyContent: 'center',
     cursor: 'pointer',
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-    position: 'relative' as const,
-    overflow: 'hidden' as const,
+    position: 'relative',
+    overflow: 'hidden',
     fontFamily: "'Inter', sans-serif",
     fontWeight: 700,
     fontSize: isMobile ? '10px' : '11px',
     letterSpacing: '0.5px',
     textTransform: 'uppercase' as const,
     flexShrink: 0,
-    whiteSpace: 'nowrap' as const,
+    whiteSpace: 'nowrap',
     ...buttonStyle
   };
 
   const callButtonStyle: React.CSSProperties = {
     ...baseButtonStyle,
-    background: 'linear-gradient(135deg, #FF0000 0%, #CC0000 100%)',
-    color: '#FFFFFF',
-    boxShadow: '0 4px 15px rgba(255, 0, 0, 0.4)',
+    background: 'linear-gradient(135deg, #FFB800 0%, #E6A600 100%)',
+    color: '#0A0A0C',
+    boxShadow: '0 4px 15px rgba(255, 184, 0, 0.4)',
   };
 
   const quoteButtonStyle: React.CSSProperties = {
@@ -425,9 +457,9 @@ function BottomCTAButtons({
 
   const bookButtonStyle: React.CSSProperties = {
     ...baseButtonStyle,
-    background: 'linear-gradient(135deg, #FF0000 0%, #CC0000 100%)',
-    color: '#FFFFFF',
-    boxShadow: '0 4px 15px rgba(255, 0, 0, 0.4)',
+    background: 'linear-gradient(135deg, #FFB800 0%, #E6A600 100%)',
+    color: '#0A0A0C',
+    boxShadow: '0 4px 15px rgba(255, 184, 0, 0.4)',
   };
 
   const buttonHoverStyle: React.CSSProperties = {
@@ -436,8 +468,8 @@ function BottomCTAButtons({
 
   const callHoverStyle: React.CSSProperties = {
     ...buttonHoverStyle,
-    boxShadow: '0 8px 20px rgba(255, 0, 0, 0.6)',
-    background: 'linear-gradient(135deg, #FF3333 0%, #FF0000 100%)',
+    boxShadow: '0 8px 20px rgba(255, 184, 0, 0.6)',
+    background: 'linear-gradient(135deg, #FFC233 0%, #FFB800 100%)',
   };
 
   const quoteHoverStyle: React.CSSProperties = {
@@ -448,34 +480,34 @@ function BottomCTAButtons({
 
   const bookHoverStyle: React.CSSProperties = {
     ...buttonHoverStyle,
-    boxShadow: '0 8px 20px rgba(255, 0, 0, 0.6)',
-    background: 'linear-gradient(135deg, #FF3333 0%, #FF0000 100%)',
+    boxShadow: '0 8px 20px rgba(255, 184, 0, 0.6)',
+    background: 'linear-gradient(135deg, #FFC233 0%, #FFB800 100%)',
   };
 
   return (
     <div 
       style={{
-        position: 'fixed' as const,
+        position: 'fixed',
         bottom: isMobile ? '10px' : '15px',
         left: '50%',
         transform: 'translateX(-50%)',
-        display: 'flex' as const,
+        display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         gap: isMobile ? '6px' : '8px',
         zIndex: 9999,
-        pointerEvents: 'auto' as const,
+        pointerEvents: 'auto',
         background: 'rgba(10, 10, 12, 0.95)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
         borderRadius: '50px',
         padding: isMobile ? '6px' : '8px',
         boxShadow: '0 8px 30px rgba(10, 10, 12, 0.4)',
-        border: '1px solid rgba(255, 0, 0, 0.3)',
+        border: '1px solid rgba(255, 184, 0, 0.3)',
         width: isMobile ? 'calc(100vw - 20px)' : 'calc(100vw - 30px)',
         maxWidth: '500px',
-        overflowX: 'auto' as const,
-        WebkitOverflowScrolling: 'touch' as const,
+        overflowX: 'auto',
+        WebkitOverflowScrolling: 'touch',
         transition: 'all 0.3s ease',
         ...containerStyle
       }}
@@ -497,11 +529,11 @@ function BottomCTAButtons({
           ...(hoveredButton === 'call' ? callHoverStyle : {})
         }}
       >
-        <span style={{ position: 'relative' as const, zIndex: 2, display: 'flex' as const, alignItems: 'center', gap: isMobile ? '4px' : '5px' }}>
+        <span style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', gap: isMobile ? '4px' : '5px' }}>
           {showPhoneIcon && (
             <svg width={isMobile ? "12" : "14"} height={isMobile ? "12" : "14"} viewBox="0 0 24 24" fill="none">
-              <path d="M20 10.999H22C22 5.869 18.127 2 12.99 2V4C17.052 4 20 6.943 20 10.999Z" fill="#FFFFFF"/>
-              <path d="M13 8C15.103 8 16 8.897 16 11H18C18 7.774 16.225 6 13 6V8ZM16.422 13.443C16.229 13.268 15.978 13.192 15.727 13.192C15.476 13.192 15.225 13.268 15.031 13.443L13.638 14.828C13.174 14.559 12.639 14.346 12.077 14.195C11.516 14.044 10.953 13.971 10.413 13.971C9.873 13.971 9.311 14.044 8.749 14.195C8.188 14.346 7.653 14.559 7.189 14.828L5.796 13.443C5.603 13.268 5.352 13.192 5.101 13.192C4.85 13.192 4.599 13.268 4.405 13.443L2.69 15.145C2.497 15.32 2.4 15.572 2.4 15.824C2.4 16.076 2.497 16.328 2.69 16.503L5.574 19.4C6.985 20.812 8.947 21.6 11.038 21.6C13.13 21.6 15.091 20.812 16.502 19.4L19.386 16.503C19.58 16.328 19.676 16.076 19.676 15.824C19.676 15.572 19.58 15.32 19.386 15.145L17.672 13.443H16.422Z" fill="#FFFFFF"/>
+              <path d="M20 10.999H22C22 5.869 18.127 2 12.99 2V4C17.052 4 20 6.943 20 10.999Z" fill="#0A0A0C"/>
+              <path d="M13 8C15.103 8 16 8.897 16 11H18C18 7.774 16.225 6 13 6V8ZM16.422 13.443C16.229 13.268 15.978 13.192 15.727 13.192C15.476 13.192 15.225 13.268 15.031 13.443L13.638 14.828C13.174 14.559 12.639 14.346 12.077 14.195C11.516 14.044 10.953 13.971 10.413 13.971C9.873 13.971 9.311 14.044 8.749 14.195C8.188 14.346 7.653 14.559 7.189 14.828L5.796 13.443C5.603 13.268 5.352 13.192 5.101 13.192C4.85 13.192 4.599 13.268 4.405 13.443L2.69 15.145C2.497 15.32 2.4 15.572 2.4 15.824C2.4 16.076 2.497 16.328 2.69 16.503L5.574 19.4C6.985 20.812 8.947 21.6 11.038 21.6C13.13 21.6 15.091 20.812 16.502 19.4L19.386 16.503C19.58 16.328 19.676 16.076 19.676 15.824C19.676 15.572 19.58 15.32 19.386 15.145L17.672 13.443H16.422Z" fill="#0A0A0C"/>
             </svg>
           )}
           {callText}
@@ -517,7 +549,7 @@ function BottomCTAButtons({
           ...(hoveredButton === 'quote' ? quoteHoverStyle : {})
         }}
       >
-        <span style={{ position: 'relative' as const, zIndex: 2, display: 'flex' as const, alignItems: 'center', gap: isMobile ? '4px' : '5px' }}>
+        <span style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', gap: isMobile ? '4px' : '5px' }}>
           {showQuoteIcon && (
             <svg width={isMobile ? "12" : "14"} height={isMobile ? "12" : "14"} viewBox="0 0 24 24" fill="none">
               <path d="M9 12H15M12 9V15M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -536,10 +568,10 @@ function BottomCTAButtons({
           ...(hoveredButton === 'book' ? bookHoverStyle : {})
         }}
       >
-        <span style={{ position: 'relative' as const, zIndex: 2, display: 'flex' as const, alignItems: 'center', gap: isMobile ? '4px' : '5px' }}>
+        <span style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', gap: isMobile ? '4px' : '5px' }}>
           {showBookIcon && (
             <svg width={isMobile ? "12" : "14"} height={isMobile ? "12" : "14"} viewBox="0 0 24 24" fill="none">
-              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#0A0A0C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           )}
           {bookText}
@@ -688,9 +720,9 @@ const HeroSection = () => {
   // BRAVOS Colors
   const colors = {
     background: '#0A0A0C',
-    gold: '#FF0000', // Changed to red
-    goldLight: 'rgba(255, 0, 0, 0.1)',
-    goldBorder: 'rgba(255, 0, 0, 0.3)',
+    gold: '#FFB800',
+    goldLight: 'rgba(255, 184, 0, 0.1)',
+    goldBorder: 'rgba(255, 184, 0, 0.3)',
     white: '#FFFFFF',
     softWhite: '#FAFAFA',
     softWhite70: 'rgba(250, 250, 250, 0.7)',
@@ -699,22 +731,19 @@ const HeroSection = () => {
 
   const baseStyles: any = {
     heroSection: {
-      position: 'relative' as const,
-      minHeight: '100vh',
-      height: '100%',
-      width: '100%',
+      position: 'relative',
+      minHeight: '100dvh',
       backgroundColor: colors.background,
-      overflow: 'visible' as const,
+      overflow: 'hidden',
       fontFamily: "'Inter', sans-serif",
+      width: '100%',
       maxWidth: '100vw',
-      boxSizing: 'border-box' as const,
-      borderTop: '4px solid #FF0000',
-      display: 'flex' as const,
-      flexDirection: 'column' as const,
+      boxSizing: 'border-box',
+      borderTop: '4px solid #FFB800',
     },
 
     backgroundContainer: {
-      position: 'absolute' as const,
+      position: 'absolute',
       top: 0,
       left: 0,
       right: 0,
@@ -723,94 +752,92 @@ const HeroSection = () => {
       backgroundSize: 'cover',
       backgroundPosition: isMobile ? 'center 30%' : 'center',
       backgroundRepeat: 'no-repeat',
-      backgroundAttachment: 'fixed' as const,
+      backgroundAttachment: isMobile ? 'scroll' : 'fixed',
       zIndex: 1,
       width: '100%',
       height: '100%',
+      minHeight: '100%',
     },
     
     overlayGradient: {
-      position: 'absolute' as const,
+      position: 'absolute',
       top: 0,
       left: 0,
       right: 0,
       bottom: 0,
-      background: 'linear-gradient(135deg, rgba(10, 10, 12, 0.85) 0%, rgba(10, 10, 12, 0.75) 100%)',
+      background: 'linear-gradient(135deg, rgba(10, 10, 12, 0.60) 0%, rgba(10, 10, 12, 0.50) 100%)',
       zIndex: 2,
     },
 
     heroContent: {
-      position: 'relative' as const,
+      position: 'relative',
       zIndex: 10,
-      paddingTop: isMobile ? '80px' : '100px',
-      paddingBottom: isMobile ? '80px' : '100px',
-      minHeight: '100vh',
-      display: 'flex' as const,
+      paddingTop: isMobile ? (isSmallMobile ? '100px' : '120px') : '140px',
+      paddingBottom: isMobile ? (isSmallMobile ? '60px' : '80px') : '80px',
+      minHeight: 'calc(100dvh - 60px)',
+      display: 'flex',
       alignItems: 'center',
-      paddingLeft: isMobile ? '16px' : '40px',
-      paddingRight: isMobile ? '16px' : '40px',
+      paddingLeft: isMobile ? (isSmallMobile ? '16px' : '20px') : '40px',
+      paddingRight: isMobile ? (isSmallMobile ? '16px' : '20px') : '40px',
       width: '100%',
-      boxSizing: 'border-box' as const,
+      boxSizing: 'border-box',
       justifyContent: 'center',
     },
     
     heroGrid: {
-      maxWidth: '1400px',
+      maxWidth: '1280px',
       margin: '0 auto',
-      display: 'grid' as const,
+      display: 'grid',
       gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-      gap: isMobile ? '2rem' : '4rem',
-      alignItems: 'center',
+      gap: isMobile ? (isSmallMobile ? '1.5rem' : '2rem') : '4rem',
+      alignItems: isMobile ? 'flex-start' : 'center',
       width: '100%',
-      position: 'relative' as const,
-      zIndex: 15,
     },
     
     leftColumn: {
-      display: 'flex' as const,
-      flexDirection: 'column' as const,
-      gap: isMobile ? '1.5rem' : '2rem',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: isMobile ? (isSmallMobile ? '1rem' : '1.5rem') : '2rem',
       width: '100%',
-      position: 'relative' as const,
     },
 
     excellenceBadge: (active: boolean) => ({
-      display: 'flex' as const,
+      display: 'flex',
       alignItems: 'center',
       justifyContent: isSmallMobile ? 'center' : 'flex-start',
-      gap: isMobile ? '0.5rem' : '1rem',
+      gap: isMobile ? (isSmallMobile ? '0.4rem' : '0.5rem') : '1rem',
       backgroundColor: colors.goldLight,
       border: `2px solid ${colors.goldBorder}`,
       borderRadius: isSmallMobile ? '40px' : '60px',
-      padding: isMobile ? '0.6rem 0.8rem' : '1rem 1.5rem',
+      padding: isMobile ? (isSmallMobile ? '0.4rem 0.6rem' : '0.6rem 0.8rem') : '1rem 1.5rem',
       width: '100%',
       maxWidth: '100%',
-      boxSizing: 'border-box' as const,
+      boxSizing: 'border-box',
       backdropFilter: 'blur(10px)',
       boxShadow: active 
-        ? '0 15px 40px rgba(255, 0, 0, 0.3), 0 0 0 2px rgba(255, 255, 255, 0.1) inset' 
-        : '0 10px 30px rgba(255, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
+        ? '0 15px 40px rgba(255, 184, 0, 0.3), 0 0 0 2px rgba(255, 255, 255, 0.1) inset' 
+        : '0 10px 30px rgba(255, 184, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
       transform: active ? 'translateY(-3px) scale(1.05)' : 'translateY(0) scale(1)',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       cursor: 'pointer',
       flexWrap: isSmallMobile ? 'wrap' : 'nowrap',
       textAlign: isSmallMobile ? 'center' : 'left',
-      position: 'relative' as const,
+      position: 'relative',
     }),
     
     numberOneBadge: (active: boolean) => ({
-      width: isMobile ? '40px' : '50px',
-      height: isMobile ? '40px' : '50px',
+      width: isMobile ? (isSmallMobile ? '32px' : '40px') : '50px',
+      height: isMobile ? (isSmallMobile ? '32px' : '40px') : '50px',
       backgroundColor: colors.gold,
       borderRadius: '50%',
-      display: 'flex' as const,
+      display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       flexShrink: 0,
       fontWeight: '900',
       boxShadow: active 
-        ? '0 8px 25px rgba(255, 0, 0, 0.6), 0 0 0 3px rgba(255, 255, 255, 0.2) inset' 
-        : '0 6px 20px rgba(255, 0, 0, 0.4), 0 0 0 2px rgba(255, 255, 255, 0.1) inset',
+        ? '0 8px 25px rgba(255, 184, 0, 0.6), 0 0 0 3px rgba(255, 255, 255, 0.2) inset' 
+        : '0 6px 20px rgba(255, 184, 0, 0.4), 0 0 0 2px rgba(255, 255, 255, 0.1) inset',
       transform: active ? 'scale(1.15)' : 'scale(1)',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     }),
@@ -818,21 +845,21 @@ const HeroSection = () => {
     numberOne: {
       color: colors.background,
       fontWeight: '900',
-      fontSize: isMobile ? '1.4rem' : '1.6rem',
+      fontSize: isMobile ? (isSmallMobile ? '1.2rem' : '1.4rem') : '1.6rem',
       fontFamily: "'Inter', sans-serif",
       textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
     },
     
     badgeText: {
-      fontSize: isMobile ? '0.75rem' : '1rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.6rem' : '0.75rem') : '1rem',
       fontWeight: '700',
       color: colors.gold,
       lineHeight: '1.2',
-      letterSpacing: isMobile ? '0.3px' : '1px',
+      letterSpacing: isMobile ? (isSmallMobile ? '0.2px' : '0.3px') : '1px',
       fontFamily: "'Inter', sans-serif",
-      textTransform: 'uppercase' as const,
-      whiteSpace: isSmallMobile ? 'normal' : 'nowrap' as const,
-      overflow: 'hidden' as const,
+      textTransform: 'uppercase',
+      whiteSpace: isSmallMobile ? 'normal' : 'nowrap',
+      overflow: 'hidden',
       textOverflow: 'ellipsis',
       flexShrink: 1,
       minWidth: 0,
@@ -841,14 +868,14 @@ const HeroSection = () => {
     houstonBold: {
       fontWeight: '800',
       color: colors.gold,
-      fontSize: isMobile ? '0.85rem' : '1.1rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.7rem' : '0.85rem') : '1.1rem',
       fontFamily: "'Inter', sans-serif",
       textShadow: '0 3px 6px rgba(0, 0, 0, 0.4)',
       display: 'inline',
     },
 
     headline: {
-      fontSize: isMobile ? (isSmallMobile ? '2.2rem' : '2.8rem') : (isTablet ? '3.5rem' : '4.2rem'),
+      fontSize: isMobile ? (isSmallMobile ? '2.2rem' : '2.5rem') : (isTablet ? '3.2rem' : '4rem'),
       fontWeight: '800',
       color: colors.white,
       lineHeight: 1.1,
@@ -860,16 +887,16 @@ const HeroSection = () => {
     
     headlineHighlight: {
       color: colors.gold,
-      display: 'block' as const,
+      display: 'block',
       fontFamily: "'Inter', sans-serif",
       fontWeight: '800',
-      fontSize: isMobile ? (isSmallMobile ? '2.5rem' : '3rem') : (isTablet ? '4rem' : '4.8rem'),
+      fontSize: isMobile ? (isSmallMobile ? '2rem' : '2.4rem') : (isTablet ? '3.4rem' : '4rem'),
       lineHeight: 1.1,
       marginTop: isMobile ? '0.5rem' : '0',
     },
 
     subheadline: {
-      fontSize: isMobile ? '1rem' : (isTablet ? '1.25rem' : '1.35rem'),
+      fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : (isTablet ? '1.125rem' : '1.25rem'),
       color: colors.softWhite90,
       lineHeight: 1.6,
       maxWidth: '600px',
@@ -877,54 +904,84 @@ const HeroSection = () => {
       fontFamily: "'Inter', sans-serif",
       fontWeight: '400',
       textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)',
+      marginTop: '100px',
     },
 
+    // REPLACED: Trust grid with big bold text
     trustGrid: {
-      display: 'flex' as const,
-      flexDirection: 'column' as const,
-      gap: '0.5rem',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
       width: '100%',
+      marginTop: isMobile ? '20px' : '30px',
+      marginBottom: isMobile ? '20px' : '30px',
     },
     
-    trustText: {
-      fontSize: isMobile ? (isSmallMobile ? '1.8rem' : '2.2rem') : '2.8rem',
-      fontWeight: '800',
-      color: colors.white,
-      fontFamily: "'Inter', sans-serif",
-      lineHeight: '1.2',
-      textTransform: 'uppercase' as const,
-      letterSpacing: '-1px',
+    trustCard: (active: boolean) => ({
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: 'transparent',
+      border: 'none',
+      padding: 0,
+      transition: 'all 0.3s ease',
+      transform: active ? 'translateY(-2px) scale(1.02)' : 'translateY(0) scale(1)',
+      width: '100%',
+    }),
+    
+    trustIcon: {
+      width: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexShrink: 0,
     },
     
-    trustTextHighlight: {
+    trustImage: {
+      width: '100%',
+      height: '100%',
+      objectFit: 'contain' as const,
+    },
+
+    // NEW: Bold text for licensed, certified & trusted
+    trustBoldText: {
+      fontSize: isMobile ? (isSmallMobile ? '1.5rem' : '2rem') : (isTablet ? '2.5rem' : '3rem'),
+      fontWeight: '900',
       color: colors.gold,
-      display: 'block' as const,
-      fontSize: isMobile ? (isSmallMobile ? '2.2rem' : '2.6rem') : '3.2rem',
+      textAlign: 'center',
+      lineHeight: 1.2,
+      letterSpacing: isMobile ? '1px' : '2px',
+      textTransform: 'uppercase',
+      fontFamily: "'Inter', sans-serif",
+      textShadow: '0 4px 8px rgba(0, 0, 0, 0.5)',
+      margin: 0,
     },
 
     reviewsContainer: {
-      display: 'flex' as const,
-      flexDirection: isMobile ? 'column' as const : 'row' as const,
+      display: 'flex',
+      flexDirection: isMobile ? 'column' : 'row',
       alignItems: isMobile ? 'flex-start' : 'center',
-      gap: isMobile ? '0.75rem' : '1rem',
-      flexWrap: 'wrap' as const,
+      gap: isMobile ? (isSmallMobile ? '0.5rem' : '0.75rem') : '1rem',
+      flexWrap: 'wrap',
       width: '100%',
     },
     
     stars: {
-      display: 'flex' as const,
+      display: 'flex',
       gap: '0.25rem',
     },
     
     starIcon: {
       color: colors.gold,
-      fontSize: isMobile ? '1rem' : '1.5rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '1rem') : '1.5rem',
       fontWeight: '700',
-      textShadow: '0 2px 4px rgba(255, 0, 0, 0.3)',
+      textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
     },
     
     reviewText: {
-      fontSize: isMobile ? '0.9rem' : '1.125rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1.125rem',
       color: colors.softWhite90,
       fontFamily: "'Inter', sans-serif",
       fontWeight: '400',
@@ -934,15 +991,15 @@ const HeroSection = () => {
       color: colors.gold,
       fontWeight: '700',
       fontFamily: "'Inter', sans-serif",
-      fontSize: isMobile ? '1rem' : '1.25rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.25rem',
     },
     
     googleBadge: (active: boolean) => ({
-      display: 'flex' as const,
+      display: 'flex',
       alignItems: 'center',
       gap: '0.5rem',
-      backgroundColor: active ? 'rgba(255, 0, 0, 0.25)' : 'rgba(255, 0, 0, 0.15)',
-      padding: isMobile ? '0.75rem 1rem' : '1rem 1.25rem',
+      backgroundColor: active ? 'rgba(255, 184, 0, 0.25)' : 'rgba(255, 184, 0, 0.15)',
+      padding: isMobile ? (isSmallMobile ? '0.5rem 0.75rem' : '0.75rem 1rem') : '1rem 1.25rem',
       borderRadius: '30px',
       backdropFilter: 'blur(10px)',
       border: active ? `2px solid ${colors.gold}` : `2px solid ${colors.goldBorder}`,
@@ -950,11 +1007,11 @@ const HeroSection = () => {
       cursor: 'pointer',
       transform: active ? 'translateY(-3px) scale(1.05)' : 'translateY(0) scale(1)',
       boxShadow: active ? '0 12px 30px rgba(0, 0, 0, 0.3)' : '0 8px 20px rgba(0, 0, 0, 0.2)',
-      position: 'relative' as const,
+      position: 'relative',
     }),
     
     googleText: {
-      fontSize: isMobile ? '0.9rem' : '1rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1rem',
       color: colors.white,
       fontWeight: '600',
       fontFamily: "'Inter', sans-serif",
@@ -962,36 +1019,36 @@ const HeroSection = () => {
     },
 
     googleReviewsCTA: (active: boolean) => ({
-      display: 'flex' as const,
+      display: 'flex',
       alignItems: 'center',
       gap: '0.5rem',
-      backgroundColor: active ? colors.gold : 'rgba(255, 0, 0, 0.1)',
+      backgroundColor: active ? colors.gold : 'rgba(255, 184, 0, 0.1)',
       color: active ? colors.background : colors.white,
       border: active ? `2px solid ${colors.gold}` : `2px solid ${colors.goldBorder}`,
-      padding: isMobile ? '0.75rem 1rem' : '1rem 1.25rem',
+      padding: isMobile ? (isSmallMobile ? '0.5rem 0.75rem' : '0.75rem 1rem') : '1rem 1.25rem',
       borderRadius: '30px',
       backdropFilter: 'blur(10px)',
       transition: 'all 0.3s ease',
       cursor: 'pointer',
       transform: active ? 'translateY(-3px) scale(1.05)' : 'translateY(0) scale(1)',
-      boxShadow: active ? '0 12px 30px rgba(255, 0, 0, 0.4)' : '0 8px 20px rgba(0, 0, 0, 0.2)',
+      boxShadow: active ? '0 12px 30px rgba(255, 184, 0, 0.4)' : '0 8px 20px rgba(0, 0, 0, 0.2)',
       fontWeight: '600',
       fontFamily: "'Inter', sans-serif",
     }),
     
     googleReviewsText: {
-      fontSize: isMobile ? '0.9rem' : '1rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1rem',
       fontWeight: '600',
       fontFamily: "'Inter', sans-serif",
       letterSpacing: '0.5px',
     },
     
     reviewsCTAContainer: {
-      display: 'flex' as const,
-      flexDirection: isMobile ? 'column' as const : 'row' as const,
+      display: 'flex',
+      flexDirection: isMobile ? 'column' : 'row',
       alignItems: isMobile ? 'stretch' : 'center',
       gap: '0.75rem',
-      flexWrap: 'wrap' as const,
+      flexWrap: 'wrap',
       width: '100%',
     },
 
@@ -1001,7 +1058,7 @@ const HeroSection = () => {
     },
     
     bostonBadge: {
-      display: 'flex' as const,
+      display: 'flex',
       alignItems: 'center',
       gap: '0.5rem',
       backgroundColor: 'rgba(10, 10, 12, 0.6)',
@@ -1018,35 +1075,34 @@ const HeroSection = () => {
     },
     
     bostonText: {
-      fontSize: isMobile ? '0.7rem' : '0.875rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.6rem' : '0.7rem') : '0.875rem',
       color: colors.softWhite,
       fontWeight: '400',
       fontFamily: "'Inter', sans-serif",
     },
 
     rightColumn: {
+      marginTop: isMobile ? (isSmallMobile ? '1.5rem' : '2rem') : '0',
       width: '100%',
     },
     
     bookingCard: {
       backgroundColor: colors.white,
       borderRadius: '20px',
-      padding: isMobile ? '1.75rem' : '2.5rem',
-      boxShadow: '0 20px 60px rgba(255, 0, 0, 0.3)',
+      padding: isMobile ? (isSmallMobile ? '1.25rem' : '1.75rem') : '2rem',
+      boxShadow: '0 20px 60px rgba(10, 10, 12, 0.3)',
       border: `2px solid ${colors.goldBorder}`,
       width: '100%',
-      boxSizing: 'border-box' as const,
-      position: 'relative' as const,
-      zIndex: 20,
+      boxSizing: 'border-box',
     },
     
     cardHeader: {
-      textAlign: 'center' as const,
+      textAlign: 'center',
       marginBottom: '1.75rem',
     },
     
     formTitle: {
-      fontSize: isMobile ? '1.6rem' : '1.85rem',
+      fontSize: isMobile ? (isSmallMobile ? '1.35rem' : '1.6rem') : '1.85rem',
       fontWeight: '700',
       color: colors.background,
       margin: '0 0 0.5rem 0',
@@ -1056,7 +1112,7 @@ const HeroSection = () => {
     },
     
     formSubtitle: {
-      fontSize: isMobile ? '0.9rem' : '1rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1rem',
       color: colors.background,
       opacity: 0.8,
       margin: 0,
@@ -1065,15 +1121,15 @@ const HeroSection = () => {
     },
     
     form: {
-      display: 'flex' as const,
-      flexDirection: 'column' as const,
+      display: 'flex',
+      flexDirection: 'column',
       gap: '1.25rem',
       width: '100%',
     },
     
     formGroup: {
-      display: 'flex' as const,
-      flexDirection: 'column' as const,
+      display: 'flex',
+      flexDirection: 'column',
       gap: '0.5rem',
       width: '100%',
     },
@@ -1086,35 +1142,53 @@ const HeroSection = () => {
     },
     
     formInput: {
-      padding: isMobile ? '0.8rem' : '1rem',
+      padding: isMobile ? (isSmallMobile ? '0.6rem' : '0.8rem') : '1rem',
       borderRadius: '10px',
       border: '2px solid #E5E7EB',
-      fontSize: isMobile ? '0.85rem' : '0.875rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.85rem') : '0.875rem',
       transition: 'all 0.3s ease',
       outline: 'none',
       fontFamily: "'Inter', sans-serif",
       fontWeight: '400',
       width: '100%',
-      boxSizing: 'border-box' as const,
+      boxSizing: 'border-box',
+      '&:focus': {
+        borderColor: colors.gold,
+        boxShadow: '0 0 0 3px rgba(255, 184, 0, 0.2)',
+      },
+      '&::placeholder': {
+        color: '#9CA3AF',
+        fontWeight: '400',
+        fontFamily: "'Inter', sans-serif",
+      },
     },
     
     formTextarea: {
-      padding: isMobile ? '0.8rem' : '1rem',
+      padding: isMobile ? (isSmallMobile ? '0.6rem' : '0.8rem') : '1rem',
       borderRadius: '10px',
       border: '2px solid #E5E7EB',
-      fontSize: isMobile ? '0.85rem' : '0.875rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.85rem') : '0.875rem',
       transition: 'all 0.3s ease',
       outline: 'none',
       fontFamily: "'Inter', sans-serif",
       fontWeight: '400',
       width: '100%',
-      boxSizing: 'border-box' as const,
-      resize: 'vertical' as const,
+      boxSizing: 'border-box',
+      resize: 'vertical',
       minHeight: '100px',
+      '&:focus': {
+        borderColor: colors.gold,
+        boxShadow: '0 0 0 3px rgba(255, 184, 0, 0.2)',
+      },
+      '&::placeholder': {
+        color: '#9CA3AF',
+        fontWeight: '400',
+        fontFamily: "'Inter', sans-serif",
+      },
     },
     
     formRow: {
-      display: 'grid' as const,
+      display: 'grid',
       gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
       gap: '1rem',
       width: '100%',
@@ -1122,49 +1196,49 @@ const HeroSection = () => {
     
     submitButton: (active: boolean) => ({
       marginTop: '0.5rem',
-      padding: isMobile ? '1.1rem' : '1.25rem',
+      padding: isMobile ? (isSmallMobile ? '0.9rem' : '1.1rem') : '1.25rem',
       backgroundColor: colors.gold,
       color: colors.background,
       border: 'none',
       borderRadius: '10px',
-      fontSize: isMobile ? '1rem' : '1.125rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.125rem',
       fontWeight: '700',
       cursor: 'pointer',
-      display: 'flex' as const,
+      display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       gap: '0.5rem',
       transition: 'all 0.3s ease',
       fontFamily: "'Inter', sans-serif",
       transform: active ? 'translateY(-3px)' : 'translateY(0)',
-      boxShadow: active ? '0 15px 40px rgba(255, 0, 0, 0.4)' : '0 10px 30px rgba(255, 0, 0, 0.3)',
+      boxShadow: active ? '0 15px 40px rgba(255, 184, 0, 0.4)' : '0 10px 30px rgba(255, 184, 0, 0.3)',
       width: '100%',
-      position: 'relative' as const,
+      position: 'relative',
     }),
     
     buttonText: {
-      fontSize: isMobile ? '1rem' : '1.125rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.125rem',
       fontWeight: '700',
     },
     
     buttonArrow: {
-      display: 'flex' as const,
+      display: 'flex',
       alignItems: 'center',
     },
     
     successMessage: {
       marginTop: '1.5rem',
       padding: '1rem',
-      backgroundColor: 'rgba(255, 0, 0, 0.1)',
+      backgroundColor: 'rgba(255, 184, 0, 0.1)',
       borderRadius: '12px',
       border: `2px solid ${colors.gold}`,
-      textAlign: 'center' as const,
+      textAlign: 'center',
       width: '100%',
-      boxSizing: 'border-box' as const,
+      boxSizing: 'border-box',
     },
     
     successTitle: {
-      fontSize: isMobile ? '1.1rem' : '1.25rem',
+      fontSize: isMobile ? (isSmallMobile ? '1rem' : '1.1rem') : '1.25rem',
       fontWeight: '700',
       color: colors.background,
       marginBottom: '0.5rem',
@@ -1172,7 +1246,7 @@ const HeroSection = () => {
     },
     
     successText: {
-      fontSize: isMobile ? '0.9rem' : '1rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1rem',
       color: colors.background,
       marginBottom: 0,
       fontFamily: "'Inter', sans-serif",
@@ -1185,13 +1259,13 @@ const HeroSection = () => {
       backgroundColor: 'rgba(239, 68, 68, 0.1)',
       borderRadius: '12px',
       border: '2px solid #EF4444',
-      textAlign: 'center' as const,
+      textAlign: 'center',
       width: '100%',
-      boxSizing: 'border-box' as const,
+      boxSizing: 'border-box',
     },
     
     errorText: {
-      fontSize: isMobile ? '1rem' : '1.125rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.125rem',
       fontWeight: '600',
       color: '#EF4444',
       marginBottom: 0,
@@ -1199,9 +1273,9 @@ const HeroSection = () => {
     },
     
     formNote: {
-      fontSize: isMobile ? '0.7rem' : '0.75rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.6rem' : '0.7rem') : '0.75rem',
       color: '#6B7280',
-      textAlign: 'center' as const,
+      textAlign: 'center',
       marginTop: '1rem',
       lineHeight: '1.5',
       fontFamily: "'Inter', sans-serif",
@@ -1209,7 +1283,7 @@ const HeroSection = () => {
     },
     
     securityBadge: {
-      display: 'flex' as const,
+      display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       gap: '0.5rem',
@@ -1225,7 +1299,7 @@ const HeroSection = () => {
     },
     
     securityText: {
-      fontSize: isMobile ? '0.7rem' : '0.75rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.6rem' : '0.7rem') : '0.75rem',
       color: '#6B7280',
       fontWeight: '400',
       fontFamily: "'Inter', sans-serif",
@@ -1237,8 +1311,6 @@ const HeroSection = () => {
       <div style={baseStyles.backgroundContainer}>
         <div style={baseStyles.overlayGradient}></div>
       </div>
-      
-      <StarRotationRing size={isMobile ? 400 : 600} color="#FF0000" />
       
       <div style={baseStyles.heroContent}>
         <div style={baseStyles.heroGrid}>
@@ -1252,11 +1324,12 @@ const HeroSection = () => {
             >
               <MicroInteraction 
                 src="/image/pointer1.png"
-                width={isMobile ? 150 : 200}
-                height={isMobile ? 170 : 220}
+                width={200}
+                height={220}
                 style={{ 
-                  top: '-30px', 
+                  top: '80px', 
                   right: '-20px',
+                  filter: 'drop-shadow(0 4px 8px rgba(255, 184, 0, 0.3))'
                 }}
               />
               
@@ -1278,16 +1351,47 @@ const HeroSection = () => {
               We deliver lasting protection and exceptional craftsmanship on every project.
             </p>
             
+            {/* REPLACED: Three images with big bold text */}
             <div style={baseStyles.trustGrid}>
-              <div style={baseStyles.trustText}>
-                Licensed, <span style={baseStyles.trustTextHighlight}>Certified</span>
+              <div 
+                style={baseStyles.trustCard(trustCardActive === 0)}
+                onMouseEnter={() => setTrustCardActive(0)}
+                onMouseLeave={() => setTrustCardActive(null)}
+                onTouchStart={() => handleTouchStart(setTrustCardActive, 0)}
+                onTouchEnd={() => handleTouchEnd(setTrustCardActive, null)}
+              >
+                <div style={baseStyles.trustIcon}>
+                  <span style={baseStyles.trustBoldText}>LICENSED,</span>
+                </div>
               </div>
-              <div style={baseStyles.trustText}>
-                & <span style={baseStyles.trustTextHighlight}>Trusted</span>
+              
+              <div 
+                style={baseStyles.trustCard(trustCardActive === 1)}
+                onMouseEnter={() => setTrustCardActive(1)}
+                onMouseLeave={() => setTrustCardActive(null)}
+                onTouchStart={() => handleTouchStart(setTrustCardActive, 1)}
+                onTouchEnd={() => handleTouchEnd(setTrustCardActive, null)}
+              >
+                <div style={baseStyles.trustIcon}>
+                  <span style={baseStyles.trustBoldText}>CERTIFIED</span>
+                </div>
+              </div>
+              
+              <div 
+                style={baseStyles.trustCard(trustCardActive === 2)}
+                onMouseEnter={() => setTrustCardActive(2)}
+                onMouseLeave={() => setTrustCardActive(null)}
+                onTouchStart={() => handleTouchStart(setTrustCardActive, 2)}
+                onTouchEnd={() => handleTouchEnd(setTrustCardActive, null)}
+              >
+                <div style={baseStyles.trustIcon}>
+                  <span style={baseStyles.trustBoldText}>& TRUSTED</span>
+                </div>
               </div>
             </div>
-            
-            <LogoCarousel autoRotate={true} showNavigation={true} />
+
+            {/* NEW: Logo Carousel after trust text */}
+            <LogoCarousel />
             
             <div style={baseStyles.reviewsContainer}>
               <div style={baseStyles.stars}>
@@ -1428,11 +1532,12 @@ const HeroSection = () => {
                 >
                   <MicroInteraction 
                     src="/image/pointer1.png"
-                    width={80}
-                    height={80}
+                    width={100}
+                    height={100}
                     style={{ 
-                      top: '-15px', 
-                      right: '-10px',
+                      top: '-10px', 
+                      right: '-5px',
+                      filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2))'
                     }}
                   />
                   
@@ -1500,9 +1605,9 @@ const VideoTestimonialCard = ({
 
   const colors = {
     background: '#0A0A0C',
-    gold: '#FF0000',
-    goldLight: 'rgba(255, 0, 0, 0.1)',
-    goldBorder: 'rgba(255, 0, 0, 0.3)',
+    gold: '#FFB800',
+    goldLight: 'rgba(255, 184, 0, 0.1)',
+    goldBorder: 'rgba(255, 184, 0, 0.3)',
     white: '#FFFFFF',
     softWhite: '#FAFAFA',
   };
@@ -1552,13 +1657,13 @@ const VideoTestimonialCard = ({
       style={{
         backgroundColor: activeVideo === index ? '#F9FAFB' : colors.white,
         borderRadius: '24px',
-        overflow: 'hidden' as const,
+        overflow: 'hidden',
         boxShadow: activeVideo === index 
           ? '0 30px 60px rgba(10, 10, 12, 0.2)' 
           : '0 20px 40px rgba(10, 10, 12, 0.1)',
         border: activeVideo === index 
           ? `2px solid ${colors.gold}` 
-          : '1px solid rgba(255, 0, 0, 0.2)',
+          : '1px solid rgba(255, 184, 0, 0.2)',
         transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
         transform: activeVideo === index ? 'translateY(-10px)' : 'translateY(0)',
         cursor: 'pointer',
@@ -1571,9 +1676,9 @@ const VideoTestimonialCard = ({
       onClick={handlePlayVideo}
     >
       <div style={{
-        position: 'relative' as const,
+        position: 'relative',
         height: isMobile ? (isSmallMobile ? '180px' : '200px') : '250px',
-        overflow: 'hidden' as const,
+        overflow: 'hidden',
         backgroundColor: colors.background,
       }}>
         {playingVideo === video.id ? (
@@ -1583,7 +1688,7 @@ const VideoTestimonialCard = ({
             style={{
               width: '100%',
               height: '100%',
-              objectFit: 'cover' as const,
+              objectFit: 'cover',
             }}
             controls
             onEnded={handleVideoEnded}
@@ -1597,14 +1702,14 @@ const VideoTestimonialCard = ({
               style={{
                 width: '100%',
                 height: '100%',
-                objectFit: 'cover' as const,
+                objectFit: 'cover',
                 filter: activeVideo === index ? 'brightness(0.7)' : 'brightness(1)',
                 transition: 'filter 0.3s ease',
               }}
             />
             
             <div style={{
-              position: 'absolute' as const,
+              position: 'absolute',
               top: '20px',
               left: '20px',
               backgroundColor: colors.gold,
@@ -1612,7 +1717,7 @@ const VideoTestimonialCard = ({
               width: isMobile ? (isSmallMobile ? '35px' : '40px') : '50px',
               height: isMobile ? (isSmallMobile ? '35px' : '40px') : '50px',
               borderRadius: '50%',
-              display: 'flex' as const,
+              display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               fontSize: isMobile ? (isSmallMobile ? '14px' : '16px') : '20px',
@@ -1624,13 +1729,13 @@ const VideoTestimonialCard = ({
             </div>
             
             <div style={{
-              position: 'absolute' as const,
+              position: 'absolute',
               top: 0,
               left: 0,
               right: 0,
               bottom: 0,
               backgroundColor: 'rgba(10, 10, 12, 0.7)',
-              display: 'flex' as const,
+              display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               opacity: activeVideo === index ? 1 : 0,
@@ -1641,7 +1746,7 @@ const VideoTestimonialCard = ({
                 height: isMobile ? (isSmallMobile ? '50px' : '60px') : '80px',
                 backgroundColor: colors.gold,
                 borderRadius: '50%',
-                display: 'flex' as const,
+                display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 transform: activeVideo === index ? 'scale(1)' : 'scale(0.8)',
@@ -1666,7 +1771,7 @@ const VideoTestimonialCard = ({
         paddingRight: isMobile ? (isSmallMobile ? '16px' : '20px') : '24px',
         paddingBottom: isMobile ? (isSmallMobile ? '20px' : '24px') : '32px',
         paddingLeft: isMobile ? (isSmallMobile ? '16px' : '20px') : '24px',
-        textAlign: 'left' as const,
+        textAlign: 'left',
       }}>
         <h4 style={{
           fontSize: isMobile ? (isSmallMobile ? '1.1rem' : '1.25rem') : '1.5rem',
@@ -1695,7 +1800,7 @@ const VideoTestimonialCard = ({
           backgroundColor: colors.goldLight,
           padding: '4px 12px',
           borderRadius: '20px',
-          display: 'inline-block' as const,
+          display: 'inline-block',
           marginBottom: '16px',
         }}>
           {video.role}
@@ -1707,7 +1812,7 @@ const VideoTestimonialCard = ({
           margin: 0,
           fontWeight: '400',
           fontFamily: "'Inter', sans-serif",
-          fontStyle: 'italic' as const,
+          fontStyle: 'italic',
         }}>
           "{video.content}"
         </p>
@@ -1726,7 +1831,7 @@ const StatsCounter = () => {
 
   const colors = {
     background: '#0A0A0C',
-    gold: '#FF0000',
+    gold: '#FFB800',
     softWhite: '#FAFAFA',
   };
 
@@ -1785,7 +1890,7 @@ const StatsCounter = () => {
 
   return (
     <div style={{
-      display: 'grid' as const,
+      display: 'grid',
       gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
       justifyContent: 'center',
       alignItems: 'center',
@@ -1955,7 +2060,7 @@ function FAQSection({
       answer: "We provide comprehensive warranties including manufacturer warranties on materials (20-50 years depending on product) and our BRAVOS workmanship warranty for added protection and peace of mind."
     }
   ],
-  accentColor = '#FF0000',
+  accentColor = '#FFB800',
   textColor = '#0A0A0C',
   backgroundColor = '#FFFFFF',
   containerStyle = {},
@@ -1966,6 +2071,9 @@ function FAQSection({
   const [openIndex, setOpenIndex] = useState<number | null>(initiallyOpenIndex);
   const [isMobile, setIsMobile] = useState(false);
   const [isSmallMobile, setIsSmallMobile] = useState(false);
+  const [badgeActive, setBadgeActive] = useState(false);
+  const [titleActive, setTitleActive] = useState(false);
+  const [subtitleActive, setSubtitleActive] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -2008,13 +2116,13 @@ function FAQSection({
       position: 'relative' as const,
     },
     badge: {
-      display: 'inline-flex' as const,
+      display: 'inline-flex',
       alignItems: 'center',
       gap: '10px',
-      background: `rgba(255, 0, 0, 0.1)`,
+      background: `rgba(255, 184, 0, 0.1)`,
       padding: isMobile ? (isSmallMobile ? '6px 12px' : '8px 16px') : '10px 20px',
       borderRadius: '50px',
-      border: `1px solid rgba(255, 0, 0, 0.3)`,
+      border: `1px solid rgba(255, 184, 0, 0.3)`,
       marginBottom: '20px',
       transition: 'all 0.3s ease',
       cursor: 'pointer',
@@ -2066,19 +2174,19 @@ function FAQSection({
       background: '#FFFFFF',
       borderRadius: '16px',
       marginBottom: '12px',
-      overflow: 'hidden' as const,
+      overflow: 'hidden',
       boxShadow: '0 4px 20px rgba(10, 10, 12, 0.08)',
-      border: `1px solid ${isOpen ? '#FF0000' : 'rgba(10, 10, 12, 0.1)'}`,
+      border: `1px solid ${isOpen ? '#FFB800' : 'rgba(10, 10, 12, 0.1)'}`,
       transition: 'all 0.3s ease',
       cursor: 'pointer',
       ...faqItemStyle
     }),
     questionButton: (isOpen: boolean) => ({
       width: '100%',
-      background: isOpen ? 'rgba(255, 0, 0, 0.05)' : '#FFFFFF',
+      background: isOpen ? 'rgba(255, 184, 0, 0.05)' : '#FFFFFF',
       border: 'none',
       padding: isMobile ? (isSmallMobile ? '14px' : '16px') : '20px',
-      display: 'flex' as const,
+      display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
       cursor: 'pointer',
@@ -2086,7 +2194,7 @@ function FAQSection({
       transition: 'all 0.3s ease',
     }),
     questionContent: {
-      display: 'flex' as const,
+      display: 'flex',
       alignItems: 'center',
       gap: isMobile ? '12px' : '16px',
       flex: 1,
@@ -2094,14 +2202,14 @@ function FAQSection({
     questionNumber: {
       width: isMobile ? (isSmallMobile ? '28px' : '32px') : '32px',
       height: isMobile ? (isSmallMobile ? '28px' : '32px') : '32px',
-      background: `linear-gradient(135deg, #FF0000 0%, #CC0000 100%)`,
+      background: `linear-gradient(135deg, #FFB800 0%, #E6A600 100%)`,
       borderRadius: '50%',
-      display: 'flex' as const,
+      display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       fontSize: isMobile ? (isSmallMobile ? '10px' : '12px') : '12px',
       fontWeight: 700,
-      color: '#FFFFFF',
+      color: '#0A0A0C',
       flexShrink: 0,
       transition: 'all 0.3s ease',
     },
@@ -2120,7 +2228,7 @@ function FAQSection({
     toggleIcon: (isOpen: boolean) => ({
       width: '20px',
       height: '20px',
-      display: 'flex' as const,
+      display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       transition: 'transform 0.3s ease',
@@ -2130,7 +2238,7 @@ function FAQSection({
     }),
     answerContainer: (isOpen: boolean) => ({
       maxHeight: isOpen ? '500px' : '0',
-      overflow: 'hidden' as const,
+      overflow: 'hidden',
       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
       background: isOpen ? 'rgba(10, 10, 12, 0.02)' : 'transparent',
     }),
@@ -2143,7 +2251,7 @@ function FAQSection({
       transition: 'opacity 0.3s ease 0.2s',
     }),
     answerWrapper: {
-      display: 'flex' as const,
+      display: 'flex',
       alignItems: 'flex-start',
       gap: '16px',
     },
@@ -2152,7 +2260,7 @@ function FAQSection({
       height: '20px',
       background: 'rgba(10, 10, 12, 0.1)',
       borderRadius: '50%',
-      display: 'flex' as const,
+      display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       fontSize: '10px',
@@ -2178,9 +2286,9 @@ function FAQSection({
       textAlign: 'center'  as const,
       marginTop: isMobile ? (isSmallMobile ? '30px' : '40px') : '60px',
       padding: isMobile ? (isSmallMobile ? '20px' : '30px 20px') : '40px 20px',
-      background: `linear-gradient(135deg, rgba(10, 10, 12, 0.05) 0%, rgba(255, 0, 0, 0.05) 100%)`,
+      background: `linear-gradient(135deg, rgba(10, 10, 12, 0.05) 0%, rgba(255, 184, 0, 0.05) 100%)`,
       borderRadius: '20px',
-      border: `1px solid rgba(255, 0, 0, 0.3)`,
+      border: `1px solid rgba(255, 184, 0, 0.3)`,
       transition: 'all 0.3s ease',
       cursor: 'pointer',
     },
@@ -2205,15 +2313,15 @@ function FAQSection({
       transition: 'all 0.3s ease',
     },
     buttonContainer: {
-      display: 'flex' as const,
+      display: 'flex',
       flexDirection: isMobile ? 'column' as const : 'row' as const,
       gap: '16px',
       justifyContent: 'center',
       alignItems: 'center',
     },
     primaryButton: {
-      background: `linear-gradient(135deg, #FF0000 0%, #CC0000 100%)`,
-      color: '#FFFFFF',
+      background: `linear-gradient(135deg, #FFB800 0%, #E6A600 100%)`,
+      color: '#0A0A0C',
       border: 'none',
       padding: isMobile ? (isSmallMobile ? '14px 20px' : '16px 24px') : '16px 24px',
       fontSize: isMobile ? (isSmallMobile ? '14px' : '15px') : '15px',
@@ -2221,7 +2329,7 @@ function FAQSection({
       borderRadius: '50px',
       cursor: 'pointer',
       transition: 'all 0.3s ease',
-      boxShadow: `0 8px 25px rgba(255, 0, 0, 0.3)`,
+      boxShadow: `0 8px 25px rgba(255, 184, 0, 0.3)`,
       fontFamily: "'Inter', sans-serif",
       letterSpacing: '0.5px',
       width: isMobile ? '100%' : 'auto',
@@ -2230,7 +2338,7 @@ function FAQSection({
     secondaryButton: {
       background: 'transparent',
       color: textColor,
-      border: `2px solid rgba(255, 0, 0, 0.5)`,
+      border: `2px solid rgba(255, 184, 0, 0.5)`,
       padding: isMobile ? (isSmallMobile ? '14px 20px' : '16px 24px') : '16px 24px',
       fontSize: isMobile ? (isSmallMobile ? '14px' : '15px') : '15px',
       fontWeight: 700,
@@ -2246,18 +2354,28 @@ function FAQSection({
 
   return (
     <section style={baseStyles.faqSection}>
-      <StarRotationRing size={500} color="#FF0000" />
       <div style={baseStyles.container}>
+        {/* Star Ring behind header */}
+        <StarRing 
+          size={isMobile ? 200 : 300}
+          color="#FFB800"
+          backgroundColor="rgba(255, 184, 0, 0.03)"
+          text="★★★★★"
+          style={{
+            opacity: 0.4,
+          }}
+        />
+        
         <div style={baseStyles.header}>
           <div style={baseStyles.badge}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'translateY(-3px)';
-              e.currentTarget.style.background = 'rgba(255, 0, 0, 0.15)';
-              e.currentTarget.style.boxShadow = '0 8px 20px rgba(255, 0, 0, 0.2)';
+              e.currentTarget.style.background = 'rgba(255, 184, 0, 0.15)';
+              e.currentTarget.style.boxShadow = '0 8px 20px rgba(255, 184, 0, 0.2)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.background = 'rgba(255, 0, 0, 0.1)';
+              e.currentTarget.style.background = 'rgba(255, 184, 0, 0.1)';
               e.currentTarget.style.boxShadow = 'none';
             }}>
             <div style={baseStyles.badgeIcon}>❓</div>
@@ -2317,11 +2435,11 @@ function FAQSection({
                 onClick={() => toggleFAQ(index)}
                 style={baseStyles.questionButton(openIndex === index)}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'rgba(255, 0, 0, 0.08)';
+                  e.currentTarget.style.background = 'rgba(255, 184, 0, 0.08)';
                   e.currentTarget.style.transform = 'scale(1.01)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = openIndex === index ? 'rgba(255, 0, 0, 0.05)' : '#FFFFFF';
+                  e.currentTarget.style.background = openIndex === index ? 'rgba(255, 184, 0, 0.05)' : '#FFFFFF';
                   e.currentTarget.style.transform = 'scale(1)';
                 }}
               >
@@ -2396,12 +2514,12 @@ function FAQSection({
         <div style={baseStyles.ctaContainer}
           onMouseEnter={(e) => {
             e.currentTarget.style.transform = 'translateY(-5px)';
-            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(10, 10, 12, 0.08) 0%, rgba(255, 0, 0, 0.08) 100%)';
+            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(10, 10, 12, 0.08) 0%, rgba(255, 184, 0, 0.08) 100%)';
             e.currentTarget.style.boxShadow = '0 15px 35px rgba(10, 10, 12, 0.15)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(10, 10, 12, 0.05) 0%, rgba(255, 0, 0, 0.05) 100%)';
+            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(10, 10, 12, 0.05) 0%, rgba(255, 184, 0, 0.05) 100%)';
             e.currentTarget.style.boxShadow = 'none';
           }}>
           <h3 style={baseStyles.ctaTitle}
@@ -2432,13 +2550,13 @@ function FAQSection({
               style={baseStyles.primaryButton}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-3px) scale(1.05)';
-                e.currentTarget.style.boxShadow = '0 12px 30px rgba(255, 0, 0, 0.4)';
-                e.currentTarget.style.background = 'linear-gradient(135deg, #CC0000 0%, #FF0000 100%)';
+                e.currentTarget.style.boxShadow = '0 12px 30px rgba(255, 184, 0, 0.4)';
+                e.currentTarget.style.background = 'linear-gradient(135deg, #E6A600 0%, #FFB800 100%)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                e.currentTarget.style.boxShadow = '0 8px 25px rgba(255, 0, 0, 0.3)';
-                e.currentTarget.style.background = 'linear-gradient(135deg, #FF0000 0%, #CC0000 100%)';
+                e.currentTarget.style.boxShadow = '0 8px 25px rgba(255, 184, 0, 0.3)';
+                e.currentTarget.style.background = 'linear-gradient(135deg, #FFB800 0%, #E6A600 100%)';
               }}
             >
               Free Inspection
@@ -2447,14 +2565,14 @@ function FAQSection({
               onClick={() => window.location.href = 'tel:+12815551234'}
               style={baseStyles.secondaryButton}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 0, 0, 0.1)';
+                e.currentTarget.style.background = 'rgba(255, 184, 0, 0.1)';
                 e.currentTarget.style.borderColor = accentColor;
                 e.currentTarget.style.transform = 'translateY(-3px) scale(1.05)';
                 e.currentTarget.style.color = accentColor;
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = 'transparent';
-                e.currentTarget.style.borderColor = 'rgba(255, 0, 0, 0.5)';
+                e.currentTarget.style.borderColor = 'rgba(255, 184, 0, 0.5)';
                 e.currentTarget.style.transform = 'translateY(0) scale(1)';
                 e.currentTarget.style.color = textColor;
               }}
@@ -2488,22 +2606,23 @@ const BodySection = () => {
 
   const colors = {
     background: '#0A0A0C',
-    gold: '#FF0000',
-    goldLight: 'rgba(255, 0, 0, 0.1)',
-    goldBorder: 'rgba(255, 0, 0, 0.3)',
+    gold: '#FFB800',
+    goldLight: 'rgba(255, 184, 0, 0.1)',
+    goldBorder: 'rgba(255, 184, 0, 0.3)',
     white: '#FFFFFF',
     softWhite: '#FAFAFA',
     softWhite90: 'rgba(250, 250, 250, 0.9)',
     softWhite70: 'rgba(250, 250, 250, 0.7)',
-    navy: '#1A2A3A',
-    navyLight: '#2C3E50',
-    navyDark: '#0F1A24',
-    beige: '#D4C5B0',
-    beigeLight: '#E5D9CC',
-    beigeDark: '#B8A992',
-    gray: '#4A5568',
-    grayLight: '#64748B',
-    grayDark: '#2D3748',
+    // New color scheme
+    navy: '#1A2A3A',      // Dark navy-blue
+    navyLight: '#2C3E50', // Lighter navy
+    navyDark: '#0F1A24',  // Darker navy
+    beige: '#D4C5B0',     // Dark beige
+    beigeLight: '#E5D9CC', // Light beige
+    beigeDark: '#B8A992',  // Dark beige
+    gray: '#4A5568',      // Dark gray
+    grayLight: '#64748B',  // Medium gray
+    grayDark: '#2D3748',   // Darker gray
   };
 
   useEffect(() => {
@@ -2625,7 +2744,7 @@ const BodySection = () => {
         'OSHA-Certified Safety Training',
         'Continuous Technical Education'
       ],
-      image: '/image/team.jpg',
+      image: "/image/team.jpg",
       imageAlt: 'Professional roofing team at work'
     },
     {
@@ -2637,7 +2756,7 @@ const BodySection = () => {
         'Premium Material Selection',
         'Advanced Ventilation Systems'
       ],
-      image: '/image/team.jpg',
+      image: "/image/team.jpg",
       imageAlt: 'Detailed roofing craftsmanship'
     },
     {
@@ -2719,7 +2838,7 @@ const BodySection = () => {
 
   const baseBodyStyles: any = {
     bodyContainer: {
-      backgroundColor: colors.navyDark,
+      backgroundColor: colors.navyDark,  // Dark navy background for main body
       paddingTop: isMobile ? '60px' : '120px',
       paddingRight: isMobile ? '20px' : '40px',
       paddingBottom: isMobile ? '60px' : '120px',
@@ -2727,25 +2846,26 @@ const BodySection = () => {
       fontFamily: "'Inter', sans-serif",
     },
     
+    // Section 1: BRAVOS Difference - Navy Blue
     differenceSection: {
       maxWidth: '1400px',
       margin: '0 auto',
       marginBottom: isMobile ? '80px' : '120px',
-      textAlign: 'center' as const,
+      textAlign: 'center',
       paddingLeft: isMobile ? '20px' : '0',
       paddingRight: isMobile ? '20px' : '0',
-      background: colors.navy,
+      background: colors.navy,  // Navy blue
       borderRadius: '32px',
       paddingTop: isMobile ? '40px' : '80px',
       paddingBottom: isMobile ? '40px' : '80px',
       boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
       border: `1px solid ${colors.goldBorder}`,
-      position: 'relative' as const,
-      overflow: 'hidden' as const,
+      position: 'relative',
+      overflow: 'hidden',
     },
     
     differenceSectionBg: {
-      position: 'absolute' as const,
+      position: 'absolute',
       top: 0,
       left: 0,
       right: 0,
@@ -2755,16 +2875,16 @@ const BodySection = () => {
     },
     
     differenceBadge: {
-      display: 'inline-flex' as const,
+      display: 'inline-flex',
       alignItems: 'center',
       gap: isMobile ? '8px' : '12px',
-      backgroundColor: 'rgba(255, 0, 0, 0.15)',
+      backgroundColor: 'rgba(255, 184, 0, 0.15)',
       padding: isMobile ? '12px 20px' : '16px 32px',
       borderRadius: '50px',
       marginBottom: isMobile ? '30px' : '40px',
       border: `2px solid ${colors.goldBorder}`,
       backdropFilter: 'blur(10px)',
-      position: 'relative' as const,
+      position: 'relative',
       zIndex: 2,
     },
     
@@ -2777,16 +2897,16 @@ const BodySection = () => {
     differenceBadgeText: {
       fontSize: isMobile ? '14px' : '18px',
       fontWeight: '700',
-      color: colors.white,
+      color: colors.white,  // White text on navy
       letterSpacing: '3px',
-      textTransform: 'uppercase' as const,
+      textTransform: 'uppercase',
       fontFamily: "'Inter', sans-serif",
     },
     
     navySubtitle: {
       fontSize: isMobile ? '2rem' : isTablet ? '2.25rem' : '2.5rem',
       fontWeight: '700',
-      color: colors.white,
+      color: colors.white,  // White text on navy
       marginTop: 0,
       marginRight: 0,
       marginBottom: '8px',
@@ -2795,7 +2915,7 @@ const BodySection = () => {
       lineHeight: '1',
       letterSpacing: '-0.5px',
       textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
-      position: 'relative' as const,
+      position: 'relative',
       zIndex: 2,
     },
     
@@ -2810,13 +2930,13 @@ const BodySection = () => {
       fontFamily: "'Inter', sans-serif",
       textShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
       letterSpacing: '-0.5px',
-      position: 'relative' as const,
+      position: 'relative',
       zIndex: 2,
     },
     
     differenceDescription: {
       fontSize: isMobile ? '1.125rem' : isTablet ? '1.25rem' : '1.375rem',
-      color: colors.softWhite90,
+      color: colors.softWhite90,  // Light text on navy
       lineHeight: '1.7',
       maxWidth: '900px',
       marginTop: 0,
@@ -2825,12 +2945,13 @@ const BodySection = () => {
       marginLeft: 'auto',
       fontWeight: '400',
       fontFamily: "'Inter', sans-serif",
-      position: 'relative' as const,
+      position: 'relative',
       zIndex: 2,
     },
     
+    // Section 2: Features Grid - Alternating Navy and Gray
     featuresGrid: {
-      display: 'grid' as const,
+      display: 'grid',
       gridTemplateColumns: isMobile ? '1fr' : isTablet ? '1fr' : 'repeat(2, 1fr)',
       gap: isMobile ? '32px' : isTablet ? '48px' : '64px',
       maxWidth: '1400px',
@@ -2841,9 +2962,9 @@ const BodySection = () => {
     },
     
     featureCard: (active: boolean) => ({
-      backgroundColor: active ? colors.navyLight : colors.gray,
+      backgroundColor: active ? colors.navyLight : colors.gray,  // Alternating colors
       borderRadius: '32px',
-      overflow: 'hidden' as const,
+      overflow: 'hidden',
       boxShadow: active 
         ? '0 40px 80px rgba(0, 0, 0, 0.4)' 
         : '0 20px 60px rgba(0, 0, 0, 0.3)',
@@ -2852,24 +2973,24 @@ const BodySection = () => {
         : `1px solid ${colors.goldBorder}`,
       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
       transform: active ? 'translateY(-15px) scale(1.02)' : 'translateY(0) scale(1)',
-      position: 'relative' as const,
+      position: 'relative',
     }),
     
     featureImageContainer: {
-      position: 'relative' as const,
+      position: 'relative',
       height: isMobile ? '200px' : isTablet ? '250px' : '300px',
-      overflow: 'hidden' as const,
+      overflow: 'hidden',
     },
     
     featureImage: {
       width: '100%',
       height: '100%',
-      objectFit: 'cover' as const,
+      objectFit: 'cover',
       transition: 'transform 0.5s ease',
     },
     
     featureNumberBadge: {
-      display: 'inline-flex' as const,
+      display: 'inline-flex',
       alignItems: 'center',
       justifyContent: 'center',
       backgroundColor: colors.gold,
@@ -2891,11 +3012,11 @@ const BodySection = () => {
       paddingRight: isMobile ? '20px' : '40px',
       paddingBottom: isMobile ? '24px' : '48px',
       paddingLeft: isMobile ? '20px' : '40px',
-      background: 'transparent',
+      background: 'transparent',  // Let card background show through
     },
     
     featureTitleContainer: {
-      display: 'flex' as const,
+      display: 'flex',
       alignItems: 'center',
       marginBottom: isMobile ? '16px' : '24px',
     },
@@ -2903,7 +3024,7 @@ const BodySection = () => {
     featureTitle: {
       fontSize: isMobile ? '1.5rem' : isTablet ? '1.75rem' : '2rem',
       fontWeight: '700',
-      color: colors.white,
+      color: colors.white,  // White text on dark backgrounds
       marginTop: 0,
       marginRight: 0,
       marginBottom: 0,
@@ -2915,7 +3036,7 @@ const BodySection = () => {
     
     featureDescription: {
       fontSize: isMobile ? '1rem' : isTablet ? '1.125rem' : '1.125rem',
-      color: colors.softWhite90,
+      color: colors.softWhite90,  // Light text
       lineHeight: '1.8',
       marginTop: 0,
       marginRight: 0,
@@ -2926,8 +3047,8 @@ const BodySection = () => {
     },
     
     featureList: {
-      display: 'flex' as const,
-      flexDirection: 'column' as const,
+      display: 'flex',
+      flexDirection: 'column',
       gap: isMobile ? '12px' : '20px',
       marginTop: 0,
       marginRight: 0,
@@ -2936,11 +3057,11 @@ const BodySection = () => {
     },
     
     featureListItem: {
-      display: 'flex' as const,
+      display: 'flex',
       alignItems: 'flex-start',
       gap: '16px',
       padding: '12px 16px',
-      backgroundColor: 'rgba(255, 0, 0, 0.15)',
+      backgroundColor: 'rgba(255, 184, 0, 0.15)',
       borderRadius: '12px',
       border: `1px solid ${colors.goldBorder}`,
       transition: 'all 0.3s ease',
@@ -2962,25 +3083,26 @@ const BodySection = () => {
       fontFamily: "'Inter', sans-serif",
     },
 
+    // Section 3: Before & After - Dark Beige
     transformationsSection: {
       maxWidth: '1400px',
       margin: '0 auto',
       marginBottom: isMobile ? '80px' : '120px',
-      textAlign: 'center' as const,
+      textAlign: 'center',
       paddingLeft: isMobile ? '20px' : '0',
       paddingRight: isMobile ? '20px' : '0',
-      background: colors.beige,
+      background: colors.beige,  // Dark beige
       borderRadius: '32px',
       paddingTop: isMobile ? '40px' : '80px',
       paddingBottom: isMobile ? '40px' : '80px',
       boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
       border: `1px solid ${colors.goldBorder}`,
-      position: 'relative' as const,
-      overflow: 'hidden' as const,
+      position: 'relative',
+      overflow: 'hidden',
     },
     
     transformationsSectionBg: {
-      position: 'absolute' as const,
+      position: 'absolute',
       top: 0,
       left: 0,
       right: 0,
@@ -2991,13 +3113,13 @@ const BodySection = () => {
     
     transformationsHeader: {
       marginBottom: isMobile ? '40px' : '60px',
-      position: 'relative' as const,
+      position: 'relative',
       zIndex: 2,
     },
     
     transformationsTitleContainer: {
-      display: 'flex' as const,
-      flexDirection: 'column' as const,
+      display: 'flex',
+      flexDirection: 'column',
       alignItems: 'center',
       marginBottom: '20px',
     },
@@ -3005,7 +3127,7 @@ const BodySection = () => {
     navyTitle: {
       fontSize: isMobile ? '2rem' : isTablet ? '2.25rem' : '2.5rem',
       fontWeight: '700',
-      color: colors.navyDark,
+      color: colors.navyDark,  // Navy text on beige
       marginTop: 0,
       marginRight: 0,
       marginBottom: '8px',
@@ -3029,7 +3151,7 @@ const BodySection = () => {
     
     transformationsSubtitle: {
       fontSize: isMobile ? '1.125rem' : '1.25rem',
-      color: colors.navyDark,
+      color: colors.navyDark,  // Navy text on beige
       lineHeight: '1.6',
       maxWidth: '800px',
       marginTop: 0,
@@ -3041,19 +3163,19 @@ const BodySection = () => {
     },
     
     beforeAfterContainer: {
-      display: 'flex' as const,
-      flexDirection: 'column' as const,
+      display: 'flex',
+      flexDirection: 'column',
       gap: isMobile ? '24px' : '40px',
       maxWidth: '1200px',
       margin: '0 auto',
-      position: 'relative' as const,
+      position: 'relative',
       zIndex: 2,
     },
     
     transformationCard: (active: boolean) => ({
-      backgroundColor: active ? colors.beigeLight : colors.white,
+      backgroundColor: active ? colors.beigeLight : colors.white,  // White cards on beige section
       borderRadius: '32px',
-      overflow: 'hidden' as const,
+      overflow: 'hidden',
       boxShadow: active 
         ? '0 40px 80px rgba(0, 0, 0, 0.25)' 
         : '0 20px 60px rgba(0, 0, 0, 0.15)',
@@ -3072,7 +3194,7 @@ const BodySection = () => {
       marginRight: 0,
       marginBottom: isMobile ? '20px' : '30px',
       marginLeft: 0,
-      textAlign: 'center' as const,
+      textAlign: 'center',
       fontFamily: "'Inter', sans-serif",
       paddingTop: isMobile ? '30px' : '40px',
       paddingRight: isMobile ? '20px' : '40px',
@@ -3081,7 +3203,7 @@ const BodySection = () => {
     },
     
     beforeAfterGrid: {
-      display: 'grid' as const,
+      display: 'grid',
       gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
       gap: isMobile ? '20px' : '30px',
       paddingTop: 0,
@@ -3091,16 +3213,16 @@ const BodySection = () => {
     },
     
     imageContainer: {
-      position: 'relative' as const,
+      position: 'relative',
       borderRadius: '24px',
-      overflow: 'hidden' as const,
+      overflow: 'hidden',
       height: isMobile ? '250px' : isTablet ? '300px' : '350px',
       boxShadow: '0 15px 40px rgba(0, 0, 0, 0.2)',
       transition: 'all 0.3s ease',
     },
     
     imageLabel: {
-      position: 'absolute' as const,
+      position: 'absolute',
       top: '20px',
       left: '20px',
       backgroundColor: colors.navyDark,
@@ -3128,7 +3250,7 @@ const BodySection = () => {
     transformationImage: {
       width: '100%',
       height: '100%',
-      objectFit: 'cover' as const,
+      objectFit: 'cover',
       transition: 'transform 0.5s ease',
     },
     
@@ -3142,30 +3264,31 @@ const BodySection = () => {
       marginLeft: isMobile ? '20px' : '40px',
       fontWeight: '400',
       fontFamily: "'Inter', sans-serif",
-      textAlign: 'center' as const,
+      textAlign: 'center',
       borderTop: `2px solid ${colors.goldBorder}`,
       paddingTop: isMobile ? '20px' : '30px',
     },
 
+    // Section 4: Video Testimonials - Dark Gray
     videoTestimonialsSection: {
       maxWidth: '1400px',
       margin: '0 auto',
       marginBottom: isMobile ? '80px' : '120px',
-      textAlign: 'center' as const,
+      textAlign: 'center',
       paddingLeft: isMobile ? '20px' : '0',
       paddingRight: isMobile ? '20px' : '0',
-      background: colors.gray,
+      background: colors.gray,  // Dark gray
       borderRadius: '32px',
       paddingTop: isMobile ? '40px' : '80px',
       paddingBottom: isMobile ? '40px' : '80px',
       boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
       border: `1px solid ${colors.goldBorder}`,
-      position: 'relative' as const,
-      overflow: 'hidden' as const,
+      position: 'relative',
+      overflow: 'hidden',
     },
     
     videoTestimonialsSectionBg: {
-      position: 'absolute' as const,
+      position: 'absolute',
       top: 0,
       left: 0,
       right: 0,
@@ -3176,13 +3299,13 @@ const BodySection = () => {
     
     videoTestimonialsHeader: {
       marginBottom: isMobile ? '40px' : '60px',
-      position: 'relative' as const,
+      position: 'relative',
       zIndex: 2,
     },
     
     videoTitleContainer: {
-      display: 'flex' as const,
-      flexDirection: 'column' as const,
+      display: 'flex',
+      flexDirection: 'column',
       alignItems: 'center',
       marginBottom: '20px',
     },
@@ -3190,7 +3313,7 @@ const BodySection = () => {
     videoNavyTitle: {
       fontSize: isMobile ? '2rem' : isTablet ? '2.25rem' : '2.5rem',
       fontWeight: '700',
-      color: colors.white,
+      color: colors.white,  // White text on gray
       marginTop: 0,
       marginRight: 0,
       marginBottom: '8px',
@@ -3226,35 +3349,36 @@ const BodySection = () => {
     },
     
     videoGrid: {
-      display: 'grid' as const,
+      display: 'grid',
       gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
       gap: isMobile ? '20px' : isTablet ? '24px' : '32px',
       maxWidth: '1200px',
       margin: '0 auto',
       marginBottom: isMobile ? '60px' : '80px',
-      position: 'relative' as const,
+      position: 'relative',
       zIndex: 2,
     },
     
+    // Section 5: Reviews - Navy Blue (alternating)
     reviewsSection: {
       maxWidth: '1400px',
       margin: '0 auto',
       marginBottom: isMobile ? '80px' : '120px',
-      textAlign: 'center' as const,
+      textAlign: 'center',
       paddingLeft: isMobile ? '20px' : '0',
       paddingRight: isMobile ? '20px' : '0',
-      background: colors.navyLight,
+      background: colors.navyLight,  // Navy blue
       borderRadius: '32px',
       paddingTop: isMobile ? '40px' : '80px',
       paddingBottom: isMobile ? '40px' : '80px',
       boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
       border: `1px solid ${colors.goldBorder}`,
-      position: 'relative' as const,
-      overflow: 'hidden' as const,
+      position: 'relative',
+      overflow: 'hidden',
     },
     
     reviewsSectionBg: {
-      position: 'absolute' as const,
+      position: 'absolute',
       top: 0,
       left: 0,
       right: 0,
@@ -3265,7 +3389,7 @@ const BodySection = () => {
     
     reviewsHeader: {
       marginBottom: isMobile ? '40px' : '60px',
-      position: 'relative' as const,
+      position: 'relative',
       zIndex: 2,
     },
     
@@ -3295,23 +3419,23 @@ const BodySection = () => {
     },
     
     reviewsGrid: {
-      display: 'grid' as const,
+      display: 'grid',
       gridTemplateColumns: isMobile ? '1fr' : isTablet ? '1fr' : 'repeat(2, 1fr)',
       gap: isMobile ? '20px' : isTablet ? '24px' : '32px',
       maxWidth: '1200px',
       margin: '0 auto',
-      position: 'relative' as const,
+      position: 'relative',
       zIndex: 2,
     },
     
     reviewCard: (active: boolean) => ({
-      backgroundColor: active ? colors.grayLight : colors.white,
+      backgroundColor: active ? colors.grayLight : colors.white,  // White cards on navy
       borderRadius: '32px',
       paddingTop: isMobile ? '30px' : '40px',
       paddingRight: isMobile ? '20px' : '32px',
       paddingBottom: isMobile ? '30px' : '40px',
       paddingLeft: isMobile ? '20px' : '32px',
-      textAlign: 'left' as const,
+      textAlign: 'left',
       border: active 
         ? `2px solid ${colors.gold}` 
         : `2px solid ${colors.goldBorder}`,
@@ -3323,7 +3447,7 @@ const BodySection = () => {
     }),
     
     reviewHeader: {
-      display: 'flex' as const,
+      display: 'flex',
       alignItems: 'center',
       gap: isMobile ? '16px' : '20px',
       marginBottom: '24px',
@@ -3333,7 +3457,7 @@ const BodySection = () => {
       width: isMobile ? '60px' : '80px',
       height: isMobile ? '60px' : '80px',
       borderRadius: '50%',
-      objectFit: 'cover' as const,
+      objectFit: 'cover',
       border: `3px solid ${colors.gold}`,
       boxShadow: `0 4px 12px ${colors.goldLight}`,
     },
@@ -3362,7 +3486,7 @@ const BodySection = () => {
     },
     
     starsContainer: {
-      display: 'flex' as const,
+      display: 'flex',
       gap: '4px',
     },
     
@@ -3382,28 +3506,32 @@ const BodySection = () => {
       marginLeft: 0,
       fontWeight: '400',
       fontFamily: "'Inter', sans-serif",
-      fontStyle: 'italic' as const,
+      fontStyle: 'italic',
     },
     
+    // Section 6: Meet the Founders - Dark Beige
+    // (Inline styles at line ~4350 - will update in the JSX)
+    
+    // Section 7: Our Story - Dark Gray
     ourStorySection: {
       maxWidth: '1400px',
       margin: '0 auto',
       marginBottom: isMobile ? '80px' : '120px',
-      textAlign: 'center' as const,
+      textAlign: 'center',
       paddingLeft: isMobile ? '20px' : '0',
       paddingRight: isMobile ? '20px' : '0',
-      background: colors.grayDark,
+      background: colors.grayDark,  // Dark gray
       borderRadius: '32px',
       paddingTop: isMobile ? '40px' : '80px',
       paddingBottom: isMobile ? '40px' : '80px',
       boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
       border: `1px solid ${colors.goldBorder}`,
-      position: 'relative' as const,
-      overflow: 'hidden' as const,
+      position: 'relative',
+      overflow: 'hidden',
     },
     
     ourStorySectionBg: {
-      position: 'absolute' as const,
+      position: 'absolute',
       top: 0,
       left: 0,
       right: 0,
@@ -3415,7 +3543,7 @@ const BodySection = () => {
     ourStoryContent: {
       maxWidth: '1000px',
       margin: '0 auto',
-      position: 'relative' as const,
+      position: 'relative',
       zIndex: 2,
     },
     
@@ -3443,14 +3571,14 @@ const BodySection = () => {
       fontFamily: "'Inter', sans-serif",
       maxWidth: '900px',
       padding: isMobile ? '20px' : '40px',
-      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',  // Semi-transparent white
       borderRadius: '24px',
       boxShadow: '0 10px 40px rgba(0, 0, 0, 0.2)',
       border: `1px solid ${colors.goldBorder}`,
     },
     
     ourStoryButton: (active: boolean) => ({
-      display: 'inline-flex' as const,
+      display: 'inline-flex',
       alignItems: 'center',
       gap: '12px',
       backgroundColor: active ? colors.gold : colors.navy,
@@ -3469,29 +3597,30 @@ const BodySection = () => {
       fontFamily: "'Inter', sans-serif",
       transform: active ? 'translateY(-3px)' : 'translateY(0)',
       boxShadow: active 
-        ? '0 15px 30px rgba(255, 0, 0, 0.4)' 
+        ? '0 15px 30px rgba(255, 184, 0, 0.4)' 
         : '0 10px 25px rgba(0, 0, 0, 0.3)',
     }),
     
+    // Section 8: Roofing Services - Navy Blue
     flexibleSolutionsSection: {
       maxWidth: '1400px',
       margin: '0 auto',
       marginBottom: isMobile ? '80px' : '120px',
-      textAlign: 'center' as const,
+      textAlign: 'center',
       paddingLeft: isMobile ? '20px' : '0',
       paddingRight: isMobile ? '20px' : '0',
-      background: colors.navy,
+      background: colors.navy,  // Navy blue
       borderRadius: '32px',
       paddingTop: isMobile ? '40px' : '80px',
       paddingBottom: isMobile ? '40px' : '80px',
       boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
       border: `1px solid ${colors.goldBorder}`,
-      position: 'relative' as const,
-      overflow: 'hidden' as const,
+      position: 'relative',
+      overflow: 'hidden',
     },
     
     flexibleSolutionsSectionBg: {
-      position: 'absolute' as const,
+      position: 'absolute',
       top: 0,
       left: 0,
       right: 0,
@@ -3502,15 +3631,15 @@ const BodySection = () => {
     
     flexibleSolutionsHeader: {
       marginBottom: isMobile ? '40px' : '60px',
-      position: 'relative' as const,
+      position: 'relative',
       zIndex: 2,
     },
     
     flexibleSolutionsBadge: {
-      display: 'inline-flex' as const,
+      display: 'inline-flex',
       alignItems: 'center',
       gap: isMobile ? '8px' : '12px',
-      backgroundColor: 'rgba(255, 0, 0, 0.15)',
+      backgroundColor: 'rgba(255, 184, 0, 0.15)',
       paddingTop: isMobile ? '12px' : '16px',
       paddingRight: isMobile ? '20px' : '32px',
       paddingBottom: isMobile ? '12px' : '16px',
@@ -3526,7 +3655,7 @@ const BodySection = () => {
       fontWeight: '700',
       color: colors.white,
       letterSpacing: '3px',
-      textTransform: 'uppercase' as const,
+      textTransform: 'uppercase',
       fontFamily: "'Inter', sans-serif",
     },
     
@@ -3570,20 +3699,20 @@ const BodySection = () => {
     },
     
     cleaningPlansGrid: {
-      display: 'grid' as const,
+      display: 'grid',
       gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
       gap: isMobile ? '32px' : isTablet ? '24px' : '32px',
       maxWidth: '1400px',
       margin: '0 auto',
       marginBottom: isMobile ? '60px' : '80px',
-      position: 'relative' as const,
+      position: 'relative',
       zIndex: 2,
     },
     
     cleaningPlanCard: (active: boolean, color: string) => ({
-      backgroundColor: active ? colors.grayLight : colors.white,
+      backgroundColor: active ? colors.grayLight : colors.white,  // White cards on navy
       borderRadius: '32px',
-      overflow: 'hidden' as const,
+      overflow: 'hidden',
       boxShadow: active 
         ? '0 40px 80px rgba(0, 0, 0, 0.3)' 
         : '0 20px 60px rgba(0, 0, 0, 0.2)',
@@ -3592,22 +3721,22 @@ const BodySection = () => {
         : `2px solid ${colors.goldBorder}`,
       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
       transform: active ? 'translateY(-20px)' : 'translateY(0)',
-      display: 'flex' as const,
-      flexDirection: 'column' as const,
+      display: 'flex',
+      flexDirection: 'column',
     }),
     
     planHeader: (color: string) => ({
-      backgroundColor: color,
+      backgroundColor: color,  // Navy, beige, or gray based on plan
       paddingTop: isMobile ? '30px' : '40px',
       paddingRight: isMobile ? '24px' : '32px',
       paddingBottom: isMobile ? '30px' : '40px',
       paddingLeft: isMobile ? '24px' : '32px',
-      textAlign: 'center' as const,
-      color: color === colors.beige ? colors.navyDark : colors.white,
+      textAlign: 'center',
+      color: color === colors.beige ? colors.navyDark : colors.white,  // Dark text on beige, white on navy/gray
     }),
     
     planBadge: {
-      display: 'inline-block' as const,
+      display: 'inline-block',
       backgroundColor: 'rgba(255, 255, 255, 0.2)',
       paddingTop: '8px',
       paddingRight: '20px',
@@ -3618,7 +3747,7 @@ const BodySection = () => {
       fontWeight: '700',
       marginBottom: '20px',
       letterSpacing: '2px',
-      textTransform: 'uppercase' as const,
+      textTransform: 'uppercase',
       fontFamily: "'Inter', sans-serif",
     },
     
@@ -3660,8 +3789,8 @@ const BodySection = () => {
       paddingBottom: isMobile ? '30px' : '40px',
       paddingLeft: isMobile ? '24px' : '32px',
       flex: 1,
-      display: 'flex' as const,
-      flexDirection: 'column' as const,
+      display: 'flex',
+      flexDirection: 'column',
       background: 'transparent',
     },
     
@@ -3679,14 +3808,14 @@ const BodySection = () => {
     },
     
     planFeatures: {
-      display: 'flex' as const,
-      flexDirection: 'column' as const,
+      display: 'flex',
+      flexDirection: 'column',
       gap: isMobile ? '12px' : '16px',
       marginBottom: isMobile ? '30px' : '40px',
     },
     
     planFeature: {
-      display: 'flex' as const,
+      display: 'flex',
       alignItems: 'flex-start',
       gap: '12px',
       padding: '12px 16px',
@@ -3712,7 +3841,7 @@ const BodySection = () => {
     },
     
     planButton: (active: boolean, color: string) => ({
-      display: 'inline-flex' as const,
+      display: 'inline-flex',
       alignItems: 'center',
       justifyContent: 'center',
       gap: '12px',
@@ -3735,18 +3864,19 @@ const BodySection = () => {
       width: '100%',
     }),
     
+    // Section 9: Consultation Card - Dark Beige
     consultationSection: {
-      backgroundColor: colors.beigeDark,
+      backgroundColor: colors.beigeDark,  // Dark beige
       borderRadius: '24px',
       paddingTop: isMobile ? '40px' : '60px',
       paddingRight: isMobile ? '24px' : '40px',
       paddingBottom: isMobile ? '40px' : '60px',
       paddingLeft: isMobile ? '24px' : '40px',
-      textAlign: 'center' as const,
+      textAlign: 'center',
       border: `2px solid ${colors.goldBorder}`,
       maxWidth: '1000px',
       margin: '0 auto',
-      position: 'relative' as const,
+      position: 'relative',
       zIndex: 2,
       backdropFilter: 'blur(10px)',
       background: `linear-gradient(135deg, ${colors.beigeDark} 0%, ${colors.beige} 100%)`,
@@ -3779,7 +3909,7 @@ const BodySection = () => {
     },
     
     consultationButton: (active: boolean) => ({
-      display: 'inline-flex' as const,
+      display: 'inline-flex',
       alignItems: 'center',
       gap: '12px',
       backgroundColor: active ? colors.gold : colors.navy,
@@ -3798,12 +3928,12 @@ const BodySection = () => {
       fontFamily: "'Inter', sans-serif",
       transform: active ? 'translateY(-3px)' : 'translateY(0)',
       boxShadow: active 
-        ? '0 20px 40px rgba(255, 0, 0, 0.4)' 
+        ? '0 20px 40px rgba(255, 184, 0, 0.4)' 
         : '0 15px 30px rgba(0, 0, 0, 0.3)',
     }),
     
     beforeAfterCTA: (active: boolean) => ({
-      display: 'inline-flex' as const,
+      display: 'inline-flex',
       alignItems: 'center',
       gap: '12px',
       backgroundColor: active ? colors.gold : colors.navyDark,
@@ -3822,19 +3952,29 @@ const BodySection = () => {
       fontFamily: "'Inter', sans-serif",
       transform: active ? 'translateY(-3px)' : 'translateY(0)',
       boxShadow: active 
-        ? '0 15px 30px rgba(255, 0, 0, 0.4)' 
+        ? '0 15px 30px rgba(255, 184, 0, 0.4)' 
         : '0 10px 25px rgba(0, 0, 0, 0.3)',
       marginTop: '40px',
-      position: 'relative' as const,
+      position: 'relative',
       zIndex: 2,
     }),
   };
 
   return (
     <section style={baseBodyStyles.bodyContainer}>
-      {/* Section 1: The BRAVOS Difference */}
+      {/* Section 1: The BRAVOS Difference - NAVY BLUE */}
       <div style={baseBodyStyles.differenceSection}>
-        <StarRotationRing size={500} color="#FF0000" />
+        {/* Star Ring behind header */}
+        <StarRing 
+          size={isMobile ? 200 : 300}
+          color="#FFB800"
+          backgroundColor="rgba(255, 184, 0, 0.03)"
+          text="★★★★★"
+          style={{
+            opacity: 0.4,
+          }}
+        />
+        
         <div style={baseBodyStyles.differenceSectionBg}></div>
         <div style={baseBodyStyles.differenceBadge}>
           <span style={baseBodyStyles.diamondIcon}>✦</span>
@@ -3854,11 +3994,12 @@ const BodySection = () => {
           With over 25 years of industry experience, BRAVOS has earned its reputation as Houston's most trusted roofing contractor. 
           We combine master craftsmanship with premium materials to deliver roofs that protect your home and enhance its beauty.
         </p>
-        
-        <LogoCarousel autoRotate={true} showNavigation={true} />
+
+        {/* Logo Carousel after section 1 */}
+        <LogoCarousel />
       </div>
 
-      {/* Section 2: Features Grid */}
+      {/* Section 2: Features Grid - Alternating NAVY and GRAY cards */}
       <div style={baseBodyStyles.featuresGrid}>
         {features.map((feature, index) => (
           <div 
@@ -3909,11 +4050,22 @@ const BodySection = () => {
         ))}
       </div>
 
-      <LogoCarousel autoRotate={true} showNavigation={true} />
+      {/* Logo Carousel after section 2 */}
+      <LogoCarousel />
 
-      {/* Section 3: Before & After Transformations */}
+      {/* Section 3: Before & After Transformations - DARK BEIGE */}
       <div style={baseBodyStyles.transformationsSection}>
-        <StarRotationRing size={500} color="#FF0000" />
+        {/* Star Ring behind header */}
+        <StarRing 
+          size={isMobile ? 200 : 300}
+          color="#FFB800"
+          backgroundColor="rgba(255, 184, 0, 0.03)"
+          text="★★★★★"
+          style={{
+            opacity: 0.4,
+          }}
+        />
+        
         <div style={baseBodyStyles.transformationsSectionBg}></div>
         <div style={baseBodyStyles.transformationsHeader}>
           <div style={baseBodyStyles.transformationsTitleContainer}>
@@ -4010,13 +4162,24 @@ const BodySection = () => {
             />
           </svg>
         </button>
+
+        {/* Logo Carousel after section 3 */}
+        <LogoCarousel />
       </div>
 
-      <LogoCarousel autoRotate={true} showNavigation={true} />
-
-      {/* Section 4: Video Testimonials */}
+      {/* Section 4: Video Testimonials - DARK GRAY */}
       <div style={baseBodyStyles.videoTestimonialsSection}>
-        <StarRotationRing size={500} color="#FF0000" />
+        {/* Star Ring behind header */}
+        <StarRing 
+          size={isMobile ? 200 : 300}
+          color="#FFB800"
+          backgroundColor="rgba(255, 184, 0, 0.03)"
+          text="★★★★★"
+          style={{
+            opacity: 0.4,
+          }}
+        />
+        
         <div style={baseBodyStyles.videoTestimonialsSectionBg}></div>
         <div style={baseBodyStyles.videoTestimonialsHeader}>
           <div style={baseBodyStyles.videoTitleContainer}>
@@ -4045,13 +4208,24 @@ const BodySection = () => {
             />
           ))}
         </div>
+
+        {/* Logo Carousel after section 4 */}
+        <LogoCarousel />
       </div>
 
-      <LogoCarousel autoRotate={true} showNavigation={true} />
-
-      {/* Section 5: Customer Reviews */}
+      {/* Section 5: Customer Reviews - NAVY BLUE (alternating) */}
       <div style={baseBodyStyles.reviewsSection}>
-        <StarRotationRing size={500} color="#FF0000" />
+        {/* Star Ring behind header */}
+        <StarRing 
+          size={isMobile ? 200 : 300}
+          color="#FFB800"
+          backgroundColor="rgba(255, 184, 0, 0.03)"
+          text="★★★★★"
+          style={{
+            opacity: 0.4,
+          }}
+        />
+        
         <div style={baseBodyStyles.reviewsSectionBg}></div>
         <div style={baseBodyStyles.reviewsHeader}>
           <h2 style={baseBodyStyles.reviewsTitle}>
@@ -4099,11 +4273,12 @@ const BodySection = () => {
             </div>
           ))}
         </div>
+
+        {/* Logo Carousel after section 5 */}
+        <LogoCarousel />
       </div>
 
-      <LogoCarousel autoRotate={true} showNavigation={true} />
-
-      {/* Section 6: Meet the Founders */}
+      {/* Section 6: Meet the Founders Section - DARK BEIGE */}
       <div style={{
         maxWidth: '1400px',
         margin: '0 auto',
@@ -4112,17 +4287,27 @@ const BodySection = () => {
         paddingRight: isMobile ? '20px' : '40px',
         paddingBottom: isMobile ? '0' : '0',
         paddingLeft: isMobile ? '20px' : '40px',
-        background: colors.beigeDark,
+        background: colors.beigeDark,  // Dark beige
         borderRadius: '32px',
         padding: isMobile ? '40px 20px' : '80px 40px',
         boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
         border: `1px solid ${colors.goldBorder}`,
-        position: 'relative' as const,
-        overflow: 'hidden' as const,
+        position: 'relative',
+        overflow: 'hidden',
       }}>
-        <StarRotationRing size={500} color="#FF0000" />
+        {/* Star Ring behind header */}
+        <StarRing 
+          size={isMobile ? 200 : 300}
+          color="#FFB800"
+          backgroundColor="rgba(255, 184, 0, 0.03)"
+          text="★★★★★"
+          style={{
+            opacity: 0.4,
+          }}
+        />
+        
         <div style={{
-          position: 'absolute' as const,
+          position: 'absolute',
           top: 0,
           left: 0,
           right: 0,
@@ -4132,23 +4317,23 @@ const BodySection = () => {
         }}></div>
         
         <div style={{
-          display: 'flex' as const,
-          flexDirection: isMobile ? 'column' as const : 'row' as const,
+          display: 'flex',
+          flexDirection: isMobile ? 'column' : 'row',
           gap: isMobile ? '40px' : isTablet ? '50px' : '80px',
           alignItems: 'center',
-          position: 'relative' as const,
+          position: 'relative',
           zIndex: 2,
         }}>
           
           <div style={{
             flex: 1,
-            position: 'relative' as const,
+            position: 'relative',
           }}>
             <div style={{
               backgroundColor: colors.navyDark,
               borderRadius: '30px',
               padding: '8px',
-              position: 'relative' as const,
+              position: 'relative',
               boxShadow: '0 40px 80px rgba(0, 0, 0, 0.4)',
             }}>
               <img 
@@ -4157,14 +4342,14 @@ const BodySection = () => {
                 style={{
                   width: '100%',
                   height: isMobile ? '400px' : isTablet ? '500px' : '600px',
-                  objectFit: 'cover' as const,
+                  objectFit: 'cover',
                   borderRadius: '24px',
                   border: `4px solid ${colors.gold}`,
                 }}
               />
               
               <div style={{
-                position: 'absolute' as const,
+                position: 'absolute',
                 bottom: isMobile ? '-20px' : isTablet ? '-25px' : '-30px',
                 left: isMobile ? '20px' : '40px',
                 right: isMobile ? '20px' : '40px',
@@ -4174,8 +4359,8 @@ const BodySection = () => {
                 paddingBottom: isMobile ? '20px' : '30px',
                 paddingLeft: isMobile ? '20px' : '30px',
                 borderRadius: '20px',
-                textAlign: 'center' as const,
-                boxShadow: '0 20px 40px rgba(255, 0, 0, 0.4)',
+                textAlign: 'center',
+                boxShadow: '0 20px 40px rgba(255, 184, 0, 0.4)',
                 transform: 'rotate(-2deg)',
                 zIndex: 3,
               }}>
@@ -4193,13 +4378,13 @@ const BodySection = () => {
           
           <div style={{
             flex: 1,
-            textAlign: isMobile ? 'center' as const : 'left' as const,
+            textAlign: isMobile ? 'center' : 'left',
           }}>
             <div style={{
-              display: 'inline-flex' as const,
+              display: 'inline-flex',
               alignItems: 'center',
               gap: isMobile ? '8px' : '12px',
-              backgroundColor: 'rgba(255, 0, 0, 0.15)',
+              backgroundColor: 'rgba(255, 184, 0, 0.15)',
               paddingTop: isMobile ? '12px' : '16px',
               paddingRight: isMobile ? '20px' : '32px',
               paddingBottom: isMobile ? '12px' : '16px',
@@ -4222,7 +4407,7 @@ const BodySection = () => {
                 fontWeight: '700',
                 color: colors.navyDark,
                 letterSpacing: '3px',
-                textTransform: 'uppercase' as const,
+                textTransform: 'uppercase',
                 fontFamily: "'Inter', sans-serif",
               }}>
                 Meet The Visionaries
@@ -4262,7 +4447,7 @@ const BodySection = () => {
                 <span style={{
                   color: colors.gold,
                   fontSize: isMobile ? '3.5rem' : isTablet ? '4.5rem' : '6rem',
-                  display: 'inline-block' as const,
+                  display: 'inline-block',
                   margin: '0 20px',
                   transform: 'translateY(5px)',
                 }}>
@@ -4341,7 +4526,7 @@ const BodySection = () => {
             
             <button
               style={{
-                display: 'inline-flex' as const,
+                display: 'inline-flex',
                 alignItems: 'center',
                 gap: '12px',
                 backgroundColor: colors.navyDark,
@@ -4393,13 +4578,24 @@ const BodySection = () => {
             </button>
           </div>
         </div>
+
+        {/* Logo Carousel after section 6 */}
+        <LogoCarousel />
       </div>
 
-      <LogoCarousel autoRotate={true} showNavigation={true} />
-
-      {/* Section 7: Our Story */}
+      {/* Section 7: Our Story Section - DARK GRAY */}
       <div style={baseBodyStyles.ourStorySection}>
-        <StarRotationRing size={500} color="#FF0000" />
+        {/* Star Ring behind header */}
+        <StarRing 
+          size={isMobile ? 200 : 300}
+          color="#FFB800"
+          backgroundColor="rgba(255, 184, 0, 0.03)"
+          text="★★★★★"
+          style={{
+            opacity: 0.4,
+          }}
+        />
+        
         <div style={baseBodyStyles.ourStorySectionBg}></div>
         <div style={baseBodyStyles.ourStoryContent}>
           <h2 style={baseBodyStyles.ourStoryTitle}>
@@ -4469,13 +4665,24 @@ const BodySection = () => {
             </svg>
           </button>
         </div>
+
+        {/* Logo Carousel after section 7 */}
+        <LogoCarousel />
       </div>
 
-      <LogoCarousel autoRotate={true} showNavigation={true} />
-
-      {/* Section 8: Roofing Services */}
+      {/* Section 8: Roofing Services Section - NAVY BLUE */}
       <div style={baseBodyStyles.flexibleSolutionsSection}>
-        <StarRotationRing size={500} color="#FF0000" />
+        {/* Star Ring behind header */}
+        <StarRing 
+          size={isMobile ? 200 : 300}
+          color="#FFB800"
+          backgroundColor="rgba(255, 184, 0, 0.03)"
+          text="★★★★★"
+          style={{
+            opacity: 0.4,
+          }}
+        />
+        
         <div style={baseBodyStyles.flexibleSolutionsSectionBg}></div>
         <div style={baseBodyStyles.flexibleSolutionsHeader}>
           <div style={baseBodyStyles.flexibleSolutionsBadge}>
@@ -4575,7 +4782,7 @@ const BodySection = () => {
           ))}
         </div>
         
-        {/* Section 9: Consultation Card */}
+        {/* Section 9: Consultation Card - DARK BEIGE */}
         <div style={baseBodyStyles.consultationSection}>
           <h3 style={baseBodyStyles.consultationTitle}>
             Not Sure What Your Roof Needs?
@@ -4617,13 +4824,11 @@ const BodySection = () => {
         </div>
       </div>
 
-      <LogoCarousel autoRotate={true} showNavigation={true} />
-
-      {/* FAQ Section */}
+      {/* FAQ Section - DARK BEIGE */}
       <FAQSection 
         title="Frequently Asked Roofing Questions"
         subtitle="Find answers to common questions about our roofing services. If you don't see your question here, contact our team for personalized assistance."
-        accentColor="#FF0000"
+        accentColor="#FFB800"
         textColor="#0A0A0C"
         backgroundColor="#FFFFFF"
         containerStyle={{
@@ -4633,14 +4838,17 @@ const BodySection = () => {
           paddingBottom: isMobile ? '60px' : '80px',
           paddingLeft: isMobile ? '20px' : '40px',
           paddingRight: isMobile ? '20px' : '40px',
-          background: colors.beigeDark,
+          background: colors.beigeDark,  // Dark beige to match section 9
           borderRadius: '32px',
           boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
           border: `1px solid ${colors.goldBorder}`,
-          position: 'relative' as const,
-          overflow: 'hidden' as const,
+          position: 'relative',
+          overflow: 'hidden',
         }}
       />
+
+      {/* Logo Carousel after FAQ section */}
+      <LogoCarousel />
     </section>
   );
 };
