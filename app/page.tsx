@@ -3,90 +3,259 @@
 import { useState, useEffect, FormEvent, ChangeEvent, useRef } from 'react';
 import { useForm, ValidationError } from '@formspree/react';
 
-// Waving USA Flag Component
-const WavingUSAFlag = ({ width = 40, height = 30 }) => {
+// Waving USA Flag Component (as image)
+const USAFlag = ({ width = 40, height = 30 }) => {
   return (
-    <svg
-      width={width}
-      height={height}
-      viewBox="0 0 60 40"
+    <img 
+      src="/image/usa-flag.png" 
+      alt="USA Flag"
       style={{
+        width: `${width}px`,
+        height: `${height}px`,
+        objectFit: 'contain',
+        marginRight: '8px',
         animation: 'waveFlag 2s ease-in-out infinite',
         transformOrigin: 'center',
-        filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.3))',
       }}
-    >
-      <style jsx>{`
-        @keyframes waveFlag {
-          0%, 100% { transform: rotate(0deg) scale(1); }
-          25% { transform: rotate(2deg) scale(1.05); }
-          75% { transform: rotate(-2deg) scale(1.05); }
-        }
-      `}</style>
-      
-      {/* Stripes */}
-      <rect x="0" y="0" width="60" height="3.07" fill="#B22234" />
-      <rect x="0" y="3.07" width="60" height="3.07" fill="#FFFFFF" />
-      <rect x="0" y="6.14" width="60" height="3.07" fill="#B22234" />
-      <rect x="0" y="9.21" width="60" height="3.07" fill="#FFFFFF" />
-      <rect x="0" y="12.28" width="60" height="3.07" fill="#B22234" />
-      <rect x="0" y="15.35" width="60" height="3.07" fill="#FFFFFF" />
-      <rect x="0" y="18.42" width="60" height="3.07" fill="#B22234" />
-      <rect x="0" y="21.49" width="60" height="3.07" fill="#FFFFFF" />
-      <rect x="0" y="24.56" width="60" height="3.07" fill="#B22234" />
-      <rect x="0" y="27.63" width="60" height="3.07" fill="#FFFFFF" />
-      <rect x="0" y="30.7" width="60" height="3.07" fill="#B22234" />
-      <rect x="0" y="33.77" width="60" height="3.07" fill="#FFFFFF" />
-      <rect x="0" y="36.84" width="60" height="3.07" fill="#B22234" />
-      
-      {/* Blue Canton */}
-      <rect x="0" y="0" width="24" height="16.9" fill="#3C3B6E" />
-      
-      {/* Stars */}
-      {[...Array(50)].map((_, i) => {
-        const row = Math.floor(i / 10);
-        const col = i % 10;
-        const x = 1.5 + col * 2.2;
-        const y = 1 + row * 1.5;
-        return (
-          <circle
-            key={i}
-            cx={x}
-            cy={y}
-            r="0.4"
-            fill="#FFFFFF"
-          />
-        );
-      })}
-    </svg>
+    />
   );
 };
 
-// Rotating Star Component with Blue/Red colors
-const RotatingStar = ({ color = '#FFB800', size = 60, rotate = true }) => {
+// Rotating Star Ring Component
+const RotatingStarRing = ({ color = '#FFB800', size = 60 }) => {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      style={{
-        animation: rotate ? 'rotateStar 8s linear infinite' : 'none',
-        filter: 'drop-shadow(0 0 10px rgba(0,0,0,0.3))',
-      }}
-    >
+    <div style={{
+      position: 'relative',
+      width: size,
+      height: size,
+      animation: 'rotateRing 10s linear infinite',
+    }}>
+      {[...Array(8)].map((_, i) => {
+        const angle = (i * 45) * Math.PI / 180;
+        const radius = size * 0.4;
+        const x = Math.cos(angle) * radius;
+        const y = Math.sin(angle) * radius;
+        
+        return (
+          <div key={i} style={{
+            position: 'absolute',
+            left: `calc(50% + ${x}px - 6px)`,
+            top: `calc(50% + ${y}px - 6px)`,
+            width: '12px',
+            height: '12px',
+            backgroundColor: color,
+            clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)',
+            transform: `rotate(${i * 45}deg)`,
+          }} />
+        );
+      })}
       <style jsx>{`
-        @keyframes rotateStar {
+        @keyframes rotateRing {
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }
         }
       `}</style>
-      <path
-        d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
-        fill={color}
-        stroke="#FFFFFF"
-        strokeWidth="0.5"
-      />
-    </svg>
+    </div>
+  );
+};
+
+// Horizontal Auto-scrolling Logo Carousel
+const LogoCarousel = ({ 
+  backgroundColor = '#0A0A0C'
+}) => {
+  const [isMobile, setIsMobile] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isPaused, setIsPaused] = useState(false);
+
+  const logos = [
+    { id: 1, src: "/image/lifetime1.png", alt: "25+ Years Experience" },
+    { id: 2, src: "/image/award1.png", alt: "Licensed & Bonded" },
+    { id: 3, src: "/image/award1.png", alt: "Lifetime Warranty" },
+    { id: 4, src: "/image/award1.png", alt: "GAF Certified" },
+    { id: 5, src: "/image/award1.png", alt: "OSHA Certified" },
+    { id: 6, src: "/image/award1.png", alt: "Insurance Approved" },
+    { id: 7, src: "/image/lifetime1.png", alt: "5-Star Rated" },
+    { id: 8, src: "/image/award1.png", alt: "BBB Accredited" },
+    { id: 9, src: "/image/award1.png", alt: "Angi Super Service" },
+    { id: 10, src: "/image/lifetime1.png", alt: "Home Advisor Elite" },
+  ];
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    const scrollContainer = scrollRef.current;
+    if (!scrollContainer || isPaused) return;
+
+    let animationFrame: number;
+    let scrollPosition = 0;
+
+    const scroll = () => {
+      if (!scrollContainer || isPaused) return;
+      
+      scrollPosition += 0.5;
+      if (scrollPosition >= scrollContainer.scrollWidth / 2) {
+        scrollPosition = 0;
+      }
+      
+      scrollContainer.scrollLeft = scrollPosition;
+      animationFrame = requestAnimationFrame(scroll);
+    };
+
+    animationFrame = requestAnimationFrame(scroll);
+
+    return () => {
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame);
+      }
+    };
+  }, [isPaused]);
+
+  const handleMouseEnter = () => setIsPaused(true);
+  const handleMouseLeave = () => setIsPaused(false);
+
+  // Manual navigation
+  const scrollLeft = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: -200, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: 200, behavior: 'smooth' });
+    }
+  };
+
+  return (
+    <div style={{
+      width: '100%',
+      backgroundColor: backgroundColor,
+      padding: '20px 0',
+      position: 'relative',
+      borderTop: '1px solid rgba(255, 184, 0, 0.2)',
+      borderBottom: '1px solid rgba(255, 184, 0, 0.2)',
+    }}>
+      <div style={{
+        position: 'relative',
+        maxWidth: '1400px',
+        margin: '0 auto',
+      }}>
+        {/* Navigation Buttons */}
+        <button
+          onClick={scrollLeft}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          style={{
+            position: 'absolute',
+            left: '10px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            zIndex: 10,
+            width: '40px',
+            height: '40px',
+            borderRadius: '50%',
+            backgroundColor: '#FFB800',
+            border: 'none',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '20px',
+            color: '#0A0A0C',
+            boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
+          }}
+        >
+          ←
+        </button>
+        
+        <button
+          onClick={scrollRight}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          style={{
+            position: 'absolute',
+            right: '10px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            zIndex: 10,
+            width: '40px',
+            height: '40px',
+            borderRadius: '50%',
+            backgroundColor: '#FFB800',
+            border: 'none',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '20px',
+            color: '#0A0A0C',
+            boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
+          }}
+        >
+          →
+        </button>
+
+        {/* Scrolling Container */}
+        <div
+          ref={scrollRef}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          style={{
+            display: 'flex',
+            overflowX: 'hidden',
+            scrollBehavior: 'smooth',
+            padding: '10px 0',
+            cursor: 'grab',
+          }}
+        >
+          {/* Double the logos for seamless looping */}
+          {[...logos, ...logos].map((logo, index) => (
+            <div
+              key={`${logo.id}-${index}`}
+              style={{
+                flex: '0 0 auto',
+                width: isMobile ? '100px' : '150px',
+                margin: '0 20px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <img
+                src={logo.src}
+                alt={logo.alt}
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  maxHeight: isMobile ? '60px' : '80px',
+                  objectFit: 'contain',
+                  filter: 'brightness(0) invert(1)',
+                  opacity: 0.9,
+                  transition: 'all 0.3s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'scale(1.1)';
+                  e.currentTarget.style.opacity = '1';
+                  e.currentTarget.style.filter = 'brightness(0) invert(0.8) sepia(1) hue-rotate(0deg) saturate(5)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'scale(1)';
+                  e.currentTarget.style.opacity = '0.9';
+                  e.currentTarget.style.filter = 'brightness(0) invert(1)';
+                }}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -98,18 +267,18 @@ const StarPopper = ({ side = 'left' }) => {
     const interval = setInterval(() => {
       const newStar = {
         id: Date.now() + Math.random(),
-        x: side === 'left' ? Math.random() * 30 : 100 - Math.random() * 30,
+        x: side === 'left' ? Math.random() * 30 : 70 + Math.random() * 30,
         y: Math.random() * 100,
-        size: 10 + Math.random() * 20,
-        color: side === 'left' ? '#3C3B6E' : '#B22234', // Blue for left, Red for right
+        size: 15 + Math.random() * 25,
+        color: side === 'left' ? '#3C3B6E' : '#B22234',
       };
       
-      setStars(prev => [...prev.slice(-5), newStar]);
+      setStars(prev => [...prev.slice(-8), newStar]);
       
       setTimeout(() => {
         setStars(prev => prev.filter(s => s.id !== newStar.id));
       }, 2000);
-    }, 300);
+    }, 200);
     
     return () => clearInterval(interval);
   }, [side]);
@@ -120,7 +289,7 @@ const StarPopper = ({ side = 'left' }) => {
       top: 0,
       left: side === 'left' ? 0 : 'auto',
       right: side === 'right' ? 0 : 'auto',
-      width: '100px',
+      width: '150px',
       height: '100%',
       pointerEvents: 'none',
       zIndex: 5,
@@ -136,340 +305,35 @@ const StarPopper = ({ side = 'left' }) => {
             animation: 'popStar 1.5s ease-out forwards',
           }}
         >
-          <RotatingStar color={star.color} size={star.size} rotate={false} />
+          <div style={{
+            width: star.size,
+            height: star.size,
+            backgroundColor: star.color,
+            clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)',
+          }} />
         </div>
       ))}
       <style jsx>{`
         @keyframes popStar {
           0% {
             opacity: 1;
-            transform: scale(0) translateY(0);
+            transform: scale(0) translateY(0) rotate(0deg);
           }
           50% {
             opacity: 1;
-            transform: scale(1.2) translateY(-20px);
+            transform: scale(1.2) translateY(-20px) rotate(180deg);
           }
           100% {
             opacity: 0;
-            transform: scale(0) translateY(-40px);
+            transform: scale(0) translateY(-40px) rotate(360deg);
           }
         }
-      `}</style>
-    </div>
-  );
-};
-
-// Auto-playing Logo Carousel Component
-const LogoCarousel = ({ 
-  title = "licensed, certified & trusted",
-  showTitle = true,
-  autoplaySpeed = 3000,
-  backgroundColor = '#0A0A0C'
-}) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const autoplayRef = useRef<NodeJS.Timeout>(undefined);
-
-  const logos = [
-    { id: 1, src: "/image/lifetime1.png", alt: "25+ Years Experience", width: 120, height: 120 },
-    { id: 2, src: "/image/award1.png", alt: "Licensed & Bonded", width: 120, height: 120 },
-    { id: 3, src: "/image/award1.png", alt: "Lifetime Warranty", width: 120, height: 120 },
-    { id: 4, src: "/image/award1.png", alt: "GAF Certified", width: 120, height: 120 },
-    { id: 5, src: "/image/award1.png", alt: "OSHA Certified", width: 120, height: 120 },
-    { id: 6, src: "/image/award1.png", alt: "Insurance Approved", width: 120, height: 120 },
-    { id: 7, src: "/image/lifetime1.png", alt: "5-Star Rated", width: 120, height: 120 },
-    { id: 8, src: "/image/award1.png", alt: "Better Business Bureau", width: 120, height: 120 },
-  ];
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  useEffect(() => {
-    if (isAutoPlaying) {
-      autoplayRef.current = setInterval(() => {
-        setCurrentIndex((prev) => (prev + 1) % logos.length);
-      }, autoplaySpeed);
-    }
-    return () => {
-      if (autoplayRef.current) {
-        clearInterval(autoplayRef.current);
-      }
-    };
-  }, [isAutoPlaying, logos.length, autoplaySpeed]);
-
-  const handlePrevious = () => {
-    setIsAutoPlaying(false);
-    setCurrentIndex((prev) => (prev - 1 + logos.length) % logos.length);
-  };
-
-  const handleNext = () => {
-    setIsAutoPlaying(false);
-    setCurrentIndex((prev) => (prev + 1) % logos.length);
-  };
-
-  const handleMouseEnter = () => setIsAutoPlaying(false);
-  const handleMouseLeave = () => setIsAutoPlaying(true);
-
-  const visibleLogos = isMobile ? 2 : 4;
-
-  return (
-    <div 
-      ref={carouselRef}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        width: '100%',
-        padding: showTitle ? '40px 0' : '20px 0',
-        backgroundColor: backgroundColor,
-        position: 'relative',
-        borderTop: showTitle ? `1px solid rgba(255, 184, 0, 0.3)` : 'none',
-        borderBottom: showTitle ? `1px solid rgba(255, 184, 0, 0.3)` : 'none',
-      }}
-    >
-      {showTitle && (
-        <div style={{
-          textAlign: 'center',
-          marginBottom: '30px',
-        }}>
-          <h3 style={{
-            fontSize: isMobile ? '2rem' : '2.5rem',
-            fontWeight: '800',
-            color: '#FFB800',
-            textTransform: 'uppercase',
-            letterSpacing: '2px',
-            margin: 0,
-            fontFamily: "'Inter', sans-serif",
-            textShadow: '0 2px 4px rgba(0,0,0,0.3)',
-          }}>
-            {title}
-          </h3>
-        </div>
-      )}
-
-      <div style={{
-        position: 'relative',
-        maxWidth: '1200px',
-        margin: '0 auto',
-        overflow: 'hidden',
-        padding: '0 40px',
-      }}>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: isMobile ? '20px' : '40px',
-          transition: 'all 0.5s ease',
-        }}>
-          {logos.slice(currentIndex, currentIndex + visibleLogos).map((logo, idx) => (
-            <div
-              key={`${logo.id}-${idx}`}
-              style={{
-                flex: '0 0 auto',
-                animation: 'floatLogo 3s ease-in-out infinite',
-                animationDelay: `${idx * 0.2}s`,
-                filter: 'drop-shadow(0 10px 20px rgba(255, 184, 0, 0.2))',
-              }}
-            >
-              <img
-                src={logo.src}
-                alt={logo.alt}
-                style={{
-                  width: isMobile ? '80px' : `${logo.width}px`,
-                  height: isMobile ? '80px' : `${logo.height}px`,
-                  objectFit: 'contain',
-                  transition: 'all 0.3s ease',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'scale(1.1)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'scale(1)';
-                }}
-              />
-            </div>
-          ))}
-        </div>
-
-        {/* Navigation Buttons */}
-        <button
-          onClick={handlePrevious}
-          style={{
-            position: 'absolute',
-            left: '0',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            width: '30px',
-            height: '30px',
-            borderRadius: '50%',
-            backgroundColor: '#FFB800',
-            border: 'none',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#0A0A0C',
-            fontSize: '18px',
-            fontWeight: 'bold',
-            zIndex: 10,
-          }}
-        >
-          ←
-        </button>
-        <button
-          onClick={handleNext}
-          style={{
-            position: 'absolute',
-            right: '0',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            width: '30px',
-            height: '30px',
-            borderRadius: '50%',
-            backgroundColor: '#FFB800',
-            border: 'none',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#0A0A0C',
-            fontSize: '18px',
-            fontWeight: 'bold',
-            zIndex: 10,
-          }}
-        >
-          →
-        </button>
-      </div>
-
-      <style jsx>{`
-        @keyframes floatLogo {
-          0%, 100% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-10px);
-          }
+        @keyframes waveFlag {
+          0%, 100% { transform: rotate(0deg) scale(1); }
+          25% { transform: rotate(2deg) scale(1.05); }
+          75% { transform: rotate(-2deg) scale(1.05); }
         }
       `}</style>
-    </div>
-  );
-};
-
-// Service Areas Component
-const ServiceAreas = () => {
-  const [isMobile, setIsMobile] = useState(false);
-  const [activeArea, setActiveArea] = useState<string | null>(null);
-
-  const areas = [
-    "Houston", "Sugar Land", "Katy", "The Woodlands", "Pearland", 
-    "Missouri City", "Cypress", "Tomball", "Kingwood", "Richmond",
-    "Rosenberg", "Bellaire", "West University", "Memorial", "River Oaks",
-    "Energy Corridor", "Galleria", "Uptown", "Medical Center", "Clear Lake",
-    "Friendswood", "League City", "Webster", "Pasadena", "Deer Park",
-    "La Porte", "Baytown", "Channelview", "Humble", "Atascocita",
-    "Conroe", "Magnolia", "Montgomery", "Spring", "Jersey Village"
-  ];
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  return (
-    <div style={{
-      backgroundColor: '#0A0A0C',
-      padding: isMobile ? '40px 20px' : '60px 40px',
-      borderTop: '2px solid rgba(255, 184, 0, 0.3)',
-      borderBottom: '2px solid rgba(255, 184, 0, 0.3)',
-      position: 'relative',
-      overflow: 'hidden',
-    }}>
-      <div style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: 'radial-gradient(circle at 20% 30%, rgba(255, 184, 0, 0.1) 0%, transparent 50%)',
-        zIndex: 1,
-      }} />
-
-      <div style={{
-        position: 'relative',
-        zIndex: 2,
-        maxWidth: '1400px',
-        margin: '0 auto',
-      }}>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '20px',
-          marginBottom: '40px',
-        }}>
-          <WavingUSAFlag width={50} height={35} />
-          <h2 style={{
-            fontSize: isMobile ? '2rem' : '2.5rem',
-            fontWeight: '800',
-            color: '#FFB800',
-            margin: 0,
-            fontFamily: "'Inter', sans-serif",
-            textTransform: 'uppercase',
-          }}>
-            Proudly Serving Greater Houston
-          </h2>
-          <WavingUSAFlag width={50} height={35} />
-        </div>
-
-        <p style={{
-          fontSize: isMobile ? '1.125rem' : '1.25rem',
-          color: '#FFFFFF',
-          marginBottom: '40px',
-          fontFamily: "'Inter', sans-serif",
-          maxWidth: '800px',
-        }}>
-          From downtown Houston to the surrounding suburbs, our family brings quality roofing to your neighborhood.
-        </p>
-
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)',
-          gap: isMobile ? '12px' : '16px',
-        }}>
-          {areas.map((area) => (
-            <div
-              key={area}
-              style={{
-                backgroundColor: activeArea === area ? '#FFB800' : 'rgba(255, 184, 0, 0.1)',
-                color: activeArea === area ? '#0A0A0C' : '#FFFFFF',
-                padding: isMobile ? '10px' : '12px',
-                borderRadius: '8px',
-                textAlign: 'center',
-                fontSize: isMobile ? '0.9rem' : '1rem',
-                fontWeight: activeArea === area ? '700' : '400',
-                border: `2px solid ${activeArea === area ? '#FFB800' : 'rgba(255, 184, 0, 0.3)'}`,
-                transition: 'all 0.3s ease',
-                cursor: 'pointer',
-                fontFamily: "'Inter', sans-serif",
-                transform: activeArea === area ? 'translateY(-3px)' : 'translateY(0)',
-              }}
-              onMouseEnter={() => setActiveArea(area)}
-              onMouseLeave={() => setActiveArea(null)}
-            >
-              {area}
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 };
@@ -732,7 +596,6 @@ const HeroSection = () => {
   const [isTablet, setIsTablet] = useState(false);
   const [isSmallMobile, setIsSmallMobile] = useState(false);
   
-  // Formspree integration
   const [state, handleSubmit] = useForm("xqeedjny");
   
   const [formData, setFormData] = useState({
@@ -745,54 +608,34 @@ const HeroSection = () => {
   
   const [formStatus, setFormStatus] = useState<'idle' | 'success' | 'error'>('idle');
   
-  const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
-  
-  const [activeItem, setActiveItem] = useState<string | null>(null);
-  const [activeService, setActiveService] = useState<number | null>(null);
-  const [activeMobileItem, setActiveMobileItem] = useState<string | null>(null);
-  const [activeMobileService, setActiveMobileService] = useState<number | null>(null);
   const [excellenceBadgeActive, setExcellenceBadgeActive] = useState(false);
   const [googleBadgeActive, setGoogleBadgeActive] = useState(false);
   const [googleReviewsActive, setGoogleReviewsActive] = useState(false);
   const [trustCardActive, setTrustCardActive] = useState<number | null>(null);
   const [submitButtonActive, setSubmitButtonActive] = useState(false);
-  const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
-    setHasMounted(true);
-    
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
 
     const checkScreenSize = () => {
       const width = window.innerWidth;
-      const height = window.innerHeight;
       setIsMobile(width < 768);
       setIsTablet(width >= 768 && width < 1024);
       setIsSmallMobile(width < 480);
-      
-      if (!isMobile) {
-        setIsMobileMenuOpen(false);
-        setMobileServicesOpen(false);
-      }
     };
 
     checkScreenSize();
     window.addEventListener('scroll', handleScroll);
     window.addEventListener('resize', checkScreenSize);
-    window.addEventListener('orientationchange', checkScreenSize);
     
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', checkScreenSize);
-      window.removeEventListener('orientationchange', checkScreenSize);
     };
   }, []);
 
-  // Reset form status after 5 seconds
   useEffect(() => {
     if (formStatus === 'success' || formStatus === 'error') {
       const timer = setTimeout(() => {
@@ -844,15 +687,6 @@ const HeroSection = () => {
   const handleGoogleReviewsClick = () => {
     window.open("https://g.page/r/YOUR_GOOGLE_REVIEWS_LINK", '_blank');
   };
-  
-  const services = [
-    { name: "Residential Roofing", url: "/residential-roofing" },
-    { name: "Commercial Roofing", url: "/commercial-roofing" },
-    { name: "Roof Repair", url: "/roof-repair" },
-    { name: "Emergency Services", url: "/emergency-services" },
-    { name: "Roof Inspection", url: "/roof-inspection" },
-    { name: "Storm Damage", url: "/storm-damage" }
-  ];
 
   const handleTouchStart = (setter: (value: any) => void, value: any) => {
     setter(value);
@@ -862,7 +696,6 @@ const HeroSection = () => {
     setTimeout(() => setter(resetValue), 150);
   };
 
-  // BRAVOS Colors
   const colors = {
     background: '#0A0A0C',
     gold: '#FFB800',
@@ -901,7 +734,6 @@ const HeroSection = () => {
       zIndex: 1,
       width: '100%',
       height: '100%',
-      minHeight: '100%',
     },
     
     overlayGradient: {
@@ -1032,6 +864,9 @@ const HeroSection = () => {
       letterSpacing: '-0.5px',
       textShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
       position: 'relative',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '15px',
     },
     
     headlineHighlight: {
@@ -1281,15 +1116,6 @@ const HeroSection = () => {
       fontWeight: '400',
       width: '100%',
       boxSizing: 'border-box',
-      '&:focus': {
-        borderColor: colors.gold,
-        boxShadow: '0 0 0 3px rgba(255, 184, 0, 0.2)',
-      },
-      '&::placeholder': {
-        color: '#9CA3AF',
-        fontWeight: '400',
-        fontFamily: "'Inter', sans-serif",
-      },
     },
     
     formTextarea: {
@@ -1305,15 +1131,6 @@ const HeroSection = () => {
       boxSizing: 'border-box',
       resize: 'vertical',
       minHeight: '100px',
-      '&:focus': {
-        borderColor: colors.gold,
-        boxShadow: '0 0 0 3px rgba(255, 184, 0, 0.2)',
-      },
-      '&::placeholder': {
-        color: '#9CA3AF',
-        fontWeight: '400',
-        fontFamily: "'Inter', sans-serif",
-      },
     },
     
     formRow: {
@@ -1469,13 +1286,13 @@ const HeroSection = () => {
                 <span style={baseStyles.numberOne}>#1</span>
               </div>
               <span style={baseStyles.badgeText}>
-                <WavingUSAFlag width={30} height={22} />
+                <USAFlag width={30} height={22} />
                 <strong style={baseStyles.houstonBold}>HOUSTON'S PREMIER</strong> ROOFING CONTRACTOR
               </span>
             </div>
             
             <h1 style={baseStyles.headline}>
-              <RotatingStar color="#FFB800" size={40} />
+              <RotatingStarRing color="#FFB800" size={50} />
               Protect Your Home With
               <span style={baseStyles.headlineHighlight}> BRAVOS</span>
             </h1>
@@ -1535,12 +1352,21 @@ const HeroSection = () => {
               </div>
             </div>
 
-            {/* Logo Carousel in Hero */}
-            <LogoCarousel 
-              title="licensed, certified & trusted"
-              showTitle={true}
-              backgroundColor="#0A0A0C"
-            />
+            {/* Licensed, Certified & Trusted title with 10-logo carousel */}
+            <div style={{ marginTop: '30px' }}>
+              <h3 style={{
+                fontSize: isMobile ? '1.5rem' : '2rem',
+                fontWeight: '800',
+                color: '#FFB800',
+                textAlign: 'center',
+                marginBottom: '20px',
+                textTransform: 'uppercase',
+                letterSpacing: '2px',
+              }}>
+                licensed, certified & trusted
+              </h3>
+              <LogoCarousel backgroundColor="#0A0A0C" />
+            </div>
             
             <div style={baseStyles.reviewsContainer}>
               <div style={baseStyles.stars}>
@@ -1739,7 +1565,7 @@ const HeroSection = () => {
   );
 };
 
-// Video Testimonial Card Component
+// Video Testimonial Card Component (keep as is from your original)
 const VideoTestimonialCard = ({ 
   video, 
   index, 
@@ -1751,15 +1577,6 @@ const VideoTestimonialCard = ({
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [isSmallMobile, setIsSmallMobile] = useState(false);
-
-  const colors = {
-    background: '#0A0A0C',
-    gold: '#FFB800',
-    goldLight: 'rgba(255, 184, 0, 0.1)',
-    goldBorder: 'rgba(255, 184, 0, 0.3)',
-    white: '#FFFFFF',
-    softWhite: '#FAFAFA',
-  };
 
   useEffect(() => {
     const checkMobile = () => {
@@ -1804,14 +1621,14 @@ const VideoTestimonialCard = ({
   return (
     <div 
       style={{
-        backgroundColor: activeVideo === index ? '#F9FAFB' : colors.white,
+        backgroundColor: activeVideo === index ? '#F9FAFB' : '#FFFFFF',
         borderRadius: '24px',
         overflow: 'hidden',
         boxShadow: activeVideo === index 
           ? '0 30px 60px rgba(10, 10, 12, 0.2)' 
           : '0 20px 40px rgba(10, 10, 12, 0.1)',
         border: activeVideo === index 
-          ? `2px solid ${colors.gold}` 
+          ? `2px solid #FFB800` 
           : '1px solid rgba(255, 184, 0, 0.2)',
         transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
         transform: activeVideo === index ? 'translateY(-10px)' : 'translateY(0)',
@@ -1828,7 +1645,7 @@ const VideoTestimonialCard = ({
         position: 'relative',
         height: isMobile ? (isSmallMobile ? '180px' : '200px') : '250px',
         overflow: 'hidden',
-        backgroundColor: colors.background,
+        backgroundColor: '#0A0A0C',
       }}>
         {playingVideo === video.id ? (
           <video
@@ -1861,8 +1678,8 @@ const VideoTestimonialCard = ({
               position: 'absolute',
               top: '20px',
               left: '20px',
-              backgroundColor: colors.gold,
-              color: colors.background,
+              backgroundColor: '#FFB800',
+              color: '#0A0A0C',
               width: isMobile ? (isSmallMobile ? '35px' : '40px') : '50px',
               height: isMobile ? (isSmallMobile ? '35px' : '40px') : '50px',
               borderRadius: '50%',
@@ -1893,7 +1710,7 @@ const VideoTestimonialCard = ({
               <div style={{
                 width: isMobile ? (isSmallMobile ? '50px' : '60px') : '80px',
                 height: isMobile ? (isSmallMobile ? '50px' : '60px') : '80px',
-                backgroundColor: colors.gold,
+                backgroundColor: '#FFB800',
                 borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
@@ -1902,7 +1719,7 @@ const VideoTestimonialCard = ({
                 transition: 'transform 0.3s ease',
               }}>
                 <span style={{
-                  color: colors.background,
+                  color: '#0A0A0C',
                   fontSize: isMobile ? (isSmallMobile ? '1.25rem' : '1.5rem') : '2rem',
                   marginLeft: '8px',
                   fontWeight: '700',
@@ -1925,7 +1742,7 @@ const VideoTestimonialCard = ({
         <h4 style={{
           fontSize: isMobile ? (isSmallMobile ? '1.1rem' : '1.25rem') : '1.5rem',
           fontWeight: '700',
-          color: colors.background,
+          color: '#0A0A0C',
           marginTop: 0,
           marginBottom: '8px',
           fontFamily: "'Inter', sans-serif",
@@ -1943,10 +1760,10 @@ const VideoTestimonialCard = ({
         </p>
         <div style={{
           fontSize: isMobile ? (isSmallMobile ? '0.7rem' : '0.75rem') : '0.875rem',
-          color: colors.gold,
+          color: '#FFB800',
           fontWeight: '600',
           fontFamily: "'Inter', sans-serif",
-          backgroundColor: colors.goldLight,
+          backgroundColor: 'rgba(255, 184, 0, 0.1)',
           padding: '4px 12px',
           borderRadius: '20px',
           display: 'inline-block',
@@ -1977,12 +1794,6 @@ const StatsCounter = () => {
   const [satisfactionRate, setSatisfactionRate] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [isSmallMobile, setIsSmallMobile] = useState(false);
-
-  const colors = {
-    background: '#0A0A0C',
-    gold: '#FFB800',
-    softWhite: '#FAFAFA',
-  };
 
   useEffect(() => {
     const checkMobile = () => {
@@ -2063,7 +1874,7 @@ const StatsCounter = () => {
         <div style={{
           fontSize: isMobile ? (isSmallMobile ? '1.75rem' : '2rem') : '2.5rem',
           fontWeight: 700,
-          color: colors.gold,
+          color: '#FFB800',
           fontFamily: "'Inter', sans-serif",
           marginBottom: '8px',
           transition: 'all 0.3s ease',
@@ -2073,7 +1884,7 @@ const StatsCounter = () => {
         <div style={{
           fontSize: isMobile ? (isSmallMobile ? '11px' : '12px') : '14px',
           fontWeight: 400,
-          color: colors.softWhite,
+          color: '#FAFAFA',
           letterSpacing: '0.5px',
           transition: 'all 0.3s ease',
           fontFamily: "'Inter', sans-serif",
@@ -2097,7 +1908,7 @@ const StatsCounter = () => {
         <div style={{
           fontSize: isMobile ? (isSmallMobile ? '1.75rem' : '2rem') : '2.5rem',
           fontWeight: 700,
-          color: colors.gold,
+          color: '#FFB800',
           fontFamily: "'Inter', sans-serif",
           marginBottom: '8px',
           transition: 'all 0.3s ease',
@@ -2107,7 +1918,7 @@ const StatsCounter = () => {
         <div style={{
           fontSize: isMobile ? (isSmallMobile ? '11px' : '12px') : '14px',
           fontWeight: 400,
-          color: colors.softWhite,
+          color: '#FAFAFA',
           letterSpacing: '0.5px',
           transition: 'all 0.3s ease',
           fontFamily: "'Inter', sans-serif",
@@ -2131,7 +1942,7 @@ const StatsCounter = () => {
         <div style={{
           fontSize: isMobile ? (isSmallMobile ? '1.75rem' : '2rem') : '2.5rem',
           fontWeight: 700,
-          color: colors.gold,
+          color: '#FFB800',
           fontFamily: "'Inter', sans-serif",
           marginBottom: '8px',
           transition: 'all 0.3s ease',
@@ -2141,7 +1952,7 @@ const StatsCounter = () => {
         <div style={{
           fontSize: isMobile ? (isSmallMobile ? '11px' : '12px') : '14px',
           fontWeight: 400,
-          color: colors.softWhite,
+          color: '#FAFAFA',
           letterSpacing: '0.5px',
           transition: 'all 0.3s ease',
           fontFamily: "'Inter', sans-serif",
@@ -2153,7 +1964,7 @@ const StatsCounter = () => {
   );
 };
 
-// FAQ Section Component
+// FAQ Section Component (keep as is from your original)
 interface FAQItem {
   question: string;
   answer: string;
@@ -2174,39 +1985,27 @@ interface FAQSectionProps {
 
 function FAQSection({
   title = 'Frequently Asked Roofing Questions',
-  subtitle = 'Find answers to common questions about our roofing services. If you don\'t see your question here, contact our team for personalized assistance.',
+  subtitle = 'Find answers to common questions about our roofing services.',
   faqs = [
     {
       question: "How do I know if I need a roof replacement or repair?",
-      answer: "Our expert inspectors will assess your roof's condition, age, and extent of damage. Generally, if your roof is over 20 years old, has widespread damage, or multiple leaks, replacement may be more cost-effective. We provide honest recommendations based on what's best for your home."
+      answer: "Our expert inspectors will assess your roof's condition, age, and extent of damage."
     },
     {
       question: "How long does a typical roof replacement take?",
-      answer: "Most residential roof replacements are completed within 1-3 days, depending on the size of your home, roof complexity, and weather conditions. We'll provide a specific timeline during your consultation and keep you updated throughout the process."
+      answer: "Most residential roof replacements are completed within 1-3 days."
     },
     {
       question: "What roofing materials do you offer?",
-      answer: "We offer a wide range of premium materials including architectural asphalt shingles, metal roofing, tile, slate, and flat roofing systems. Our team will help you choose the best option for your home's style, budget, and local climate."
+      answer: "We offer architectural asphalt shingles, metal roofing, tile, slate, and flat roofing systems."
     },
     {
       question: "Are you licensed and insured?",
-      answer: "Yes, BRAVOS is fully licensed, bonded, and insured with comprehensive liability and workers' compensation coverage. We also offer extended warranties on both materials and workmanship for your peace of mind."
+      answer: "Yes, BRAVOS is fully licensed, bonded, and insured."
     },
     {
       question: "Do you handle insurance claims?",
-      answer: "Absolutely. Our team specializes in insurance claim assistance and will work directly with your insurance adjuster to ensure you receive fair coverage for storm damage, hail damage, or other covered perils."
-    },
-    {
-      question: "What's included in your free estimate?",
-      answer: "Our complimentary roof inspection includes a thorough assessment of your roof's condition, photo documentation, detailed measurements, material recommendations, and a transparent written quote with no hidden fees or surprises."
-    },
-    {
-      question: "Do you offer financing options?",
-      answer: "Yes, we offer flexible financing options with competitive rates to help make your roof replacement more affordable. Ask our team about current specials and 0% APR financing opportunities."
-    },
-    {
-      question: "What warranty do you provide?",
-      answer: "We provide comprehensive warranties including manufacturer warranties on materials (20-50 years depending on product) and our BRAVOS workmanship warranty for added protection and peace of mind."
+      answer: "Absolutely. Our team specializes in insurance claim assistance."
     }
   ],
   accentColor = '#FFB800',
@@ -2243,9 +2042,8 @@ function FAQSection({
       paddingBottom: isMobile ? (isSmallMobile ? '40px' : '60px') : '80px',
       paddingLeft: isMobile ? (isSmallMobile ? '16px' : '20px') : '40px',
       paddingRight: isMobile ? (isSmallMobile ? '16px' : '20px') : '40px',
-      background: 'linear-gradient(180deg, #FFFFFF 0%, #F8FAFF 100%)',
+      background: '#FFFFFF',
       position: 'relative' as const,
-      backgroundColor: backgroundColor,
       ...containerStyle
     },
     container: {
@@ -2260,42 +2058,13 @@ function FAQSection({
       textAlign: 'center' as const,
       marginBottom: isMobile ? (isSmallMobile ? '30px' : '40px') : '60px',
     },
-    badge: {
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: '10px',
-      background: `rgba(255, 184, 0, 0.1)`,
-      padding: isMobile ? (isSmallMobile ? '6px 12px' : '8px 16px') : '10px 20px',
-      borderRadius: '50px',
-      border: `1px solid rgba(255, 184, 0, 0.3)`,
-      marginBottom: '20px',
-      transition: 'all 0.3s ease',
-      cursor: 'pointer',
-    },
-    badgeIcon: {
-      fontSize: isMobile ? (isSmallMobile ? '16px' : '18px') : '18px',
-      transition: 'all 0.3s ease',
-    },
-    badgeText: {
-      fontSize: isMobile ? (isSmallMobile ? '10px' : '12px') : '14px',
-      fontWeight: 600,
-      color: textColor,
-      letterSpacing: '1px',
-      transition: 'all 0.3s ease',
-    },
     title: {
       fontSize: isMobile ? (isSmallMobile ? '1.75rem' : '2rem') : '2.5rem',
       fontWeight: 700,
       color: textColor,
       lineHeight: 1.2,
       fontFamily: "'Inter', sans-serif",
-      marginTop: 0,
-      marginRight: 0,
       marginBottom: '20px',
-      marginLeft: 0,
-      maxWidth: '900px',
-      transition: 'all 0.3s ease',
-      cursor: 'pointer',
     },
     subtitle: {
       fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.125rem',
@@ -2303,17 +2072,11 @@ function FAQSection({
       color: '#666666',
       lineHeight: 1.6,
       maxWidth: '800px',
-      marginTop: 0,
-      marginRight: 'auto',
-      marginBottom: '30px',
-      marginLeft: 'auto',
-      transition: 'all 0.3s ease',
-      cursor: 'pointer',
+      margin: '0 auto',
     },
     faqContainer: {
       maxWidth: '900px',
       margin: '0 auto',
-      width: '100%',
     },
     faqItem: (isOpen: boolean) => ({
       background: '#FFFFFF',
@@ -2321,7 +2084,7 @@ function FAQSection({
       marginBottom: '12px',
       overflow: 'hidden',
       boxShadow: '0 4px 20px rgba(10, 10, 12, 0.08)',
-      border: `1px solid ${isOpen ? '#FFB800' : 'rgba(10, 10, 12, 0.1)'}`,
+      border: `1px solid ${isOpen ? accentColor : 'rgba(10, 10, 12, 0.1)'}`,
       transition: 'all 0.3s ease',
       cursor: 'pointer',
       ...faqItemStyle
@@ -2336,18 +2099,11 @@ function FAQSection({
       justifyContent: 'space-between',
       cursor: 'pointer',
       textAlign: 'left' as const,
-      transition: 'all 0.3s ease',
     }),
-    questionContent: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: isMobile ? '12px' : '16px',
-      flex: 1,
-    },
     questionNumber: {
       width: isMobile ? (isSmallMobile ? '28px' : '32px') : '32px',
       height: isMobile ? (isSmallMobile ? '28px' : '32px') : '32px',
-      background: `linear-gradient(135deg, #FFB800 0%, #E6A600 100%)`,
+      background: `linear-gradient(135deg, ${accentColor} 0%, #E6A600 100%)`,
       borderRadius: '50%',
       display: 'flex',
       alignItems: 'center',
@@ -2356,19 +2112,14 @@ function FAQSection({
       fontWeight: 700,
       color: '#0A0A0C',
       flexShrink: 0,
-      transition: 'all 0.3s ease',
+      marginRight: '16px',
     },
     questionText: {
       fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.125rem',
       fontWeight: 600,
       color: textColor,
       fontFamily: "'Inter', sans-serif",
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: 0,
-      marginLeft: 0,
-      lineHeight: 1.4,
-      transition: 'all 0.3s ease',
+      flex: 1,
     },
     toggleIcon: (isOpen: boolean) => ({
       width: '20px',
@@ -2385,57 +2136,25 @@ function FAQSection({
       maxHeight: isOpen ? '500px' : '0',
       overflow: 'hidden',
       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-      background: isOpen ? 'rgba(10, 10, 12, 0.02)' : 'transparent',
     }),
-    answerContent: (isOpen: boolean) => ({
-      paddingTop: isOpen ? (isMobile ? (isSmallMobile ? '0' : '0') : '0') : (isMobile ? (isSmallMobile ? '0' : '0') : '0'),
-      paddingRight: isOpen ? (isMobile ? (isSmallMobile ? '14px' : '16px') : '20px') : (isMobile ? (isSmallMobile ? '14px' : '16px') : '20px'),
-      paddingBottom: isOpen ? (isMobile ? (isSmallMobile ? '14px' : '16px') : '20px') : (isMobile ? (isSmallMobile ? '0' : '0') : '0'),
-      paddingLeft: isOpen ? (isMobile ? (isSmallMobile ? '60px' : '68px') : '68px') : (isMobile ? (isSmallMobile ? '14px' : '16px') : '20px'),
-      opacity: isOpen ? 1 : 0,
-      transition: 'opacity 0.3s ease 0.2s',
-    }),
-    answerWrapper: {
-      display: 'flex',
-      alignItems: 'flex-start',
-      gap: '16px',
-    },
-    answerIcon: {
-      width: '20px',
-      height: '20px',
-      background: 'rgba(10, 10, 12, 0.1)',
-      borderRadius: '50%',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      fontSize: '10px',
-      fontWeight: 700,
-      color: '#0A0A0C',
-      flexShrink: 0,
-      marginTop: '3px',
-      transition: 'all 0.3s ease',
+    answerContent: {
+      padding: isMobile ? (isSmallMobile ? '0 14px 14px 60px' : '0 16px 16px 68px') : '0 20px 20px 68px',
+      opacity: 1,
     },
     answerText: {
       fontSize: isMobile ? (isSmallMobile ? '0.85rem' : '0.9rem') : '1rem',
       fontWeight: 400,
       color: '#666666',
       lineHeight: 1.6,
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: 0,
-      marginLeft: 0,
-      transition: 'all 0.3s ease',
-      cursor: 'pointer',
+      margin: 0,
     },
     ctaContainer: {
-      textAlign: 'center'  as const,
+      textAlign: 'center' as const,
       marginTop: isMobile ? (isSmallMobile ? '30px' : '40px') : '60px',
       padding: isMobile ? (isSmallMobile ? '20px' : '30px 20px') : '40px 20px',
       background: `linear-gradient(135deg, rgba(10, 10, 12, 0.05) 0%, rgba(255, 184, 0, 0.05) 100%)`,
       borderRadius: '20px',
       border: `1px solid rgba(255, 184, 0, 0.3)`,
-      transition: 'all 0.3s ease',
-      cursor: 'pointer',
     },
     ctaTitle: {
       fontSize: isMobile ? (isSmallMobile ? '1.25rem' : '1.5rem') : '1.75rem',
@@ -2443,7 +2162,6 @@ function FAQSection({
       color: textColor,
       fontFamily: "'Inter', sans-serif",
       marginBottom: '20px',
-      transition: 'all 0.3s ease',
     },
     ctaDescription: {
       fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.125rem',
@@ -2451,11 +2169,7 @@ function FAQSection({
       color: '#666666',
       lineHeight: 1.6,
       maxWidth: '600px',
-      marginTop: 0,
-      marginRight: 'auto',
-      marginBottom: '24px',
-      marginLeft: 'auto',
-      transition: 'all 0.3s ease',
+      margin: '0 auto 24px',
     },
     buttonContainer: {
       display: 'flex',
@@ -2465,7 +2179,7 @@ function FAQSection({
       alignItems: 'center',
     },
     primaryButton: {
-      background: `linear-gradient(135deg, #FFB800 0%, #E6A600 100%)`,
+      background: `linear-gradient(135deg, ${accentColor} 0%, #E6A600 100%)`,
       color: '#0A0A0C',
       border: 'none',
       padding: isMobile ? (isSmallMobile ? '14px 20px' : '16px 24px') : '16px 24px',
@@ -2503,52 +2217,11 @@ function FAQSection({
       <StarPopper side="right" />
       <div style={baseStyles.container}>
         <div style={baseStyles.header}>
-          <div style={baseStyles.badge}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-3px)';
-              e.currentTarget.style.background = 'rgba(255, 184, 0, 0.15)';
-              e.currentTarget.style.boxShadow = '0 8px 20px rgba(255, 184, 0, 0.2)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.background = 'rgba(255, 184, 0, 0.1)';
-              e.currentTarget.style.boxShadow = 'none';
-            }}>
-            <div style={baseStyles.badgeIcon}>❓</div>
-            <span style={baseStyles.badgeText}>
-              Got Roofing Questions?
-            </span>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+            <RotatingStarRing color={accentColor} size={50} />
           </div>
-          
-          <h2 style={baseStyles.title}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'scale(1.02)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'scale(1)';
-            }}>
-            {title.split(' ').map((word, index, array) => 
-              index === array.length - 1 ? (
-                <span key={index} style={{ color: accentColor, transition: 'all 0.3s ease' }}>
-                  {word}
-                </span>
-              ) : (
-                word + ' '
-              )
-            )}
-          </h2>
-          
-          <p style={baseStyles.subtitle}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = textColor;
-              e.currentTarget.style.transform = 'scale(1.01)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = '#666666';
-              e.currentTarget.style.transform = 'scale(1)';
-            }}>
-            {subtitle}
-          </p>
+          <h2 style={baseStyles.title}>{title}</h2>
+          <p style={baseStyles.subtitle}>{subtitle}</p>
         </div>
 
         <div style={baseStyles.faqContainer}>
@@ -2556,58 +2229,17 @@ function FAQSection({
             <div 
               key={index}
               style={baseStyles.faqItem(openIndex === index)}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = '0 8px 30px rgba(10, 10, 12, 0.12)';
-                e.currentTarget.style.borderColor = `${accentColor}`;
-                e.currentTarget.style.transform = 'translateY(-3px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = '0 4px 20px rgba(10, 10, 12, 0.08)';
-                e.currentTarget.style.borderColor = openIndex === index ? accentColor : 'rgba(10, 10, 12, 0.1)';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
             >
               <button
                 onClick={() => toggleFAQ(index)}
                 style={baseStyles.questionButton(openIndex === index)}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'rgba(255, 184, 0, 0.08)';
-                  e.currentTarget.style.transform = 'scale(1.01)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = openIndex === index ? 'rgba(255, 184, 0, 0.05)' : '#FFFFFF';
-                  e.currentTarget.style.transform = 'scale(1)';
-                }}
               >
-                <div style={baseStyles.questionContent}>
-                  <div style={baseStyles.questionNumber}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'scale(1.1)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'scale(1)';
-                    }}>
-                    Q{index + 1}
-                  </div>
-                  <h3 style={baseStyles.questionText}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.color = accentColor;
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.color = textColor;
-                    }}>
-                    {faq.question}
-                  </h3>
+                <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
+                  <div style={baseStyles.questionNumber}>Q{index + 1}</div>
+                  <span style={baseStyles.questionText}>{faq.question}</span>
                 </div>
-                
                 {showToggleIcon && (
-                  <div style={baseStyles.toggleIcon(openIndex === index)}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = openIndex === index ? 'rotate(45deg) scale(1.2)' : 'rotate(0deg) scale(1.2)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = openIndex === index ? 'rotate(45deg) scale(1)' : 'rotate(0deg) scale(1)';
-                    }}>
+                  <div style={baseStyles.toggleIcon(openIndex === index)}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                       <path d="M12 5V19M5 12H19" stroke={accentColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
@@ -2616,102 +2248,29 @@ function FAQSection({
               </button>
               
               <div style={baseStyles.answerContainer(openIndex === index)}>
-                <div style={baseStyles.answerContent(openIndex === index)}>
-                  <div style={baseStyles.answerWrapper}>
-                    <div style={baseStyles.answerIcon}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'scale(1.1)';
-                        e.currentTarget.style.background = 'rgba(10, 10, 12, 0.2)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'scale(1)';
-                        e.currentTarget.style.background = 'rgba(10, 10, 12, 0.1)';
-                      }}>
-                      A
-                    </div>
-                    <p style={baseStyles.answerText}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.color = textColor;
-                        e.currentTarget.style.transform = 'scale(1.01)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.color = '#666666';
-                        e.currentTarget.style.transform = 'scale(1)';
-                      }}>
-                      {faq.answer}
-                    </p>
-                  </div>
+                <div style={baseStyles.answerContent}>
+                  <p style={baseStyles.answerText}>{faq.answer}</p>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        <div style={baseStyles.ctaContainer}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-5px)';
-            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(10, 10, 12, 0.08) 0%, rgba(255, 184, 0, 0.08) 100%)';
-            e.currentTarget.style.boxShadow = '0 15px 35px rgba(10, 10, 12, 0.15)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(10, 10, 12, 0.05) 0%, rgba(255, 184, 0, 0.05) 100%)';
-            e.currentTarget.style.boxShadow = 'none';
-          }}>
-          <h3 style={baseStyles.ctaTitle}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = accentColor;
-              e.currentTarget.style.transform = 'scale(1.02)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = textColor;
-              e.currentTarget.style.transform = 'scale(1)';
-            }}>
-            Still Have Roofing Questions?
-          </h3>
-          <p style={baseStyles.ctaDescription}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = textColor;
-              e.currentTarget.style.transform = 'scale(1.01)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = '#666666';
-              e.currentTarget.style.transform = 'scale(1)';
-            }}>
+        <div style={baseStyles.ctaContainer}>
+          <h3 style={baseStyles.ctaTitle}>Still Have Roofing Questions?</h3>
+          <p style={baseStyles.ctaDescription}>
             Our expert team is available 24/7 to answer any questions and schedule your free roof inspection.
           </p>
           <div style={baseStyles.buttonContainer}>
             <button 
               onClick={() => window.location.href = '/contact'}
               style={baseStyles.primaryButton}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-3px) scale(1.05)';
-                e.currentTarget.style.boxShadow = '0 12px 30px rgba(255, 184, 0, 0.4)';
-                e.currentTarget.style.background = 'linear-gradient(135deg, #E6A600 0%, #FFB800 100%)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                e.currentTarget.style.boxShadow = '0 8px 25px rgba(255, 184, 0, 0.3)';
-                e.currentTarget.style.background = 'linear-gradient(135deg, #FFB800 0%, #E6A600 100%)';
-              }}
             >
               Free Inspection
             </button>
             <button 
               onClick={() => window.location.href = 'tel:+12815551234'}
               style={baseStyles.secondaryButton}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 184, 0, 0.1)';
-                e.currentTarget.style.borderColor = accentColor;
-                e.currentTarget.style.transform = 'translateY(-3px) scale(1.05)';
-                e.currentTarget.style.color = accentColor;
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'transparent';
-                e.currentTarget.style.borderColor = 'rgba(255, 184, 0, 0.5)';
-                e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                e.currentTarget.style.color = textColor;
-              }}
             >
               Call (281) 555-1234
             </button>
@@ -2722,7 +2281,7 @@ function FAQSection({
   );
 }
 
-// BodySection Component - ROOFING VERSION WITH NAVY, BEIGE & GRAY SECTIONS
+// BodySection Component
 const BodySection = () => {
   const [activeCard, setActiveCard] = useState<number | null>(null);
   const [activeStat, setActiveStat] = useState<number | null>(null);
@@ -2786,7 +2345,7 @@ const BodySection = () => {
       title: "#1 Complete Roof Transformation",
       beforeImage: "/image/spoiledroof.jpg",
       afterImage: "/image/repairedroof.jpg",
-      description: "From severe storm damage to premium architectural shingle installation with lifetime warranty"
+      description: "From severe storm damage to premium architectural shingle installation"
     },
     {
       id: 2,
@@ -2803,30 +2362,27 @@ const BodySection = () => {
       name: "David & Susan Thompson",
       location: "River Oaks",
       role: "Verified Homeowner",
-      content: "BRAVOS replaced our roof after hail damage and the transformation was incredible. Their attention to detail and cleanup was exceptional.",
+      content: "BRAVOS replaced our roof after hail damage and the transformation was incredible.",
       videoThumbnail: "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       videoUrl: "/videos/roofing1.mp4",
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b786d4d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
     },
     {
       id: 2,
       name: "Michael Chen",
       location: "Memorial",
       role: "Verified Homeowner",
-      content: "The team was professional, punctual, and completed our new roof in just two days. We couldn't be happier with the quality.",
+      content: "The team was professional, punctual, and completed our new roof in just two days.",
       videoThumbnail: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       videoUrl: "/videos/roofing2.mp4",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
     },
     {
       id: 3,
       name: "Jennifer Williams",
       location: "West University",
       role: "Verified Homeowner",
-      content: "They helped us navigate the insurance claim process and got us a brand new roof with minimal out-of-pocket expense. Highly recommend!",
+      content: "They helped us navigate the insurance claim process and got us a brand new roof.",
       videoThumbnail: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       videoUrl: "/videos/roofing3.mp4",
-      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
     }
   ];
 
@@ -2837,7 +2393,7 @@ const BodySection = () => {
       location: "Sugar Land",
       service: "Complete Roof Replacement",
       rating: 5,
-      content: "BRAVOS exceeded our expectations in every way. Their crew was professional, the installation was flawless, and they left our property spotless. Best roofing company in Houston!",
+      content: "BRAVOS exceeded our expectations in every way. Their crew was professional, the installation was flawless.",
       avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
     },
     {
@@ -2846,7 +2402,7 @@ const BodySection = () => {
       location: "Katy",
       service: "Emergency Repair",
       rating: 5,
-      content: "Our roof was leaking during a storm and BRAVOS responded within hours. They tarped our roof and completed the repair the next day. True professionals!",
+      content: "Our roof was leaking during a storm and BRAVOS responded within hours. True professionals!",
       avatar: "https://images.unsplash.com/photo-1494790108755-2616b786d4d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
     },
     {
@@ -2855,7 +2411,7 @@ const BodySection = () => {
       location: "The Woodlands",
       service: "Insurance Claim Assistance",
       rating: 5,
-      content: "The team at BRAVOS handled our insurance claim from start to finish. We got a complete roof replacement with no stress. Worth every penny!",
+      content: "The team at BRAVOS handled our insurance claim from start to finish. We got a complete roof replacement with no stress.",
       avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
     },
     {
@@ -2864,7 +2420,7 @@ const BodySection = () => {
       location: "Pearland",
       service: "Metal Roof Installation",
       rating: 5,
-      content: "We upgraded to a standing seam metal roof and it's stunning. The crew was meticulous and the project manager kept us informed daily. Highly recommend!",
+      content: "We upgraded to a standing seam metal roof and it's stunning. The crew was meticulous.",
       avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
     }
   ];
@@ -2873,19 +2429,19 @@ const BodySection = () => {
     {
       number: '01',
       title: 'Master Craftsmen & GAF-Certified',
-      description: 'Our team consists of factory-trained, GAF-certified roofing professionals with decades of combined experience. Each member undergoes rigorous safety training and continuous education on the latest installation techniques.',
+      description: 'Our team consists of factory-trained, GAF-certified roofing professionals.',
       listItems: [
         'GAF Master Elite® Certification',
         'OSHA-Certified Safety Training',
         'Continuous Technical Education'
       ],
       image: '/image/team.jpg',
-      imageAlt: 'Professional roofing team at work'
+      imageAlt: 'Professional roofing team'
     },
     {
       number: '02',
       title: 'Precision Craftsmanship & Quality',
-      description: 'We don\'t just install roofs—we engineer protection systems. Every project follows our proprietary 127-point quality checklist, ensuring proper flashing, ventilation, and flawless installation down to the last nail.',
+      description: 'Every project follows our proprietary 127-point quality checklist.',
       listItems: [
         '127-Point Quality Inspection',
         'Premium Material Selection',
@@ -2897,19 +2453,19 @@ const BodySection = () => {
     {
       number: '03',
       title: 'Triple Protection Guarantee',
-      description: 'Your peace of mind is our priority. Every BRAVOS roof comes with our comprehensive protection package: 25-year workmanship warranty, manufacturer materials warranty, and our exclusive leak-free guarantee.',
+      description: 'Every BRAVOS roof comes with our comprehensive protection package.',
       listItems: [
         '25-Year Workmanship Warranty',
         '50-Year Material Coverage',
         'Leak-Free Installation Guarantee'
       ],
       image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      imageAlt: 'Satisfied homeowner with warranty documents'
+      imageAlt: 'Satisfied homeowner'
     },
     {
       number: '04',
       title: 'Insurance Claim Specialists',
-      description: 'Navigating insurance claims is overwhelming. Our dedicated claims team works directly with your adjuster, providing detailed documentation and advocacy to maximize your coverage and minimize your stress.',
+      description: 'Our dedicated claims team works directly with your adjuster.',
       listItems: [
         'Direct Adjuster Coordination',
         'Comprehensive Damage Documentation',
@@ -2927,7 +2483,7 @@ const BodySection = () => {
       title: "Complete Replacement",
       frequency: "Full Roof System",
       description: "Premium protection for your home",
-      details: "Our comprehensive roof replacement service includes complete tear-off, underlayment installation, premium shingles, flashing replacement, and ridge vent installation for optimal performance.",
+      details: "Complete tear-off, underlayment, premium shingles, flashing replacement.",
       features: [
         "Full tear-off & disposal",
         "Premium architectural shingles",
@@ -2943,7 +2499,7 @@ const BodySection = () => {
       title: "Roof Repair",
       frequency: "Targeted Solutions",
       description: "Fast, reliable repair service",
-      details: "From minor leaks to storm damage repair, our team provides prompt, lasting repairs. We identify the root cause and deliver solutions that extend your roof's lifespan without unnecessary replacement.",
+      details: "From minor leaks to storm damage repair, we provide prompt, lasting repairs.",
       features: [
         "Emergency leak repair",
         "Shingle replacement",
@@ -2959,7 +2515,7 @@ const BodySection = () => {
       title: "Free Roof Inspection",
       frequency: "Comprehensive Assessment",
       description: "Expert evaluation & recommendations",
-      details: "Our thorough roof inspection includes drone and manual assessment of all roof components, photo documentation, detailed report, and honest recommendations—no pressure, just expertise.",
+      details: "Drone and manual assessment, photo documentation, detailed report.",
       features: [
         "Drone & manual inspection",
         "Thermal imaging available",
@@ -2982,14 +2538,11 @@ const BodySection = () => {
       position: 'relative',
     },
     
-    // Section 1: BRAVOS Difference - Navy Blue
     differenceSection: {
       maxWidth: '1400px',
       margin: '0 auto',
       marginBottom: isMobile ? '80px' : '120px',
       textAlign: 'center',
-      paddingLeft: isMobile ? '20px' : '0',
-      paddingRight: isMobile ? '20px' : '0',
       background: colors.navy,
       borderRadius: '32px',
       paddingTop: isMobile ? '40px' : '80px',
@@ -3074,26 +2627,19 @@ const BodySection = () => {
       color: colors.softWhite90,
       lineHeight: '1.7',
       maxWidth: '900px',
-      marginTop: 0,
-      marginRight: 'auto',
-      marginBottom: isMobile ? '60px' : isTablet ? '80px' : '80px',
-      marginLeft: 'auto',
+      margin: '0 auto 40px',
       fontWeight: '400',
       fontFamily: "'Inter', sans-serif",
       position: 'relative',
       zIndex: 2,
     },
     
-    // Section 2: Features Grid - Alternating Navy and Gray
     featuresGrid: {
       display: 'grid',
       gridTemplateColumns: isMobile ? '1fr' : isTablet ? '1fr' : 'repeat(2, 1fr)',
       gap: isMobile ? '32px' : isTablet ? '48px' : '64px',
       maxWidth: '1400px',
-      margin: '0 auto',
-      marginBottom: isMobile ? '80px' : '120px',
-      paddingLeft: isMobile ? '20px' : '0',
-      paddingRight: isMobile ? '20px' : '0',
+      margin: '0 auto 80px',
     },
     
     featureCard: (active: boolean) => ({
@@ -3112,7 +2658,6 @@ const BodySection = () => {
     }),
     
     featureImageContainer: {
-      position: 'relative',
       height: isMobile ? '200px' : isTablet ? '250px' : '300px',
       overflow: 'hidden',
     },
@@ -3125,29 +2670,22 @@ const BodySection = () => {
     },
     
     featureNumberBadge: {
-      display: 'inline-flex',
-      alignItems: 'center',
-      justifyContent: 'center',
       backgroundColor: colors.gold,
       color: colors.navyDark,
       width: isMobile ? '50px' : '60px',
       height: isMobile ? '50px' : '60px',
       borderRadius: '50%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
       fontSize: isMobile ? '1.25rem' : '1.5rem',
       fontWeight: '700',
-      fontFamily: "'Inter', sans-serif",
-      boxShadow: '0 8px 20px rgba(0, 0, 0, 0.3)',
       marginRight: isMobile ? '12px' : '20px',
       flexShrink: 0,
-      transition: 'all 0.3s ease',
     },
     
     featureContent: {
-      paddingTop: isMobile ? '24px' : '48px',
-      paddingRight: isMobile ? '20px' : '40px',
-      paddingBottom: isMobile ? '24px' : '48px',
-      paddingLeft: isMobile ? '20px' : '40px',
-      background: 'transparent',
+      padding: isMobile ? '24px 20px' : '48px 40px',
     },
     
     featureTitleContainer: {
@@ -3160,35 +2698,22 @@ const BodySection = () => {
       fontSize: isMobile ? '1.5rem' : isTablet ? '1.75rem' : '2rem',
       fontWeight: '700',
       color: colors.white,
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: 0,
-      marginLeft: 0,
+      margin: 0,
       lineHeight: '1.2',
       fontFamily: "'Inter', sans-serif",
-      letterSpacing: '-0.25px',
     },
     
     featureDescription: {
       fontSize: isMobile ? '1rem' : isTablet ? '1.125rem' : '1.125rem',
       color: colors.softWhite90,
       lineHeight: '1.8',
-      marginTop: 0,
-      marginRight: 0,
       marginBottom: isMobile ? '24px' : '32px',
-      marginLeft: 0,
-      fontWeight: '400',
-      fontFamily: "'Inter', sans-serif",
     },
     
     featureList: {
       display: 'flex',
       flexDirection: 'column',
       gap: isMobile ? '12px' : '20px',
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: isMobile ? '30px' : '40px',
-      marginLeft: 0,
     },
     
     featureListItem: {
@@ -3199,7 +2724,6 @@ const BodySection = () => {
       backgroundColor: 'rgba(255, 184, 0, 0.15)',
       borderRadius: '12px',
       border: `1px solid ${colors.goldBorder}`,
-      transition: 'all 0.3s ease',
     },
     
     checkIcon: {
@@ -3207,25 +2731,18 @@ const BodySection = () => {
       fontWeight: '700',
       fontSize: isMobile ? '20px' : '24px',
       flexShrink: 0,
-      marginTop: '2px',
     },
     
     featureListItemText: {
       fontSize: isMobile ? '0.95rem' : '1.1rem',
       color: colors.white,
       lineHeight: '1.6',
-      fontWeight: '400',
-      fontFamily: "'Inter', sans-serif",
     },
 
-    // Section 3: Before & After - Dark Beige
     transformationsSection: {
       maxWidth: '1400px',
-      margin: '0 auto',
-      marginBottom: isMobile ? '80px' : '120px',
+      margin: '0 auto 120px',
       textAlign: 'center',
-      paddingLeft: isMobile ? '20px' : '0',
-      paddingRight: isMobile ? '20px' : '0',
       background: colors.beige,
       borderRadius: '32px',
       paddingTop: isMobile ? '40px' : '80px',
@@ -3234,16 +2751,6 @@ const BodySection = () => {
       border: `1px solid ${colors.goldBorder}`,
       position: 'relative',
       overflow: 'hidden',
-    },
-    
-    transformationsSectionBg: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      background: `radial-gradient(circle at 10% 10%, ${colors.goldLight} 0%, transparent 40%), radial-gradient(circle at 90% 90%, rgba(0, 0, 0, 0.05) 0%, transparent 40%)`,
-      zIndex: 1,
     },
     
     transformationsHeader: {
@@ -3289,12 +2796,7 @@ const BodySection = () => {
       color: colors.navyDark,
       lineHeight: '1.6',
       maxWidth: '800px',
-      marginTop: 0,
-      marginRight: 'auto',
-      marginBottom: 0,
-      marginLeft: 'auto',
-      fontWeight: '400',
-      fontFamily: "'Inter', sans-serif",
+      margin: '0 auto',
     },
     
     beforeAfterContainer: {
@@ -3325,26 +2827,16 @@ const BodySection = () => {
       fontSize: isMobile ? '1.5rem' : '1.75rem',
       fontWeight: '700',
       color: colors.navyDark,
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: isMobile ? '20px' : '30px',
-      marginLeft: 0,
+      margin: 0,
+      padding: isMobile ? '30px 20px 0' : '40px 40px 0',
       textAlign: 'center',
-      fontFamily: "'Inter', sans-serif",
-      paddingTop: isMobile ? '30px' : '40px',
-      paddingRight: isMobile ? '20px' : '40px',
-      paddingBottom: 0,
-      paddingLeft: isMobile ? '20px' : '40px',
     },
     
     beforeAfterGrid: {
       display: 'grid',
       gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
       gap: isMobile ? '20px' : '30px',
-      paddingTop: 0,
-      paddingRight: isMobile ? '20px' : '40px',
-      paddingBottom: isMobile ? '30px' : '40px',
-      paddingLeft: isMobile ? '20px' : '40px',
+      padding: isMobile ? '20px' : '40px',
     },
     
     imageContainer: {
@@ -3353,7 +2845,6 @@ const BodySection = () => {
       overflow: 'hidden',
       height: isMobile ? '250px' : isTablet ? '300px' : '350px',
       boxShadow: '0 15px 40px rgba(0, 0, 0, 0.2)',
-      transition: 'all 0.3s ease',
     },
     
     imageLabel: {
@@ -3362,16 +2853,11 @@ const BodySection = () => {
       left: '20px',
       backgroundColor: colors.navyDark,
       color: colors.white,
-      paddingTop: '8px',
-      paddingRight: '20px',
-      paddingBottom: '8px',
-      paddingLeft: '20px',
+      padding: '8px 20px',
       borderRadius: '30px',
       fontSize: isMobile ? '0.9rem' : '1rem',
       fontWeight: '600',
-      fontFamily: "'Inter', sans-serif",
       zIndex: 2,
-      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
     },
     
     beforeLabel: {
@@ -3393,25 +2879,17 @@ const BodySection = () => {
       fontSize: isMobile ? '1rem' : '1.125rem',
       color: colors.navyDark,
       lineHeight: '1.6',
-      marginTop: isMobile ? '20px' : '30px',
-      marginRight: isMobile ? '20px' : '40px',
-      marginBottom: isMobile ? '30px' : '40px',
-      marginLeft: isMobile ? '20px' : '40px',
-      fontWeight: '400',
-      fontFamily: "'Inter', sans-serif",
+      margin: 0,
+      padding: isMobile ? '0 20px 30px' : '0 40px 40px',
       textAlign: 'center',
       borderTop: `2px solid ${colors.goldBorder}`,
       paddingTop: isMobile ? '20px' : '30px',
     },
 
-    // Section 4: Video Testimonials - Dark Gray
     videoTestimonialsSection: {
       maxWidth: '1400px',
-      margin: '0 auto',
-      marginBottom: isMobile ? '80px' : '120px',
+      margin: '0 auto 120px',
       textAlign: 'center',
-      paddingLeft: isMobile ? '20px' : '0',
-      paddingRight: isMobile ? '20px' : '0',
       background: colors.gray,
       borderRadius: '32px',
       paddingTop: isMobile ? '40px' : '80px',
@@ -3420,22 +2898,6 @@ const BodySection = () => {
       border: `1px solid ${colors.goldBorder}`,
       position: 'relative',
       overflow: 'hidden',
-    },
-    
-    videoTestimonialsSectionBg: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      background: `radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.05) 0%, transparent 50%), radial-gradient(circle at 70% 70%, ${colors.goldLight} 0%, transparent 50%)`,
-      zIndex: 1,
-    },
-    
-    videoTestimonialsHeader: {
-      marginBottom: isMobile ? '40px' : '60px',
-      position: 'relative',
-      zIndex: 2,
     },
     
     videoTitleContainer: {
@@ -3475,12 +2937,7 @@ const BodySection = () => {
       color: colors.softWhite90,
       lineHeight: '1.6',
       maxWidth: '800px',
-      marginTop: 0,
-      marginRight: 'auto',
-      marginBottom: 0,
-      marginLeft: 'auto',
-      fontWeight: '400',
-      fontFamily: "'Inter', sans-serif",
+      margin: '0 auto',
     },
     
     videoGrid: {
@@ -3488,20 +2945,15 @@ const BodySection = () => {
       gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
       gap: isMobile ? '20px' : isTablet ? '24px' : '32px',
       maxWidth: '1200px',
-      margin: '0 auto',
-      marginBottom: isMobile ? '60px' : '80px',
+      margin: '40px auto 60px',
       position: 'relative',
       zIndex: 2,
     },
-    
-    // Section 5: Reviews - Navy Blue (alternating)
+
     reviewsSection: {
       maxWidth: '1400px',
-      margin: '0 auto',
-      marginBottom: isMobile ? '80px' : '120px',
+      margin: '0 auto 120px',
       textAlign: 'center',
-      paddingLeft: isMobile ? '20px' : '0',
-      paddingRight: isMobile ? '20px' : '0',
       background: colors.navyLight,
       borderRadius: '32px',
       paddingTop: isMobile ? '40px' : '80px',
@@ -3510,22 +2962,6 @@ const BodySection = () => {
       border: `1px solid ${colors.goldBorder}`,
       position: 'relative',
       overflow: 'hidden',
-    },
-    
-    reviewsSectionBg: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      background: `radial-gradient(circle at 20% 20%, ${colors.goldLight} 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)`,
-      zIndex: 1,
-    },
-    
-    reviewsHeader: {
-      marginBottom: isMobile ? '40px' : '60px',
-      position: 'relative',
-      zIndex: 2,
     },
     
     reviewsTitle: {
@@ -3545,12 +2981,7 @@ const BodySection = () => {
       color: colors.softWhite90,
       lineHeight: '1.6',
       maxWidth: '800px',
-      marginTop: 0,
-      marginRight: 'auto',
-      marginBottom: 0,
-      marginLeft: 'auto',
-      fontWeight: '400',
-      fontFamily: "'Inter', sans-serif",
+      margin: '0 auto',
     },
     
     reviewsGrid: {
@@ -3558,7 +2989,7 @@ const BodySection = () => {
       gridTemplateColumns: isMobile ? '1fr' : isTablet ? '1fr' : 'repeat(2, 1fr)',
       gap: isMobile ? '20px' : isTablet ? '24px' : '32px',
       maxWidth: '1200px',
-      margin: '0 auto',
+      margin: '40px auto 0',
       position: 'relative',
       zIndex: 2,
     },
@@ -3566,10 +2997,7 @@ const BodySection = () => {
     reviewCard: (active: boolean) => ({
       backgroundColor: active ? colors.grayLight : colors.white,
       borderRadius: '32px',
-      paddingTop: isMobile ? '30px' : '40px',
-      paddingRight: isMobile ? '20px' : '32px',
-      paddingBottom: isMobile ? '30px' : '40px',
-      paddingLeft: isMobile ? '20px' : '32px',
+      padding: isMobile ? '30px 20px' : '40px 32px',
       textAlign: 'left',
       border: active 
         ? `2px solid ${colors.gold}` 
@@ -3594,7 +3022,6 @@ const BodySection = () => {
       borderRadius: '50%',
       objectFit: 'cover',
       border: `3px solid ${colors.gold}`,
-      boxShadow: `0 4px 12px ${colors.goldLight}`,
     },
     
     reviewerInfo: {
@@ -3605,19 +3032,13 @@ const BodySection = () => {
       fontSize: isMobile ? '1.25rem' : '1.5rem',
       fontWeight: '700',
       color: colors.navyDark,
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: '8px',
-      marginLeft: 0,
-      fontFamily: "'Inter', sans-serif",
+      margin: '0 0 8px 0',
     },
     
     reviewerDetails: {
       fontSize: isMobile ? '0.9rem' : '1rem',
       color: colors.grayDark,
-      fontWeight: '400',
-      fontFamily: "'Inter', sans-serif",
-      marginBottom: '8px',
+      margin: '0 0 8px 0',
     },
     
     starsContainer: {
@@ -3628,120 +3049,20 @@ const BodySection = () => {
     starIcon: {
       color: colors.gold,
       fontSize: isMobile ? '1rem' : '1.25rem',
-      fontWeight: '700',
     },
     
     reviewContent: {
       fontSize: isMobile ? '0.95rem' : '1.1rem',
       color: colors.grayDark,
       lineHeight: '1.7',
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: 0,
-      marginLeft: 0,
-      fontWeight: '400',
-      fontFamily: "'Inter', sans-serif",
+      margin: 0,
       fontStyle: 'italic',
     },
-    
-    // Section 6: Meet the Founders - Dark Beige
-    // Section 7: Our Story - Dark Gray
-    ourStorySection: {
-      maxWidth: '1400px',
-      margin: '0 auto',
-      marginBottom: isMobile ? '80px' : '120px',
-      textAlign: 'center',
-      paddingLeft: isMobile ? '20px' : '0',
-      paddingRight: isMobile ? '20px' : '0',
-      background: colors.grayDark,
-      borderRadius: '32px',
-      paddingTop: isMobile ? '40px' : '80px',
-      paddingBottom: isMobile ? '40px' : '80px',
-      boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-      border: `1px solid ${colors.goldBorder}`,
-      position: 'relative',
-      overflow: 'hidden',
-    },
-    
-    ourStorySectionBg: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      background: `radial-gradient(circle at 20% 30%, ${colors.goldLight} 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)`,
-      zIndex: 1,
-    },
-    
-    ourStoryContent: {
-      maxWidth: '1000px',
-      margin: '0 auto',
-      position: 'relative',
-      zIndex: 2,
-    },
-    
-    ourStoryTitle: {
-      fontSize: isMobile ? '2rem' : isTablet ? '2.25rem' : '2.5rem',
-      fontWeight: '700',
-      color: colors.white,
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: '30px',
-      marginLeft: 0,
-      fontFamily: "'Inter', sans-serif",
-      lineHeight: '1.2',
-    },
-    
-    ourStoryDescription: {
-      fontSize: isMobile ? '1.125rem' : isTablet ? '1.25rem' : '1.375rem',
-      color: colors.softWhite90,
-      lineHeight: '1.8',
-      marginTop: 0,
-      marginRight: 'auto',
-      marginBottom: isMobile ? '40px' : '60px',
-      marginLeft: 'auto',
-      fontWeight: '400',
-      fontFamily: "'Inter', sans-serif",
-      maxWidth: '900px',
-      padding: isMobile ? '20px' : '40px',
-      backgroundColor: 'rgba(255, 255, 255, 0.1)',
-      borderRadius: '24px',
-      boxShadow: '0 10px 40px rgba(0, 0, 0, 0.2)',
-      border: `1px solid ${colors.goldBorder}`,
-    },
-    
-    ourStoryButton: (active: boolean) => ({
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: '12px',
-      backgroundColor: active ? colors.gold : colors.navy,
-      color: active ? colors.navyDark : colors.white,
-      border: 'none',
-      paddingTop: isMobile ? '16px' : '20px',
-      paddingRight: isMobile ? '24px' : '40px',
-      paddingBottom: isMobile ? '16px' : '20px',
-      paddingLeft: isMobile ? '24px' : '40px',
-      borderRadius: '50px',
-      fontSize: isMobile ? '0.95rem' : '1rem',
-      fontWeight: '700',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      textDecoration: 'none',
-      fontFamily: "'Inter', sans-serif",
-      transform: active ? 'translateY(-3px)' : 'translateY(0)',
-      boxShadow: active 
-        ? '0 15px 30px rgba(255, 184, 0, 0.4)' 
-        : '0 10px 25px rgba(0, 0, 0, 0.3)',
-    }),
-    
-    // Section 8: Roofing Services - Navy Blue
+
     flexibleSolutionsSection: {
       maxWidth: '1400px',
-      margin: '0 auto',
-      marginBottom: isMobile ? '80px' : '120px',
+      margin: '0 auto 120px',
       textAlign: 'center',
-      paddingLeft: isMobile ? '20px' : '0',
-      paddingRight: isMobile ? '20px' : '0',
       background: colors.navy,
       borderRadius: '32px',
       paddingTop: isMobile ? '40px' : '80px',
@@ -3750,16 +3071,6 @@ const BodySection = () => {
       border: `1px solid ${colors.goldBorder}`,
       position: 'relative',
       overflow: 'hidden',
-    },
-    
-    flexibleSolutionsSectionBg: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      background: `radial-gradient(circle at 10% 90%, ${colors.goldLight} 0%, transparent 50%), radial-gradient(circle at 90% 10%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)`,
-      zIndex: 1,
     },
     
     flexibleSolutionsHeader: {
@@ -3773,10 +3084,7 @@ const BodySection = () => {
       alignItems: 'center',
       gap: isMobile ? '8px' : '12px',
       backgroundColor: 'rgba(255, 184, 0, 0.15)',
-      paddingTop: isMobile ? '12px' : '16px',
-      paddingRight: isMobile ? '20px' : '32px',
-      paddingBottom: isMobile ? '12px' : '16px',
-      paddingLeft: isMobile ? '20px' : '32px',
+      padding: isMobile ? '12px 20px' : '16px 32px',
       borderRadius: '50px',
       marginBottom: isMobile ? '20px' : '30px',
       border: `2px solid ${colors.goldBorder}`,
@@ -3795,24 +3103,17 @@ const BodySection = () => {
       fontSize: isMobile ? '2.5rem' : isTablet ? '3rem' : '3.5rem',
       fontWeight: '700',
       color: colors.white,
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: '20px',
-      marginLeft: 0,
+      margin: '0 0 20px 0',
       lineHeight: '1',
       fontFamily: "'Inter', sans-serif",
       letterSpacing: '-1px',
-      textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
     },
     
     flexibleSolutionsSubtitle: {
       fontSize: isMobile ? '1.75rem' : isTablet ? '2rem' : '2rem',
       fontWeight: '700',
       color: colors.white,
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: '16px',
-      marginLeft: 0,
+      margin: '0 0 16px 0',
       fontFamily: "'Inter', sans-serif",
       lineHeight: '1.2',
     },
@@ -3822,12 +3123,7 @@ const BodySection = () => {
       color: colors.softWhite90,
       lineHeight: '1.7',
       maxWidth: '900px',
-      marginTop: 0,
-      marginRight: 'auto',
-      marginBottom: isMobile ? '40px' : '60px',
-      marginLeft: 'auto',
-      fontWeight: '400',
-      fontFamily: "'Inter', sans-serif",
+      margin: '0 auto 60px',
     },
     
     cleaningPlansGrid: {
@@ -3835,8 +3131,7 @@ const BodySection = () => {
       gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
       gap: isMobile ? '32px' : isTablet ? '24px' : '32px',
       maxWidth: '1400px',
-      margin: '0 auto',
-      marginBottom: isMobile ? '60px' : '80px',
+      margin: '0 auto 60px',
       position: 'relative',
       zIndex: 2,
     },
@@ -3859,10 +3154,7 @@ const BodySection = () => {
     
     planHeader: (color: string) => ({
       backgroundColor: color,
-      paddingTop: isMobile ? '30px' : '40px',
-      paddingRight: isMobile ? '24px' : '32px',
-      paddingBottom: isMobile ? '30px' : '40px',
-      paddingLeft: isMobile ? '24px' : '32px',
+      padding: isMobile ? '30px 24px' : '40px 32px',
       textAlign: 'center',
       color: color === colors.beige ? colors.navyDark : colors.white,
     }),
@@ -3870,72 +3162,46 @@ const BodySection = () => {
     planBadge: {
       display: 'inline-block',
       backgroundColor: 'rgba(255, 255, 255, 0.2)',
-      paddingTop: '8px',
-      paddingRight: '20px',
-      paddingBottom: '8px',
-      paddingLeft: '20px',
+      padding: '8px 20px',
       borderRadius: '30px',
       fontSize: '14px',
       fontWeight: '700',
       marginBottom: '20px',
       letterSpacing: '2px',
       textTransform: 'uppercase',
-      fontFamily: "'Inter', sans-serif",
     },
     
     planTitle: {
       fontSize: isMobile ? '1.75rem' : '2rem',
       fontWeight: '700',
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: '12px',
-      marginLeft: 0,
-      fontFamily: "'Inter', sans-serif",
+      margin: '0 0 12px 0',
       lineHeight: '1.1',
     },
     
     planFrequency: {
       fontSize: isMobile ? '1.125rem' : '1.25rem',
       fontWeight: '600',
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: '8px',
-      marginLeft: 0,
-      fontFamily: "'Inter', sans-serif",
+      margin: '0 0 8px 0',
       opacity: 0.9,
     },
     
     planDescription: {
       fontSize: isMobile ? '1rem' : '1.125rem',
-      fontWeight: '400',
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: 0,
-      marginLeft: 0,
-      fontFamily: "'Inter', sans-serif",
+      margin: 0,
     },
     
     planContent: {
-      paddingTop: isMobile ? '30px' : '40px',
-      paddingRight: isMobile ? '24px' : '32px',
-      paddingBottom: isMobile ? '30px' : '40px',
-      paddingLeft: isMobile ? '24px' : '32px',
+      padding: isMobile ? '30px 24px' : '40px 32px',
       flex: 1,
       display: 'flex',
       flexDirection: 'column',
-      background: 'transparent',
     },
     
     planDetails: {
       fontSize: isMobile ? '0.95rem' : '1rem',
       color: colors.grayDark,
       lineHeight: '1.7',
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: '32px',
-      marginLeft: 0,
-      fontWeight: '400',
-      fontFamily: "'Inter', sans-serif",
+      margin: '0 0 32px 0',
       flex: 1,
     },
     
@@ -3958,18 +3224,14 @@ const BodySection = () => {
     
     planFeatureIcon: {
       color: colors.gold,
-      fontWeight: '700',
       fontSize: '20px',
       flexShrink: 0,
-      marginTop: '2px',
     },
     
     planFeatureText: {
       fontSize: isMobile ? '0.9rem' : '1rem',
       color: colors.navyDark,
       lineHeight: '1.5',
-      fontWeight: '400',
-      fontFamily: "'Inter', sans-serif",
     },
     
     planButton: (active: boolean, color: string) => ({
@@ -3980,30 +3242,21 @@ const BodySection = () => {
       backgroundColor: active ? color : 'transparent',
       color: active ? (color === colors.beige ? colors.navyDark : colors.white) : color,
       border: `3px solid ${color}`,
-      paddingTop: isMobile ? '16px' : '20px',
-      paddingRight: isMobile ? '24px' : '32px',
-      paddingBottom: isMobile ? '16px' : '20px',
-      paddingLeft: isMobile ? '24px' : '32px',
+      padding: isMobile ? '16px 24px' : '20px 32px',
       borderRadius: '50px',
       fontSize: isMobile ? '0.95rem' : '1rem',
       fontWeight: '700',
       cursor: 'pointer',
       transition: 'all 0.3s ease',
-      textDecoration: 'none',
-      fontFamily: "'Inter', sans-serif",
       transform: active ? 'translateY(-3px)' : 'translateY(0)',
       boxShadow: active ? '0 15px 30px rgba(0, 0, 0, 0.2)' : 'none',
       width: '100%',
     }),
-    
-    // Section 9: Consultation Card - Dark Beige
+
     consultationSection: {
       backgroundColor: colors.beigeDark,
       borderRadius: '24px',
-      paddingTop: isMobile ? '40px' : '60px',
-      paddingRight: isMobile ? '24px' : '40px',
-      paddingBottom: isMobile ? '40px' : '60px',
-      paddingLeft: isMobile ? '24px' : '40px',
+      padding: isMobile ? '40px 24px' : '60px 40px',
       textAlign: 'center',
       border: `2px solid ${colors.goldBorder}`,
       maxWidth: '1000px',
@@ -4018,11 +3271,7 @@ const BodySection = () => {
       fontSize: isMobile ? '1.75rem' : isTablet ? '2rem' : '2.25rem',
       fontWeight: '700',
       color: colors.navyDark,
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: '24px',
-      marginLeft: 0,
-      fontFamily: "'Inter', sans-serif",
+      margin: '0 0 24px 0',
       lineHeight: '1.2',
     },
     
@@ -4030,12 +3279,7 @@ const BodySection = () => {
       fontSize: isMobile ? '1.125rem' : isTablet ? '1.25rem' : '1.375rem',
       color: colors.navyDark,
       lineHeight: '1.7',
-      marginTop: 0,
-      marginRight: 'auto',
-      marginBottom: '40px',
-      marginLeft: 'auto',
-      fontWeight: '400',
-      fontFamily: "'Inter', sans-serif",
+      margin: '0 auto 40px',
       maxWidth: '800px',
     },
     
@@ -4046,48 +3290,16 @@ const BodySection = () => {
       backgroundColor: active ? colors.gold : colors.navy,
       color: active ? colors.navyDark : colors.white,
       border: 'none',
-      paddingTop: isMobile ? '16px' : '20px',
-      paddingRight: isMobile ? '32px' : '48px',
-      paddingBottom: isMobile ? '16px' : '20px',
-      paddingLeft: isMobile ? '32px' : '48px',
+      padding: isMobile ? '16px 32px' : '20px 48px',
       borderRadius: '50px',
       fontSize: isMobile ? '1rem' : '1.125rem',
       fontWeight: '700',
       cursor: 'pointer',
       transition: 'all 0.3s ease',
-      textDecoration: 'none',
-      fontFamily: "'Inter', sans-serif",
       transform: active ? 'translateY(-3px)' : 'translateY(0)',
       boxShadow: active 
         ? '0 20px 40px rgba(255, 184, 0, 0.4)' 
         : '0 15px 30px rgba(0, 0, 0, 0.3)',
-    }),
-    
-    beforeAfterCTA: (active: boolean) => ({
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: '12px',
-      backgroundColor: active ? colors.gold : colors.navyDark,
-      color: active ? colors.navyDark : colors.white,
-      border: 'none',
-      paddingTop: isMobile ? '16px' : '20px',
-      paddingRight: isMobile ? '24px' : '40px',
-      paddingBottom: isMobile ? '16px' : '20px',
-      paddingLeft: isMobile ? '24px' : '40px',
-      borderRadius: '50px',
-      fontSize: isMobile ? '0.95rem' : '1rem',
-      fontWeight: '700',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      textDecoration: 'none',
-      fontFamily: "'Inter', sans-serif",
-      transform: active ? 'translateY(-3px)' : 'translateY(0)',
-      boxShadow: active 
-        ? '0 15px 30px rgba(255, 184, 0, 0.4)' 
-        : '0 10px 25px rgba(0, 0, 0, 0.3)',
-      marginTop: '40px',
-      position: 'relative',
-      zIndex: 2,
     }),
   };
 
@@ -4096,7 +3308,7 @@ const BodySection = () => {
       <StarPopper side="left" />
       <StarPopper side="right" />
       
-      {/* Section 1: The BRAVOS Difference - NAVY BLUE */}
+      {/* Section 1: The BRAVOS Difference */}
       <div style={baseBodyStyles.differenceSection}>
         <div style={baseBodyStyles.differenceSectionBg}></div>
         <div style={baseBodyStyles.differenceBadge}>
@@ -4105,8 +3317,10 @@ const BodySection = () => {
         </div>
         
         <div>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+            <RotatingStarRing color="#FFB800" size={60} />
+          </div>
           <h2 style={baseBodyStyles.navySubtitle}>
-            <RotatingStar color="#FFB800" size={40} />
             What You Can Expect from BRAVOS
           </h2>
           <h3 style={baseBodyStyles.goldSubtitle}>
@@ -4118,16 +3332,12 @@ const BodySection = () => {
           With over 25 years of industry experience, BRAVOS has earned its reputation as Houston's most trusted roofing contractor. 
           We combine master craftsmanship with premium materials to deliver roofs that protect your home and enhance its beauty.
         </p>
-        
-        {/* Logo Carousel in Section 1 */}
-        <LogoCarousel 
-          title=""
-          showTitle={false}
-          backgroundColor={colors.navy}
-        />
       </div>
 
-      {/* Section 2: Features Grid - Alternating NAVY and GRAY cards */}
+      {/* Logo Carousel between Section 1 and Section 2 */}
+      <LogoCarousel backgroundColor={colors.navyDark} />
+
+      {/* Section 2: Features Grid */}
       <div style={baseBodyStyles.featuresGrid}>
         {features.map((feature, index) => (
           <div 
@@ -4178,13 +3388,18 @@ const BodySection = () => {
         ))}
       </div>
 
-      {/* Section 3: Before & After Transformations - DARK BEIGE */}
+      {/* Logo Carousel between Section 2 and Section 3 */}
+      <LogoCarousel backgroundColor={colors.navyDark} />
+
+      {/* Section 3: Before & After */}
       <div style={baseBodyStyles.transformationsSection}>
         <div style={baseBodyStyles.transformationsSectionBg}></div>
         <div style={baseBodyStyles.transformationsHeader}>
           <div style={baseBodyStyles.transformationsTitleContainer}>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+              <RotatingStarRing color="#3C3B6E" size={60} />
+            </div>
             <h2 style={baseBodyStyles.navyTitle}>
-              <RotatingStar color="#3C3B6E" size={35} />
               See the BRAVOS Difference:
             </h2>
             <h2 style={baseBodyStyles.goldTitle}>
@@ -4246,53 +3461,20 @@ const BodySection = () => {
             </div>
           ))}
         </div>
-        
-        <button
-          style={baseBodyStyles.beforeAfterCTA(activeBeforeAfterButton)}
-          onMouseEnter={() => setActiveBeforeAfterButton(true)}
-          onMouseLeave={() => setActiveBeforeAfterButton(false)}
-          onTouchStart={() => handleTouchStart(setActiveBeforeAfterButton, true)}
-          onTouchEnd={() => handleTouchEnd(setActiveBeforeAfterButton, false)}
-          onClick={() => {
-            window.location.href = '/gallery';
-          }}
-        >
-          See More Transformations
-          <svg 
-            width="20" 
-            height="20" 
-            viewBox="0 0 24 24" 
-            fill="none"
-            style={{
-              transition: 'transform 0.3s ease',
-              transform: activeBeforeAfterButton ? 'translateX(5px)' : 'translateX(0)'
-            }}
-          >
-            <path 
-              d="M5 12H19M19 12L12 5M19 12L12 19" 
-              stroke="currentColor" 
-              strokeWidth="2" 
-              strokeLinecap="round" 
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
-        
-        {/* Logo Carousel in Section 3 */}
-        <LogoCarousel 
-          title=""
-          showTitle={false}
-          backgroundColor={colors.beige}
-        />
       </div>
 
-      {/* Section 4: Video Testimonials - DARK GRAY */}
+      {/* Logo Carousel between Section 3 and Section 4 */}
+      <LogoCarousel backgroundColor={colors.navyDark} />
+
+      {/* Section 4: Video Testimonials */}
       <div style={baseBodyStyles.videoTestimonialsSection}>
         <div style={baseBodyStyles.videoTestimonialsSectionBg}></div>
-        <div style={baseBodyStyles.videoTestimonialsHeader}>
+        <div style={baseBodyStyles.transformationsHeader}>
           <div style={baseBodyStyles.videoTitleContainer}>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+              <RotatingStarRing color="#FFB800" size={60} />
+            </div>
             <h2 style={baseBodyStyles.videoNavyTitle}>
-              <RotatingStar color="#FFB800" size={35} />
               Video Testimonials
             </h2>
             <h2 style={baseBodyStyles.videoGoldTitle}>
@@ -4317,21 +3499,19 @@ const BodySection = () => {
             />
           ))}
         </div>
-        
-        {/* Logo Carousel in Section 4 */}
-        <LogoCarousel 
-          title=""
-          showTitle={false}
-          backgroundColor={colors.gray}
-        />
       </div>
 
-      {/* Section 5: Customer Reviews - NAVY BLUE (alternating) */}
+      {/* Logo Carousel between Section 4 and Section 5 */}
+      <LogoCarousel backgroundColor={colors.navyDark} />
+
+      {/* Section 5: Customer Reviews */}
       <div style={baseBodyStyles.reviewsSection}>
         <div style={baseBodyStyles.reviewsSectionBg}></div>
-        <div style={baseBodyStyles.reviewsHeader}>
+        <div style={baseBodyStyles.transformationsHeader}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+            <RotatingStarRing color="#FFB800" size={60} />
+          </div>
           <h2 style={baseBodyStyles.reviewsTitle}>
-            <RotatingStar color="#FFB800" size={40} />
             Real Reviews from Real Homeowners
           </h2>
           <p style={baseBodyStyles.reviewsSubtitle}>
@@ -4376,394 +3556,12 @@ const BodySection = () => {
             </div>
           ))}
         </div>
-        
-        {/* Logo Carousel in Section 5 */}
-        <LogoCarousel 
-          title=""
-          showTitle={false}
-          backgroundColor={colors.navyLight}
-        />
       </div>
 
-      {/* Section 6: Meet the Founders Section - DARK BEIGE */}
-      <div style={{
-        maxWidth: '1400px',
-        margin: '0 auto',
-        marginBottom: isMobile ? '80px' : '120px',
-        paddingTop: isMobile ? '0' : '0',
-        paddingRight: isMobile ? '20px' : '40px',
-        paddingBottom: isMobile ? '0' : '0',
-        paddingLeft: isMobile ? '20px' : '40px',
-        background: colors.beigeDark,
-        borderRadius: '32px',
-        padding: isMobile ? '40px 20px' : '80px 40px',
-        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-        border: `1px solid ${colors.goldBorder}`,
-        position: 'relative',
-        overflow: 'hidden',
-      }}>
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: `radial-gradient(circle at 20% 80%, ${colors.goldLight} 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(0, 0, 0, 0.05) 0%, transparent 50%)`,
-          zIndex: 1,
-        }}></div>
-        
-        <div style={{
-          display: 'flex',
-          flexDirection: isMobile ? 'column' : 'row',
-          gap: isMobile ? '40px' : isTablet ? '50px' : '80px',
-          alignItems: 'center',
-          position: 'relative',
-          zIndex: 2,
-        }}>
-          
-          <div style={{
-            flex: 1,
-            position: 'relative',
-          }}>
-            <div style={{
-              backgroundColor: colors.navyDark,
-              borderRadius: '30px',
-              padding: '8px',
-              position: 'relative',
-              boxShadow: '0 40px 80px rgba(0, 0, 0, 0.4)',
-            }}>
-              <img 
-                src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                alt="BRAVOS Founders"
-                style={{
-                  width: '100%',
-                  height: isMobile ? '400px' : isTablet ? '500px' : '600px',
-                  objectFit: 'cover',
-                  borderRadius: '24px',
-                  border: `4px solid ${colors.gold}`,
-                }}
-              />
-              
-              <div style={{
-                position: 'absolute',
-                bottom: isMobile ? '-20px' : isTablet ? '-25px' : '-30px',
-                left: isMobile ? '20px' : '40px',
-                right: isMobile ? '20px' : '40px',
-                backgroundColor: colors.gold,
-                paddingTop: isMobile ? '20px' : '30px',
-                paddingRight: isMobile ? '20px' : '30px',
-                paddingBottom: isMobile ? '20px' : '30px',
-                paddingLeft: isMobile ? '20px' : '30px',
-                borderRadius: '20px',
-                textAlign: 'center',
-                boxShadow: '0 20px 40px rgba(255, 184, 0, 0.4)',
-                transform: 'rotate(-2deg)',
-                zIndex: 3,
-              }}>
-                <div style={{
-                  fontSize: isMobile ? '18px' : isTablet ? '20px' : '24px',
-                  fontWeight: '700',
-                  color: colors.navyDark,
-                  fontFamily: "'Inter', sans-serif",
-                }}>
-                  Quality Inspectors & Founders
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div style={{
-            flex: 1,
-            textAlign: isMobile ? 'center' : 'left',
-          }}>
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: isMobile ? '8px' : '12px',
-              backgroundColor: 'rgba(255, 184, 0, 0.15)',
-              paddingTop: isMobile ? '12px' : '16px',
-              paddingRight: isMobile ? '20px' : '32px',
-              paddingBottom: isMobile ? '12px' : '16px',
-              paddingLeft: isMobile ? '20px' : '32px',
-              borderRadius: '50px',
-              marginBottom: isMobile ? '30px' : '40px',
-              border: `2px solid ${colors.goldBorder}`,
-            }}>
-              <span style={{
-                color: colors.gold,
-                fontWeight: '700',
-                fontSize: isMobile ? '20px' : '24px',
-                fontFamily: "'Inter', sans-serif",
-              }}>
-                ✦
-              </span>
-              <span style={{
-                fontSize: isMobile ? '14px' : '18px',
-                fontWeight: '700',
-                color: colors.navyDark,
-                letterSpacing: '3px',
-                textTransform: 'uppercase',
-                fontFamily: "'Inter', sans-serif",
-              }}>
-                Meet The Visionaries
-              </span>
-            </div>
-            
-            <div style={{
-              marginBottom: isMobile ? '20px' : '30px',
-            }}>
-              <h2 style={{
-                fontSize: isMobile ? '2rem' : isTablet ? '2.5rem' : '3rem',
-                fontWeight: '700',
-                color: colors.navyDark,
-                marginTop: 0,
-                marginRight: 0,
-                marginBottom: '8px',
-                marginLeft: 0,
-                fontFamily: "'Inter', sans-serif",
-                lineHeight: '1',
-                letterSpacing: '-1px',
-                textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-              }}>
-                <RotatingStar color="#B22234" size={40} />
-                Meet The Founders:
-              </h2>
-              <h2 style={{
-                fontSize: isMobile ? '3rem' : isTablet ? '4rem' : '5rem',
-                fontWeight: '700',
-                color: colors.navyDark,
-                marginTop: 0,
-                marginRight: 0,
-                marginBottom: '8px',
-                marginLeft: 0,
-                fontFamily: "'Inter', sans-serif",
-                lineHeight: '0.9',
-              }}>
-                David{" "}
-                <span style={{
-                  color: colors.gold,
-                  fontSize: isMobile ? '3.5rem' : isTablet ? '4.5rem' : '6rem',
-                  display: 'inline-block',
-                  margin: '0 20px',
-                  transform: 'translateY(5px)',
-                }}>
-                  &
-                </span>
-                {" "}Sarah
-              </h2>
-            </div>
-            
-            <p style={{
-              fontSize: isMobile ? '1.125rem' : isTablet ? '1.25rem' : '1.375rem',
-              color: colors.navyDark,
-              lineHeight: '1.7',
-              marginTop: 0,
-              marginRight: 0,
-              marginBottom: isMobile ? '20px' : '30px',
-              marginLeft: 0,
-              fontWeight: '400',
-              fontFamily: "'Inter', sans-serif",
-            }}>
-              The husband-and-wife team behind Houston's most trusted roofing company. 
-              Their commitment to craftsmanship and integrity has built BRAVOS into the region's premier roofing contractor.
-            </p>
-            
-            <div style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.2)',
-              padding: isMobile ? '30px' : '40px',
-              borderRadius: '20px',
-              border: `2px solid ${colors.goldBorder}`,
-              marginBottom: isMobile ? '30px' : '40px',
-              background: 'rgba(255, 255, 255, 0.1)',
-              boxShadow: '0 10px 40px rgba(0, 0, 0, 0.1)',
-            }}>
-              <h3 style={{
-                fontSize: isMobile ? '1.5rem' : isTablet ? '1.75rem' : '2rem',
-                fontWeight: '700',
-                color: colors.navyDark,
-                marginTop: 0,
-                marginRight: 0,
-                marginBottom: isMobile ? '16px' : '20px',
-                marginLeft: 0,
-                fontFamily: "'Inter', sans-serif",
-              }}>
-                Our Story of Excellence
-              </h3>
-              <p style={{
-                fontSize: isMobile ? '0.95rem' : '1rem',
-                color: colors.navyDark,
-                lineHeight: '1.8',
-                marginTop: 0,
-                marginRight: 0,
-                marginBottom: isMobile ? '16px' : '20px',
-                marginLeft: 0,
-                fontWeight: '400',
-                fontFamily: "'Inter', sans-serif",
-              }}>
-                With over 25 years of combined experience in the roofing industry, David and Sarah founded BRAVOS with one mission: 
-                to provide Houston homeowners with honest, high-quality roofing solutions backed by exceptional customer service.
-              </p>
-              <p style={{
-                fontSize: isMobile ? '0.95rem' : '1rem',
-                color: colors.navyDark,
-                lineHeight: '1.8',
-                marginTop: 0,
-                marginRight: 0,
-                marginBottom: 0,
-                marginLeft: 0,
-                fontWeight: '400',
-                fontFamily: "'Inter', sans-serif",
-              }}>
-                What started as a family operation has grown into Houston's #1 rated roofing company, serving over 3,500 homeowners 
-                and maintaining a 99.7% satisfaction rate. Their hands-on approach means they're personally invested in every project.
-              </p>
-            </div>
-            
-            <button
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '12px',
-                backgroundColor: colors.navyDark,
-                color: colors.white,
-                border: 'none',
-                paddingTop: isMobile ? '16px' : '20px',
-                paddingRight: isMobile ? '24px' : '40px',
-                paddingBottom: isMobile ? '16px' : '20px',
-                paddingLeft: isMobile ? '24px' : '40px',
-                borderRadius: '50px',
-                fontSize: isMobile ? '0.95rem' : '1rem',
-                fontWeight: '700',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                textDecoration: 'none',
-                fontFamily: "'Inter', sans-serif",
-                transform: activeButton === 'learnMore' ? 'translateY(-3px)' : 'translateY(0)',
-                boxShadow: activeButton === 'learnMore' 
-                  ? '0 20px 40px rgba(0, 0, 0, 0.4)' 
-                  : '0 10px 30px rgba(0, 0, 0, 0.3)',
-              }}
-              onMouseEnter={() => setActiveButton('learnMore')}
-              onMouseLeave={() => setActiveButton(null)}
-              onTouchStart={() => handleTouchStart(setActiveButton, 'learnMore')}
-              onTouchEnd={() => handleTouchEnd(setActiveButton, null)}
-              onClick={() => {
-                window.location.href = '/about';
-              }}
-            >
-              Learn More About Us
-              <svg 
-                width="20" 
-                height="20" 
-                viewBox="0 0 24 24" 
-                fill="none"
-                style={{
-                  transition: 'transform 0.3s ease',
-                  transform: activeButton === 'learnMore' ? 'translateX(5px)' : 'translateX(0)'
-                }}
-              >
-                <path 
-                  d="M5 12H19M19 12L12 5M19 12L12 19" 
-                  stroke="currentColor" 
-                  strokeWidth="2" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-        
-        {/* Logo Carousel in Section 6 */}
-        <LogoCarousel 
-          title=""
-          showTitle={false}
-          backgroundColor={colors.beigeDark}
-        />
-      </div>
+      {/* Logo Carousel between Section 5 and Section 6 */}
+      <LogoCarousel backgroundColor={colors.navyDark} />
 
-      {/* Section 7: Our Story Section - DARK GRAY */}
-      <div style={baseBodyStyles.ourStorySection}>
-        <div style={baseBodyStyles.ourStorySectionBg}></div>
-        <div style={baseBodyStyles.ourStoryContent}>
-          <h2 style={baseBodyStyles.ourStoryTitle}>
-            <RotatingStar color="#FFB800" size={45} />
-            The BRAVOS Commitment
-          </h2>
-          
-          <div style={baseBodyStyles.ourStoryDescription}>
-            <p style={{
-              marginTop: 0,
-              marginBottom: '30px',
-              fontSize: isMobile ? '1.125rem' : '1.25rem',
-              lineHeight: 1.7,
-              fontWeight: '400',
-              color: colors.white,
-              fontFamily: "'Inter', sans-serif",
-            }}>
-              While other contractors focus on speed, we focus on precision. Every BRAVOS roof is engineered for maximum 
-              protection, optimal ventilation, and lasting beauty. We don't just install roofs—we create lasting relationships 
-              built on trust, quality, and unparalleled customer service.
-            </p>
-            
-            <StatsCounter />
-            
-            <p style={{
-              marginTop: '40px',
-              marginBottom: 0,
-              fontSize: isMobile ? '1.125rem' : '1.25rem',
-              lineHeight: 1.7,
-              fontWeight: '400',
-              color: colors.white,
-              fontFamily: "'Inter', sans-serif",
-            }}>
-              Join thousands of satisfied homeowners who trust BRAVOS with their most valuable investment. 
-              From our meticulous installation process to our comprehensive warranties, we're redefining 
-              what it means to be a roofing contractor in Houston.
-            </p>
-          </div>
-          
-          <button
-            style={baseBodyStyles.ourStoryButton(activeOurStory)}
-            onMouseEnter={() => setActiveOurStory(true)}
-            onMouseLeave={() => setActiveOurStory(false)}
-            onTouchStart={() => handleTouchStart(setActiveOurStory, true)}
-            onTouchEnd={() => handleTouchEnd(setActiveOurStory, false)}
-            onClick={() => {
-              window.location.href = '/about';
-            }}
-          >
-            Discover Our Story
-            <svg 
-              width="20" 
-              height="20" 
-              viewBox="0 0 24 24" 
-              fill="none"
-              style={{
-                transition: 'transform 0.3s ease',
-                transform: activeOurStory ? 'translateX(5px)' : 'translateX(0)'
-              }}
-            >
-              <path 
-                d="M5 12H19M19 12L12 5M19 12L12 19" 
-                stroke="currentColor" 
-                strokeWidth="2" 
-                strokeLinecap="round" 
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-        </div>
-        
-        {/* Logo Carousel in Section 7 */}
-        <LogoCarousel 
-          title=""
-          showTitle={false}
-          backgroundColor={colors.grayDark}
-        />
-      </div>
-
-      {/* Section 8: Roofing Services Section - NAVY BLUE */}
+      {/* Section 6: Roofing Services */}
       <div style={baseBodyStyles.flexibleSolutionsSection}>
         <div style={baseBodyStyles.flexibleSolutionsSectionBg}></div>
         <div style={baseBodyStyles.flexibleSolutionsHeader}>
@@ -4772,8 +3570,11 @@ const BodySection = () => {
             <span style={baseBodyStyles.flexibleSolutionsBadgeText}>Roofing Services</span>
           </div>
           
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+            <RotatingStarRing color="#FFB800" size={70} />
+          </div>
+          
           <h2 style={baseBodyStyles.flexibleSolutionsTitle}>
-            <RotatingStar color="#FFB800" size={45} />
             Professional Roofing Solutions
           </h2>
           <h3 style={baseBodyStyles.flexibleSolutionsSubtitle}>
@@ -4865,10 +3666,12 @@ const BodySection = () => {
           ))}
         </div>
         
-        {/* Section 9: Consultation Card - DARK BEIGE */}
+        {/* Consultation Card */}
         <div style={baseBodyStyles.consultationSection}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+            <RotatingStarRing color="#3C3B6E" size={50} />
+          </div>
           <h3 style={baseBodyStyles.consultationTitle}>
-            <RotatingStar color="#3C3B6E" size={35} />
             Not Sure What Your Roof Needs?
           </h3>
           <p style={baseBodyStyles.consultationDescription}>
@@ -4906,19 +3709,12 @@ const BodySection = () => {
             </svg>
           </button>
         </div>
-        
-        {/* Logo Carousel in Section 8 */}
-        <LogoCarousel 
-          title=""
-          showTitle={false}
-          backgroundColor={colors.navy}
-        />
       </div>
 
-      {/* Service Areas Section */}
-      <ServiceAreas />
+      {/* Logo Carousel before FAQ */}
+      <LogoCarousel backgroundColor={colors.navyDark} />
 
-      {/* FAQ Section - DARK BEIGE */}
+      {/* FAQ Section */}
       <FAQSection 
         title="Frequently Asked Roofing Questions"
         subtitle="Find answers to common questions about our roofing services. If you don't see your question here, contact our team for personalized assistance."
