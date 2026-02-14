@@ -29,330 +29,6 @@ const MicroInteraction = ({
   );
 };
 
-// Logo Carousel Component
-interface LogoCarouselProps {
-  autoplaySpeed?: number;
-  containerStyle?: React.CSSProperties;
-}
-
-const LogoCarousel = ({ autoplaySpeed = 3000, containerStyle = {} }: LogoCarouselProps) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
-  const [isSmallMobile, setIsSmallMobile] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-  const [isHovering, setIsHovering] = useState(false);
-  const autoplayRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Logo images - 10 logos without backgrounds
-  const logos = [
-    { id: 1, src: "/image/logo1.png", alt: "Logo 1" },
-    { id: 2, src: "/image/logo2.png", alt: "Logo 2" },
-    { id: 3, src: "/image/logo3.png", alt: "Logo 3" },
-    { id: 4, src: "/image/logo4.png", alt: "Logo 4" },
-    { id: 5, src: "/image/logo5.png", alt: "Logo 5" },
-    { id: 6, src: "/image/logo6.png", alt: "Logo 6" },
-    { id: 7, src: "/image/logo7.png", alt: "Logo 7" },
-    { id: 8, src: "/image/logo8.png", alt: "Logo 8" },
-    { id: 9, src: "/image/logo9.png", alt: "Logo 9" },
-    { id: 10, src: "/image/logo10.png", alt: "Logo 10" },
-  ];
-
-  useEffect(() => {
-    const checkMobile = () => {
-      const width = window.innerWidth;
-      setIsMobile(width < 768);
-      setIsSmallMobile(width < 480);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  // Autoplay functionality
-  useEffect(() => {
-    if (isPaused) return;
-    
-    autoplayRef.current = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % logos.length);
-    }, autoplaySpeed);
-    
-    return () => {
-      if (autoplayRef.current) {
-        clearInterval(autoplayRef.current);
-      }
-    };
-  }, [autoplaySpeed, logos.length, isPaused]);
-
-  const goToNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % logos.length);
-  };
-
-  const goToPrev = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + logos.length) % logos.length);
-  };
-
-  const goToSlide = (index: number) => {
-    setCurrentIndex(index);
-  };
-
-  const handleMouseEnter = () => {
-    setIsPaused(true);
-    setIsHovering(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsPaused(false);
-    setIsHovering(false);
-  };
-
-  return (
-    <div 
-      style={{
-        width: '100%',
-        maxWidth: '1200px',
-        margin: isMobile ? '20px auto' : '30px auto',
-        position: 'relative',
-        ...containerStyle
-      }}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: isMobile ? '10px' : '20px',
-      }}>
-        {/* Previous Button */}
-        <button
-          onClick={goToPrev}
-          style={{
-            width: isMobile ? '32px' : '40px',
-            height: isMobile ? '32px' : '40px',
-            borderRadius: '50%',
-            backgroundColor: 'rgba(255, 184, 0, 0.2)',
-            border: `2px solid #FFB800`,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            transition: 'all 0.3s ease',
-            color: '#FFB800',
-            fontSize: isMobile ? '16px' : '20px',
-            fontWeight: '700',
-            flexShrink: 0,
-            transform: isHovering ? 'scale(1.1)' : 'scale(1)',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#FFB800';
-            e.currentTarget.style.color = '#0A0A0C';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'rgba(255, 184, 0, 0.2)';
-            e.currentTarget.style.color = '#FFB800';
-          }}
-        >
-          ←
-        </button>
-
-        {/* Logo Display */}
-        <div style={{
-          flex: 1,
-          overflow: 'hidden',
-          position: 'relative',
-          height: isMobile ? '80px' : isSmallMobile ? '60px' : '100px',
-        }}>
-          <div style={{
-            display: 'flex',
-            transition: 'transform 0.5s ease',
-            transform: `translateX(-${currentIndex * 100}%)`,
-            height: '100%',
-          }}>
-            {logos.map((logo) => (
-              <div
-                key={logo.id}
-                style={{
-                  minWidth: '100%',
-                  height: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <img
-                  src={logo.src}
-                  alt={logo.alt}
-                  style={{
-                    maxWidth: '100%',
-                    maxHeight: '100%',
-                    width: 'auto',
-                    height: 'auto',
-                    objectFit: 'contain',
-                    filter: 'brightness(0.9)',
-                    transition: 'all 0.3s ease',
-                    opacity: isHovering ? 1 : 0.8,
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.filter = 'brightness(1)';
-                    e.currentTarget.style.transform = 'scale(1.05)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.filter = 'brightness(0.9)';
-                    e.currentTarget.style.transform = 'scale(1)';
-                  }}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Next Button */}
-        <button
-          onClick={goToNext}
-          style={{
-            width: isMobile ? '32px' : '40px',
-            height: isMobile ? '32px' : '40px',
-            borderRadius: '50%',
-            backgroundColor: 'rgba(255, 184, 0, 0.2)',
-            border: `2px solid #FFB800`,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            transition: 'all 0.3s ease',
-            color: '#FFB800',
-            fontSize: isMobile ? '16px' : '20px',
-            fontWeight: '700',
-            flexShrink: 0,
-            transform: isHovering ? 'scale(1.1)' : 'scale(1)',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#FFB800';
-            e.currentTarget.style.color = '#0A0A0C';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'rgba(255, 184, 0, 0.2)';
-            e.currentTarget.style.color = '#FFB800';
-          }}
-        >
-          →
-        </button>
-      </div>
-
-      {/* Dots Navigation */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        gap: '8px',
-        marginTop: isMobile ? '10px' : '15px',
-      }}>
-        {logos.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => goToSlide(index)}
-            style={{
-              width: isMobile ? '8px' : '10px',
-              height: isMobile ? '8px' : '10px',
-              borderRadius: '50%',
-              backgroundColor: index === currentIndex ? '#FFB800' : 'rgba(255, 184, 0, 0.3)',
-              border: 'none',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              padding: 0,
-              transform: index === currentIndex ? 'scale(1.2)' : 'scale(1)',
-            }}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
-
-// Rotating Star Ring Component
-interface StarRingProps {
-  size?: number;
-  color?: string;
-  backgroundColor?: string;
-  text?: string;
-  style?: React.CSSProperties;
-}
-
-const StarRing = ({ 
-  size = 300, 
-  color = '#FFB800', 
-  backgroundColor = 'rgba(255, 184, 0, 0.05)',
-  text = '★★★★★',
-  style = {}
-}: StarRingProps) => {
-  const [rotation, setRotation] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
-  const [isSmallMobile, setIsSmallMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      const width = window.innerWidth;
-      setIsMobile(width < 768);
-      setIsSmallMobile(width < 480);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setRotation((prev) => (prev + 1) % 360);
-    }, 50);
-    
-    return () => clearInterval(interval);
-  }, []);
-
-  const mobileSize = isMobile ? (isSmallMobile ? 150 : 200) : size;
-
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: mobileSize,
-        height: mobileSize,
-        borderRadius: '50%',
-        backgroundColor: backgroundColor,
-        border: `2px dashed ${color}`,
-        zIndex: 0,
-        pointerEvents: 'none',
-        ...style
-      }}
-    >
-      <div
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: `translate(-50%, -50%) rotate(${rotation}deg)`,
-          width: mobileSize * 1.2,
-          height: mobileSize * 1.2,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: isMobile ? (isSmallMobile ? '2rem' : '2.5rem') : '3rem',
-          color: color,
-          opacity: 0.3,
-          fontWeight: '700',
-          whiteSpace: 'nowrap',
-          fontFamily: "'Inter', sans-serif",
-        }}
-      >
-        {text}
-      </div>
-    </div>
-  );
-};
-
 // Bottom CTA Buttons Component
 interface BottomCTAButtonsProps {
   onCallClick?: () => void;
@@ -580,6 +256,323 @@ function BottomCTAButtons({
     </div>
   );
 }
+
+// Logo Carousel Component
+interface LogoCarouselProps {
+  logos?: Array<{ src: string; alt: string }>;
+  autoRotate?: boolean;
+  interval?: number;
+  showNavigation?: boolean;
+  backgroundColor?: string;
+  height?: number;
+}
+
+function LogoCarousel({
+  logos = [
+    { src: "/image/logo1.png", alt: "GAF Certified" },
+    { src: "/image/logo2.png", alt: "Owens Corning" },
+    { src: "/image/logo3.png", alt: "CertainTeed" },
+    { src: "/image/logo4.png", alt: "Malarkey" },
+    { src: "/image/logo5.png", alt: "IKO" },
+    { src: "/image/logo6.png", alt: "Atlas" },
+    { src: "/image/logo7.png", alt: "Tamko" },
+    { src: "/image/logo8.png", alt: "GAF" },
+    { src: "/image/logo9.png", alt: "CertainTeed" },
+    { src: "/image/logo10.png", alt: "Owens Corning" }
+  ],
+  autoRotate = true,
+  interval = 3000,
+  showNavigation = true,
+  backgroundColor = 'transparent',
+  height = 80
+}: LogoCarouselProps) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const autoRotateRef = useRef<NodeJS.Timeout>();
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (autoRotate && !isHovered) {
+      autoRotateRef.current = setInterval(() => {
+        setCurrentIndex((prev) => (prev + 1) % logos.length);
+      }, interval);
+    }
+    return () => {
+      if (autoRotateRef.current) {
+        clearInterval(autoRotateRef.current);
+      }
+    };
+  }, [autoRotate, isHovered, logos.length, interval]);
+
+  const handlePrevious = () => {
+    setCurrentIndex((prev) => (prev - 1 + logos.length) % logos.length);
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % logos.length);
+  };
+
+  const visibleLogos = isMobile ? 3 : 5;
+  const startIndex = currentIndex;
+  const visibleItems = [];
+  
+  for (let i = 0; i < visibleLogos; i++) {
+    visibleItems.push(logos[(startIndex + i) % logos.length]);
+  }
+
+  return (
+    <div
+      ref={containerRef}
+      style={{
+        width: '100%',
+        overflow: 'hidden',
+        position: 'relative',
+        backgroundColor,
+        padding: isMobile ? '20px 0' : '30px 0',
+        margin: isMobile ? '20px 0' : '30px 0',
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: isMobile ? '20px' : '40px',
+          transition: 'all 0.5s ease',
+          opacity: isHovered ? 0.9 : 1,
+        }}
+      >
+        {visibleItems.map((logo, index) => (
+          <div
+            key={`${logo.alt}-${index}`}
+            style={{
+              flex: '0 0 auto',
+              width: isMobile ? '80px' : '120px',
+              height: isMobile ? height * 0.6 : height,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.3s ease',
+              transform: isHovered ? 'scale(1.1)' : 'scale(1)',
+              filter: 'brightness(1) contrast(1)',
+            }}
+          >
+            <img
+              src={logo.src}
+              alt={logo.alt}
+              style={{
+                maxWidth: '100%',
+                maxHeight: '100%',
+                objectFit: 'contain',
+                opacity: 0.9,
+              }}
+            />
+          </div>
+        ))}
+      </div>
+
+      {showNavigation && (
+        <>
+          <button
+            onClick={handlePrevious}
+            style={{
+              position: 'absolute',
+              left: isMobile ? '5px' : '15px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              background: 'rgba(255, 184, 0, 0.2)',
+              border: '2px solid #FFB800',
+              borderRadius: '50%',
+              width: isMobile ? '30px' : '40px',
+              height: isMobile ? '30px' : '40px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              color: '#FFB800',
+              fontSize: isMobile ? '16px' : '20px',
+              fontWeight: 'bold',
+              transition: 'all 0.3s ease',
+              zIndex: 10,
+              backdropFilter: 'blur(5px)',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = '#FFB800';
+              e.currentTarget.style.color = '#0A0A0C';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 184, 0, 0.2)';
+              e.currentTarget.style.color = '#FFB800';
+            }}
+          >
+            ←
+          </button>
+          <button
+            onClick={handleNext}
+            style={{
+              position: 'absolute',
+              right: isMobile ? '5px' : '15px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              background: 'rgba(255, 184, 0, 0.2)',
+              border: '2px solid #FFB800',
+              borderRadius: '50%',
+              width: isMobile ? '30px' : '40px',
+              height: isMobile ? '30px' : '40px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              color: '#FFB800',
+              fontSize: isMobile ? '16px' : '20px',
+              fontWeight: 'bold',
+              transition: 'all 0.3s ease',
+              zIndex: 10,
+              backdropFilter: 'blur(5px)',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = '#FFB800';
+              e.currentTarget.style.color = '#0A0A0C';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 184, 0, 0.2)';
+              e.currentTarget.style.color = '#FFB800';
+            }}
+          >
+            →
+          </button>
+        </>
+      )}
+
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '8px',
+          marginTop: isMobile ? '15px' : '20px',
+        }}
+      >
+        {logos.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentIndex(index)}
+            style={{
+              width: isMobile ? '8px' : '10px',
+              height: isMobile ? '8px' : '10px',
+              borderRadius: '50%',
+              background: index === currentIndex ? '#FFB800' : 'rgba(255, 184, 0, 0.3)',
+              border: 'none',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              padding: 0,
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Rotating Star Ring Component
+const RotatingStarRing = ({ 
+  size = 300, 
+  color = '#FFB800',
+  opacity = 0.1,
+  speed = 20,
+  style = {}
+}) => {
+  const [rotation, setRotation] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    const interval = setInterval(() => {
+      setRotation(prev => (prev + 1) % 360);
+    }, speed);
+    
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, [speed]);
+
+  const actualSize = isMobile ? size * 0.6 : size;
+
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: `translate(-50%, -50%) rotate(${rotation}deg)`,
+        width: actualSize,
+        height: actualSize,
+        pointerEvents: 'none',
+        zIndex: 0,
+        ...style
+      }}
+    >
+      <svg
+        width={actualSize}
+        height={actualSize}
+        viewBox={`0 0 ${actualSize} ${actualSize}`}
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <linearGradient id="starGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor={color} stopOpacity={opacity} />
+            <stop offset="50%" stopColor={color} stopOpacity={opacity * 1.5} />
+            <stop offset="100%" stopColor={color} stopOpacity={opacity} />
+          </linearGradient>
+        </defs>
+        {[...Array(24)].map((_, i) => {
+          const angle = (i * 15) * (Math.PI / 180);
+          const radius = actualSize * 0.4;
+          const x = actualSize / 2 + radius * Math.cos(angle);
+          const y = actualSize / 2 + radius * Math.sin(angle);
+          const starSize = actualSize * 0.08;
+          
+          return (
+            <g key={i}>
+              <path
+                d={`M${x},${y - starSize} L${x + starSize * 0.3},${y - starSize * 0.2} L${x + starSize},${y} L${x + starSize * 0.3},${y + starSize * 0.2} L${x},${y + starSize} L${x - starSize * 0.3},${y + starSize * 0.2} L${x - starSize},${y} L${x - starSize * 0.3},${y - starSize * 0.2} Z`}
+                fill="url(#starGradient)"
+                transform={`rotate(${i * 15}, ${x}, ${y})`}
+              />
+              <circle
+                cx={x}
+                cy={y}
+                r={starSize * 0.3}
+                fill={color}
+                fillOpacity={opacity * 2}
+              />
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+};
 
 const HeroSection = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -907,15 +900,12 @@ const HeroSection = () => {
       marginTop: '100px',
     },
 
-    // REPLACED: Trust grid with big bold text
     trustGrid: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
+      display: 'grid',
+      gridTemplateColumns: 'repeat(3, 1fr)',
+      gap: isMobile ? (isSmallMobile ? '0.5rem' : '0.75rem') : '1rem',
       width: '100%',
-      marginTop: isMobile ? '20px' : '30px',
-      marginBottom: isMobile ? '20px' : '30px',
+      marginTop: isMobile ? '10px' : '20px',
     },
     
     trustCard: (active: boolean) => ({
@@ -927,12 +917,13 @@ const HeroSection = () => {
       border: 'none',
       padding: 0,
       transition: 'all 0.3s ease',
-      transform: active ? 'translateY(-2px) scale(1.02)' : 'translateY(0) scale(1)',
-      width: '100%',
+      transform: active ? 'translateY(-2px)' : 'translateY(0)',
     }),
     
     trustIcon: {
-      width: '100%',
+      width: isMobile ? (isSmallMobile ? '100px' : '100px') : '200px',
+      height: isMobile ? (isSmallMobile ? '100px' : '100px') : '200px',
+      borderRadius: '10px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -943,20 +934,6 @@ const HeroSection = () => {
       width: '100%',
       height: '100%',
       objectFit: 'contain' as const,
-    },
-
-    // NEW: Bold text for licensed, certified & trusted
-    trustBoldText: {
-      fontSize: isMobile ? (isSmallMobile ? '1.5rem' : '2rem') : (isTablet ? '2.5rem' : '3rem'),
-      fontWeight: '900',
-      color: colors.gold,
-      textAlign: 'center',
-      lineHeight: 1.2,
-      letterSpacing: isMobile ? '1px' : '2px',
-      textTransform: 'uppercase',
-      fontFamily: "'Inter', sans-serif",
-      textShadow: '0 4px 8px rgba(0, 0, 0, 0.5)',
-      margin: 0,
     },
 
     reviewsContainer: {
@@ -1322,6 +1299,22 @@ const HeroSection = () => {
               onTouchStart={() => handleTouchStart(setExcellenceBadgeActive, true)}
               onTouchEnd={() => handleTouchEnd(setExcellenceBadgeActive, false)}
             >
+              {/* Wavy flag image on top of the badge */}
+              <img
+                src="/image/wavy-flag.png"
+                alt="Wavy Flag"
+                style={{
+                  position: 'absolute',
+                  top: '-40px',
+                  left: '20px',
+                  width: isMobile ? '60px' : '80px',
+                  height: isMobile ? '40px' : '50px',
+                  objectFit: 'contain',
+                  zIndex: 21,
+                  filter: 'drop-shadow(0 8px 16px rgba(255, 184, 0, 0.4))',
+                }}
+              />
+              
               <MicroInteraction 
                 src="/image/pointer1.png"
                 width={200}
@@ -1351,46 +1344,68 @@ const HeroSection = () => {
               We deliver lasting protection and exceptional craftsmanship on every project.
             </p>
             
-            {/* REPLACED: Three images with big bold text */}
-            <div style={baseStyles.trustGrid}>
-              <div 
-                style={baseStyles.trustCard(trustCardActive === 0)}
-                onMouseEnter={() => setTrustCardActive(0)}
-                onMouseLeave={() => setTrustCardActive(null)}
-                onTouchStart={() => handleTouchStart(setTrustCardActive, 0)}
-                onTouchEnd={() => handleTouchEnd(setTrustCardActive, null)}
-              >
-                <div style={baseStyles.trustIcon}>
-                  <span style={baseStyles.trustBoldText}>LICENSED,</span>
-                </div>
+            {/* Replaced three images with "Licensed, Certified & Trusted" */}
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              width: '100%',
+              marginTop: isMobile ? '20px' : '30px',
+              marginBottom: isMobile ? '20px' : '30px',
+              padding: isMobile ? '15px' : '20px',
+              background: 'rgba(255, 184, 0, 0.15)',
+              border: `2px solid ${colors.goldBorder}`,
+              borderRadius: '15px',
+              backdropFilter: 'blur(10px)',
+            }}>
+              <div style={{ textAlign: 'center', flex: 1 }}>
+                <span style={{
+                  fontSize: isMobile ? '1rem' : '1.25rem',
+                  fontWeight: '700',
+                  color: colors.gold,
+                  display: 'block',
+                  marginBottom: '5px',
+                }}>✓</span>
+                <span style={{
+                  fontSize: isMobile ? '0.8rem' : '1rem',
+                  fontWeight: '600',
+                  color: colors.white,
+                  fontFamily: "'Inter', sans-serif",
+                }}>Licensed</span>
               </div>
-              
-              <div 
-                style={baseStyles.trustCard(trustCardActive === 1)}
-                onMouseEnter={() => setTrustCardActive(1)}
-                onMouseLeave={() => setTrustCardActive(null)}
-                onTouchStart={() => handleTouchStart(setTrustCardActive, 1)}
-                onTouchEnd={() => handleTouchEnd(setTrustCardActive, null)}
-              >
-                <div style={baseStyles.trustIcon}>
-                  <span style={baseStyles.trustBoldText}>CERTIFIED</span>
-                </div>
+              <div style={{ textAlign: 'center', flex: 1 }}>
+                <span style={{
+                  fontSize: isMobile ? '1rem' : '1.25rem',
+                  fontWeight: '700',
+                  color: colors.gold,
+                  display: 'block',
+                  marginBottom: '5px',
+                }}>✓</span>
+                <span style={{
+                  fontSize: isMobile ? '0.8rem' : '1rem',
+                  fontWeight: '600',
+                  color: colors.white,
+                  fontFamily: "'Inter', sans-serif",
+                }}>Certified</span>
               </div>
-              
-              <div 
-                style={baseStyles.trustCard(trustCardActive === 2)}
-                onMouseEnter={() => setTrustCardActive(2)}
-                onMouseLeave={() => setTrustCardActive(null)}
-                onTouchStart={() => handleTouchStart(setTrustCardActive, 2)}
-                onTouchEnd={() => handleTouchEnd(setTrustCardActive, null)}
-              >
-                <div style={baseStyles.trustIcon}>
-                  <span style={baseStyles.trustBoldText}>& TRUSTED</span>
-                </div>
+              <div style={{ textAlign: 'center', flex: 1 }}>
+                <span style={{
+                  fontSize: isMobile ? '1rem' : '1.25rem',
+                  fontWeight: '700',
+                  color: colors.gold,
+                  display: 'block',
+                  marginBottom: '5px',
+                }}>✓</span>
+                <span style={{
+                  fontSize: isMobile ? '0.8rem' : '1rem',
+                  fontWeight: '600',
+                  color: colors.white,
+                  fontFamily: "'Inter', sans-serif",
+                }}>Trusted</span>
               </div>
             </div>
-
-            {/* NEW: Logo Carousel after trust text */}
+            
+            {/* Logo Carousel below "Licensed, Certified & Trusted" */}
             <LogoCarousel />
             
             <div style={baseStyles.reviewsContainer}>
@@ -2071,9 +2086,6 @@ function FAQSection({
   const [openIndex, setOpenIndex] = useState<number | null>(initiallyOpenIndex);
   const [isMobile, setIsMobile] = useState(false);
   const [isSmallMobile, setIsSmallMobile] = useState(false);
-  const [badgeActive, setBadgeActive] = useState(false);
-  const [titleActive, setTitleActive] = useState(false);
-  const [subtitleActive, setSubtitleActive] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -2126,6 +2138,8 @@ function FAQSection({
       marginBottom: '20px',
       transition: 'all 0.3s ease',
       cursor: 'pointer',
+      position: 'relative',
+      zIndex: 2,
     },
     badgeIcon: {
       fontSize: isMobile ? (isSmallMobile ? '16px' : '18px') : '18px',
@@ -2151,6 +2165,8 @@ function FAQSection({
       maxWidth: '900px',
       transition: 'all 0.3s ease',
       cursor: 'pointer',
+      position: 'relative',
+      zIndex: 2,
     },
     subtitle: {
       fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.125rem',
@@ -2164,11 +2180,15 @@ function FAQSection({
       marginLeft: 'auto',
       transition: 'all 0.3s ease',
       cursor: 'pointer',
+      position: 'relative',
+      zIndex: 2,
     },
     faqContainer: {
       maxWidth: '900px',
       margin: '0 auto',
       width: '100%',
+      position: 'relative',
+      zIndex: 2,
     },
     faqItem: (isOpen: boolean) => ({
       background: '#FFFFFF',
@@ -2291,6 +2311,8 @@ function FAQSection({
       border: `1px solid rgba(255, 184, 0, 0.3)`,
       transition: 'all 0.3s ease',
       cursor: 'pointer',
+      position: 'relative',
+      zIndex: 2,
     },
     ctaTitle: {
       fontSize: isMobile ? (isSmallMobile ? '1.25rem' : '1.5rem') : '1.75rem',
@@ -2355,18 +2377,16 @@ function FAQSection({
   return (
     <section style={baseStyles.faqSection}>
       <div style={baseStyles.container}>
-        {/* Star Ring behind header */}
-        <StarRing 
-          size={isMobile ? 200 : 300}
-          color="#FFB800"
-          backgroundColor="rgba(255, 184, 0, 0.03)"
-          text="★★★★★"
-          style={{
-            opacity: 0.4,
-          }}
-        />
-        
         <div style={baseStyles.header}>
+          {/* Rotating Star Ring behind the badge */}
+          <RotatingStarRing 
+            size={400}
+            color={accentColor}
+            opacity={0.15}
+            speed={25}
+            style={{ top: '50%', left: '50%' }}
+          />
+          
           <div style={baseStyles.badge}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'translateY(-3px)';
@@ -2744,7 +2764,7 @@ const BodySection = () => {
         'OSHA-Certified Safety Training',
         'Continuous Technical Education'
       ],
-      image: "/image/team.jpg",
+      image: '/image/team.jpg',
       imageAlt: 'Professional roofing team at work'
     },
     {
@@ -2756,7 +2776,7 @@ const BodySection = () => {
         'Premium Material Selection',
         'Advanced Ventilation Systems'
       ],
-      image: "/image/team.jpg",
+      image: '/image/team.jpg',
       imageAlt: 'Detailed roofing craftsmanship'
     },
     {
@@ -2838,7 +2858,7 @@ const BodySection = () => {
 
   const baseBodyStyles: any = {
     bodyContainer: {
-      backgroundColor: colors.navyDark,  // Dark navy background for main body
+      backgroundColor: colors.navyDark,
       paddingTop: isMobile ? '60px' : '120px',
       paddingRight: isMobile ? '20px' : '40px',
       paddingBottom: isMobile ? '60px' : '120px',
@@ -2854,7 +2874,7 @@ const BodySection = () => {
       textAlign: 'center',
       paddingLeft: isMobile ? '20px' : '0',
       paddingRight: isMobile ? '20px' : '0',
-      background: colors.navy,  // Navy blue
+      background: colors.navy,
       borderRadius: '32px',
       paddingTop: isMobile ? '40px' : '80px',
       paddingBottom: isMobile ? '40px' : '80px',
@@ -2897,7 +2917,7 @@ const BodySection = () => {
     differenceBadgeText: {
       fontSize: isMobile ? '14px' : '18px',
       fontWeight: '700',
-      color: colors.white,  // White text on navy
+      color: colors.white,
       letterSpacing: '3px',
       textTransform: 'uppercase',
       fontFamily: "'Inter', sans-serif",
@@ -2906,7 +2926,7 @@ const BodySection = () => {
     navySubtitle: {
       fontSize: isMobile ? '2rem' : isTablet ? '2.25rem' : '2.5rem',
       fontWeight: '700',
-      color: colors.white,  // White text on navy
+      color: colors.white,
       marginTop: 0,
       marginRight: 0,
       marginBottom: '8px',
@@ -2936,7 +2956,7 @@ const BodySection = () => {
     
     differenceDescription: {
       fontSize: isMobile ? '1.125rem' : isTablet ? '1.25rem' : '1.375rem',
-      color: colors.softWhite90,  // Light text on navy
+      color: colors.softWhite90,
       lineHeight: '1.7',
       maxWidth: '900px',
       marginTop: 0,
@@ -2962,7 +2982,7 @@ const BodySection = () => {
     },
     
     featureCard: (active: boolean) => ({
-      backgroundColor: active ? colors.navyLight : colors.gray,  // Alternating colors
+      backgroundColor: active ? colors.navyLight : colors.gray,
       borderRadius: '32px',
       overflow: 'hidden',
       boxShadow: active 
@@ -3012,7 +3032,7 @@ const BodySection = () => {
       paddingRight: isMobile ? '20px' : '40px',
       paddingBottom: isMobile ? '24px' : '48px',
       paddingLeft: isMobile ? '20px' : '40px',
-      background: 'transparent',  // Let card background show through
+      background: 'transparent',
     },
     
     featureTitleContainer: {
@@ -3024,7 +3044,7 @@ const BodySection = () => {
     featureTitle: {
       fontSize: isMobile ? '1.5rem' : isTablet ? '1.75rem' : '2rem',
       fontWeight: '700',
-      color: colors.white,  // White text on dark backgrounds
+      color: colors.white,
       marginTop: 0,
       marginRight: 0,
       marginBottom: 0,
@@ -3036,7 +3056,7 @@ const BodySection = () => {
     
     featureDescription: {
       fontSize: isMobile ? '1rem' : isTablet ? '1.125rem' : '1.125rem',
-      color: colors.softWhite90,  // Light text
+      color: colors.softWhite90,
       lineHeight: '1.8',
       marginTop: 0,
       marginRight: 0,
@@ -3091,7 +3111,7 @@ const BodySection = () => {
       textAlign: 'center',
       paddingLeft: isMobile ? '20px' : '0',
       paddingRight: isMobile ? '20px' : '0',
-      background: colors.beige,  // Dark beige
+      background: colors.beige,
       borderRadius: '32px',
       paddingTop: isMobile ? '40px' : '80px',
       paddingBottom: isMobile ? '40px' : '80px',
@@ -3122,18 +3142,21 @@ const BodySection = () => {
       flexDirection: 'column',
       alignItems: 'center',
       marginBottom: '20px',
+      position: 'relative',
     },
     
     navyTitle: {
       fontSize: isMobile ? '2rem' : isTablet ? '2.25rem' : '2.5rem',
       fontWeight: '700',
-      color: colors.navyDark,  // Navy text on beige
+      color: colors.navyDark,
       marginTop: 0,
       marginRight: 0,
       marginBottom: '8px',
       marginLeft: 0,
       fontFamily: "'Inter', sans-serif",
       lineHeight: '1.1',
+      position: 'relative',
+      zIndex: 2,
     },
     
     goldTitle: {
@@ -3147,11 +3170,13 @@ const BodySection = () => {
       fontFamily: "'Inter', sans-serif",
       textShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
       lineHeight: '1.1',
+      position: 'relative',
+      zIndex: 2,
     },
     
     transformationsSubtitle: {
       fontSize: isMobile ? '1.125rem' : '1.25rem',
-      color: colors.navyDark,  // Navy text on beige
+      color: colors.navyDark,
       lineHeight: '1.6',
       maxWidth: '800px',
       marginTop: 0,
@@ -3160,6 +3185,8 @@ const BodySection = () => {
       marginLeft: 'auto',
       fontWeight: '400',
       fontFamily: "'Inter', sans-serif",
+      position: 'relative',
+      zIndex: 2,
     },
     
     beforeAfterContainer: {
@@ -3173,7 +3200,7 @@ const BodySection = () => {
     },
     
     transformationCard: (active: boolean) => ({
-      backgroundColor: active ? colors.beigeLight : colors.white,  // White cards on beige section
+      backgroundColor: active ? colors.beigeLight : colors.white,
       borderRadius: '32px',
       overflow: 'hidden',
       boxShadow: active 
@@ -3277,7 +3304,7 @@ const BodySection = () => {
       textAlign: 'center',
       paddingLeft: isMobile ? '20px' : '0',
       paddingRight: isMobile ? '20px' : '0',
-      background: colors.gray,  // Dark gray
+      background: colors.gray,
       borderRadius: '32px',
       paddingTop: isMobile ? '40px' : '80px',
       paddingBottom: isMobile ? '40px' : '80px',
@@ -3308,18 +3335,21 @@ const BodySection = () => {
       flexDirection: 'column',
       alignItems: 'center',
       marginBottom: '20px',
+      position: 'relative',
     },
     
     videoNavyTitle: {
       fontSize: isMobile ? '2rem' : isTablet ? '2.25rem' : '2.5rem',
       fontWeight: '700',
-      color: colors.white,  // White text on gray
+      color: colors.white,
       marginTop: 0,
       marginRight: 0,
       marginBottom: '8px',
       marginLeft: 0,
       fontFamily: "'Inter', sans-serif",
       lineHeight: '1.1',
+      position: 'relative',
+      zIndex: 2,
     },
     
     videoGoldTitle: {
@@ -3333,6 +3363,8 @@ const BodySection = () => {
       fontFamily: "'Inter', sans-serif",
       textShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
       lineHeight: '1.1',
+      position: 'relative',
+      zIndex: 2,
     },
     
     videoSubtitle: {
@@ -3346,6 +3378,8 @@ const BodySection = () => {
       marginLeft: 'auto',
       fontWeight: '400',
       fontFamily: "'Inter', sans-serif",
+      position: 'relative',
+      zIndex: 2,
     },
     
     videoGrid: {
@@ -3367,7 +3401,7 @@ const BodySection = () => {
       textAlign: 'center',
       paddingLeft: isMobile ? '20px' : '0',
       paddingRight: isMobile ? '20px' : '0',
-      background: colors.navyLight,  // Navy blue
+      background: colors.navyLight,
       borderRadius: '32px',
       paddingTop: isMobile ? '40px' : '80px',
       paddingBottom: isMobile ? '40px' : '80px',
@@ -3403,6 +3437,8 @@ const BodySection = () => {
       marginLeft: 0,
       fontFamily: "'Inter', sans-serif",
       lineHeight: '1.1',
+      position: 'relative',
+      zIndex: 2,
     },
     
     reviewsSubtitle: {
@@ -3416,6 +3452,8 @@ const BodySection = () => {
       marginLeft: 'auto',
       fontWeight: '400',
       fontFamily: "'Inter', sans-serif",
+      position: 'relative',
+      zIndex: 2,
     },
     
     reviewsGrid: {
@@ -3429,7 +3467,7 @@ const BodySection = () => {
     },
     
     reviewCard: (active: boolean) => ({
-      backgroundColor: active ? colors.grayLight : colors.white,  // White cards on navy
+      backgroundColor: active ? colors.grayLight : colors.white,
       borderRadius: '32px',
       paddingTop: isMobile ? '30px' : '40px',
       paddingRight: isMobile ? '20px' : '32px',
@@ -3510,7 +3548,6 @@ const BodySection = () => {
     },
     
     // Section 6: Meet the Founders - Dark Beige
-    // (Inline styles at line ~4350 - will update in the JSX)
     
     // Section 7: Our Story - Dark Gray
     ourStorySection: {
@@ -3520,7 +3557,7 @@ const BodySection = () => {
       textAlign: 'center',
       paddingLeft: isMobile ? '20px' : '0',
       paddingRight: isMobile ? '20px' : '0',
-      background: colors.grayDark,  // Dark gray
+      background: colors.grayDark,
       borderRadius: '32px',
       paddingTop: isMobile ? '40px' : '80px',
       paddingBottom: isMobile ? '40px' : '80px',
@@ -3557,6 +3594,8 @@ const BodySection = () => {
       marginLeft: 0,
       fontFamily: "'Inter', sans-serif",
       lineHeight: '1.2',
+      position: 'relative',
+      zIndex: 2,
     },
     
     ourStoryDescription: {
@@ -3571,10 +3610,12 @@ const BodySection = () => {
       fontFamily: "'Inter', sans-serif",
       maxWidth: '900px',
       padding: isMobile ? '20px' : '40px',
-      backgroundColor: 'rgba(255, 255, 255, 0.1)',  // Semi-transparent white
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
       borderRadius: '24px',
       boxShadow: '0 10px 40px rgba(0, 0, 0, 0.2)',
       border: `1px solid ${colors.goldBorder}`,
+      position: 'relative',
+      zIndex: 2,
     },
     
     ourStoryButton: (active: boolean) => ({
@@ -3599,6 +3640,8 @@ const BodySection = () => {
       boxShadow: active 
         ? '0 15px 30px rgba(255, 184, 0, 0.4)' 
         : '0 10px 25px rgba(0, 0, 0, 0.3)',
+      position: 'relative',
+      zIndex: 2,
     }),
     
     // Section 8: Roofing Services - Navy Blue
@@ -3609,7 +3652,7 @@ const BodySection = () => {
       textAlign: 'center',
       paddingLeft: isMobile ? '20px' : '0',
       paddingRight: isMobile ? '20px' : '0',
-      background: colors.navy,  // Navy blue
+      background: colors.navy,
       borderRadius: '32px',
       paddingTop: isMobile ? '40px' : '80px',
       paddingBottom: isMobile ? '40px' : '80px',
@@ -3648,6 +3691,8 @@ const BodySection = () => {
       marginBottom: isMobile ? '20px' : '30px',
       border: `2px solid ${colors.goldBorder}`,
       backdropFilter: 'blur(10px)',
+      position: 'relative',
+      zIndex: 2,
     },
     
     flexibleSolutionsBadgeText: {
@@ -3671,6 +3716,8 @@ const BodySection = () => {
       fontFamily: "'Inter', sans-serif",
       letterSpacing: '-1px',
       textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
+      position: 'relative',
+      zIndex: 2,
     },
     
     flexibleSolutionsSubtitle: {
@@ -3683,6 +3730,8 @@ const BodySection = () => {
       marginLeft: 0,
       fontFamily: "'Inter', sans-serif",
       lineHeight: '1.2',
+      position: 'relative',
+      zIndex: 2,
     },
     
     flexibleSolutionsDescription: {
@@ -3696,6 +3745,8 @@ const BodySection = () => {
       marginLeft: 'auto',
       fontWeight: '400',
       fontFamily: "'Inter', sans-serif",
+      position: 'relative',
+      zIndex: 2,
     },
     
     cleaningPlansGrid: {
@@ -3710,7 +3761,7 @@ const BodySection = () => {
     },
     
     cleaningPlanCard: (active: boolean, color: string) => ({
-      backgroundColor: active ? colors.grayLight : colors.white,  // White cards on navy
+      backgroundColor: active ? colors.grayLight : colors.white,
       borderRadius: '32px',
       overflow: 'hidden',
       boxShadow: active 
@@ -3726,13 +3777,13 @@ const BodySection = () => {
     }),
     
     planHeader: (color: string) => ({
-      backgroundColor: color,  // Navy, beige, or gray based on plan
+      backgroundColor: color,
       paddingTop: isMobile ? '30px' : '40px',
       paddingRight: isMobile ? '24px' : '32px',
       paddingBottom: isMobile ? '30px' : '40px',
       paddingLeft: isMobile ? '24px' : '32px',
       textAlign: 'center',
-      color: color === colors.beige ? colors.navyDark : colors.white,  // Dark text on beige, white on navy/gray
+      color: color === colors.beige ? colors.navyDark : colors.white,
     }),
     
     planBadge: {
@@ -3866,7 +3917,7 @@ const BodySection = () => {
     
     // Section 9: Consultation Card - Dark Beige
     consultationSection: {
-      backgroundColor: colors.beigeDark,  // Dark beige
+      backgroundColor: colors.beigeDark,
       borderRadius: '24px',
       paddingTop: isMobile ? '40px' : '60px',
       paddingRight: isMobile ? '24px' : '40px',
@@ -3964,18 +4015,17 @@ const BodySection = () => {
     <section style={baseBodyStyles.bodyContainer}>
       {/* Section 1: The BRAVOS Difference - NAVY BLUE */}
       <div style={baseBodyStyles.differenceSection}>
-        {/* Star Ring behind header */}
-        <StarRing 
-          size={isMobile ? 200 : 300}
-          color="#FFB800"
-          backgroundColor="rgba(255, 184, 0, 0.03)"
-          text="★★★★★"
-          style={{
-            opacity: 0.4,
-          }}
+        <div style={baseBodyStyles.differenceSectionBg}></div>
+        
+        {/* Rotating Star Ring behind the title */}
+        <RotatingStarRing 
+          size={500}
+          color={colors.gold}
+          opacity={0.15}
+          speed={30}
+          style={{ top: '30%', left: '50%' }}
         />
         
-        <div style={baseBodyStyles.differenceSectionBg}></div>
         <div style={baseBodyStyles.differenceBadge}>
           <span style={baseBodyStyles.diamondIcon}>✦</span>
           <span style={baseBodyStyles.differenceBadgeText}>The BRAVOS Difference</span>
@@ -3994,7 +4044,7 @@ const BodySection = () => {
           With over 25 years of industry experience, BRAVOS has earned its reputation as Houston's most trusted roofing contractor. 
           We combine master craftsmanship with premium materials to deliver roofs that protect your home and enhance its beauty.
         </p>
-
+        
         {/* Logo Carousel after section 1 */}
         <LogoCarousel />
       </div>
@@ -4049,24 +4099,23 @@ const BodySection = () => {
           </div>
         ))}
       </div>
-
+      
       {/* Logo Carousel after section 2 */}
       <LogoCarousel />
 
       {/* Section 3: Before & After Transformations - DARK BEIGE */}
       <div style={baseBodyStyles.transformationsSection}>
-        {/* Star Ring behind header */}
-        <StarRing 
-          size={isMobile ? 200 : 300}
-          color="#FFB800"
-          backgroundColor="rgba(255, 184, 0, 0.03)"
-          text="★★★★★"
-          style={{
-            opacity: 0.4,
-          }}
+        <div style={baseBodyStyles.transformationsSectionBg}></div>
+        
+        {/* Rotating Star Ring behind the title */}
+        <RotatingStarRing 
+          size={500}
+          color={colors.gold}
+          opacity={0.15}
+          speed={28}
+          style={{ top: '30%', left: '50%' }}
         />
         
-        <div style={baseBodyStyles.transformationsSectionBg}></div>
         <div style={baseBodyStyles.transformationsHeader}>
           <div style={baseBodyStyles.transformationsTitleContainer}>
             <h2 style={baseBodyStyles.navyTitle}>
@@ -4162,25 +4211,24 @@ const BodySection = () => {
             />
           </svg>
         </button>
-
+        
         {/* Logo Carousel after section 3 */}
         <LogoCarousel />
       </div>
 
       {/* Section 4: Video Testimonials - DARK GRAY */}
       <div style={baseBodyStyles.videoTestimonialsSection}>
-        {/* Star Ring behind header */}
-        <StarRing 
-          size={isMobile ? 200 : 300}
-          color="#FFB800"
-          backgroundColor="rgba(255, 184, 0, 0.03)"
-          text="★★★★★"
-          style={{
-            opacity: 0.4,
-          }}
+        <div style={baseBodyStyles.videoTestimonialsSectionBg}></div>
+        
+        {/* Rotating Star Ring behind the title */}
+        <RotatingStarRing 
+          size={500}
+          color={colors.gold}
+          opacity={0.15}
+          speed={32}
+          style={{ top: '30%', left: '50%' }}
         />
         
-        <div style={baseBodyStyles.videoTestimonialsSectionBg}></div>
         <div style={baseBodyStyles.videoTestimonialsHeader}>
           <div style={baseBodyStyles.videoTitleContainer}>
             <h2 style={baseBodyStyles.videoNavyTitle}>
@@ -4208,25 +4256,24 @@ const BodySection = () => {
             />
           ))}
         </div>
-
+        
         {/* Logo Carousel after section 4 */}
         <LogoCarousel />
       </div>
 
       {/* Section 5: Customer Reviews - NAVY BLUE (alternating) */}
       <div style={baseBodyStyles.reviewsSection}>
-        {/* Star Ring behind header */}
-        <StarRing 
-          size={isMobile ? 200 : 300}
-          color="#FFB800"
-          backgroundColor="rgba(255, 184, 0, 0.03)"
-          text="★★★★★"
-          style={{
-            opacity: 0.4,
-          }}
+        <div style={baseBodyStyles.reviewsSectionBg}></div>
+        
+        {/* Rotating Star Ring behind the title */}
+        <RotatingStarRing 
+          size={500}
+          color={colors.gold}
+          opacity={0.15}
+          speed={26}
+          style={{ top: '30%', left: '50%' }}
         />
         
-        <div style={baseBodyStyles.reviewsSectionBg}></div>
         <div style={baseBodyStyles.reviewsHeader}>
           <h2 style={baseBodyStyles.reviewsTitle}>
             Real Reviews from Real Homeowners
@@ -4273,7 +4320,7 @@ const BodySection = () => {
             </div>
           ))}
         </div>
-
+        
         {/* Logo Carousel after section 5 */}
         <LogoCarousel />
       </div>
@@ -4287,7 +4334,7 @@ const BodySection = () => {
         paddingRight: isMobile ? '20px' : '40px',
         paddingBottom: isMobile ? '0' : '0',
         paddingLeft: isMobile ? '20px' : '40px',
-        background: colors.beigeDark,  // Dark beige
+        background: colors.beigeDark,
         borderRadius: '32px',
         padding: isMobile ? '40px 20px' : '80px 40px',
         boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
@@ -4295,17 +4342,6 @@ const BodySection = () => {
         position: 'relative',
         overflow: 'hidden',
       }}>
-        {/* Star Ring behind header */}
-        <StarRing 
-          size={isMobile ? 200 : 300}
-          color="#FFB800"
-          backgroundColor="rgba(255, 184, 0, 0.03)"
-          text="★★★★★"
-          style={{
-            opacity: 0.4,
-          }}
-        />
-        
         <div style={{
           position: 'absolute',
           top: 0,
@@ -4315,6 +4351,15 @@ const BodySection = () => {
           background: `radial-gradient(circle at 20% 80%, ${colors.goldLight} 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(0, 0, 0, 0.05) 0%, transparent 50%)`,
           zIndex: 1,
         }}></div>
+        
+        {/* Rotating Star Ring behind the title */}
+        <RotatingStarRing 
+          size={600}
+          color={colors.gold}
+          opacity={0.15}
+          speed={30}
+          style={{ top: '50%', left: '50%' }}
+        />
         
         <div style={{
           display: 'flex',
@@ -4578,25 +4623,24 @@ const BodySection = () => {
             </button>
           </div>
         </div>
-
+        
         {/* Logo Carousel after section 6 */}
         <LogoCarousel />
       </div>
 
       {/* Section 7: Our Story Section - DARK GRAY */}
       <div style={baseBodyStyles.ourStorySection}>
-        {/* Star Ring behind header */}
-        <StarRing 
-          size={isMobile ? 200 : 300}
-          color="#FFB800"
-          backgroundColor="rgba(255, 184, 0, 0.03)"
-          text="★★★★★"
-          style={{
-            opacity: 0.4,
-          }}
+        <div style={baseBodyStyles.ourStorySectionBg}></div>
+        
+        {/* Rotating Star Ring behind the title */}
+        <RotatingStarRing 
+          size={500}
+          color={colors.gold}
+          opacity={0.15}
+          speed={28}
+          style={{ top: '30%', left: '50%' }}
         />
         
-        <div style={baseBodyStyles.ourStorySectionBg}></div>
         <div style={baseBodyStyles.ourStoryContent}>
           <h2 style={baseBodyStyles.ourStoryTitle}>
             The BRAVOS Commitment
@@ -4665,25 +4709,24 @@ const BodySection = () => {
             </svg>
           </button>
         </div>
-
+        
         {/* Logo Carousel after section 7 */}
         <LogoCarousel />
       </div>
 
       {/* Section 8: Roofing Services Section - NAVY BLUE */}
       <div style={baseBodyStyles.flexibleSolutionsSection}>
-        {/* Star Ring behind header */}
-        <StarRing 
-          size={isMobile ? 200 : 300}
-          color="#FFB800"
-          backgroundColor="rgba(255, 184, 0, 0.03)"
-          text="★★★★★"
-          style={{
-            opacity: 0.4,
-          }}
+        <div style={baseBodyStyles.flexibleSolutionsSectionBg}></div>
+        
+        {/* Rotating Star Ring behind the title */}
+        <RotatingStarRing 
+          size={600}
+          color={colors.gold}
+          opacity={0.15}
+          speed={25}
+          style={{ top: '30%', left: '50%' }}
         />
         
-        <div style={baseBodyStyles.flexibleSolutionsSectionBg}></div>
         <div style={baseBodyStyles.flexibleSolutionsHeader}>
           <div style={baseBodyStyles.flexibleSolutionsBadge}>
             <span style={baseBodyStyles.diamondIcon}>✦</span>
@@ -4782,6 +4825,9 @@ const BodySection = () => {
           ))}
         </div>
         
+        {/* Logo Carousel after section 8 */}
+        <LogoCarousel />
+        
         {/* Section 9: Consultation Card - DARK BEIGE */}
         <div style={baseBodyStyles.consultationSection}>
           <h3 style={baseBodyStyles.consultationTitle}>
@@ -4838,7 +4884,7 @@ const BodySection = () => {
           paddingBottom: isMobile ? '60px' : '80px',
           paddingLeft: isMobile ? '20px' : '40px',
           paddingRight: isMobile ? '20px' : '40px',
-          background: colors.beigeDark,  // Dark beige to match section 9
+          background: colors.beigeDark,
           borderRadius: '32px',
           boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
           border: `1px solid ${colors.goldBorder}`,
@@ -4846,9 +4892,6 @@ const BodySection = () => {
           overflow: 'hidden',
         }}
       />
-
-      {/* Logo Carousel after FAQ section */}
-      <LogoCarousel />
     </section>
   );
 };
