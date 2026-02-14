@@ -170,7 +170,7 @@ const LogoCarousel = ({
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
-  const autoplayRef = useRef<NodeJS.Timeout>();
+  const autoplayRef = useRef<NodeJS.Timeout>(undefined);
 
   const logos = [
     { id: 1, src: "/image/lifetime1.png", alt: "25+ Years Experience", width: 120, height: 120 },
