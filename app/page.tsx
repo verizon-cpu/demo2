@@ -173,13 +173,11 @@ function BottomCTAButtons({
         gap: isMobile ? '6px' : '8px',
         zIndex: 9999,
         pointerEvents: 'auto',
-        background: 'rgba(10, 10, 12, 0.95)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
+        background: '#0A0A0C',
         borderRadius: '50px',
         padding: isMobile ? '6px' : '8px',
         boxShadow: '0 8px 30px rgba(10, 10, 12, 0.4)',
-        border: '1px solid rgba(255, 184, 0, 0.3)',
+        border: '1px solid #FFB800',
         width: isMobile ? 'calc(100vw - 20px)' : 'calc(100vw - 30px)',
         maxWidth: '500px',
         overflowX: 'auto',
@@ -393,7 +391,7 @@ function LogoCarousel({
               left: isMobile ? '5px' : '15px',
               top: '50%',
               transform: 'translateY(-50%)',
-              background: 'rgba(255, 184, 0, 0.2)',
+              background: '#FFB800',
               border: '2px solid #FFB800',
               borderRadius: '50%',
               width: isMobile ? '30px' : '40px',
@@ -402,20 +400,19 @@ function LogoCarousel({
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              color: '#FFB800',
+              color: '#0A0A0C',
               fontSize: isMobile ? '16px' : '20px',
               fontWeight: 'bold',
               transition: 'all 0.3s ease',
               zIndex: 10,
-              backdropFilter: 'blur(5px)',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#FFB800';
-              e.currentTarget.style.color = '#0A0A0C';
+              e.currentTarget.style.background = '#0A0A0C';
+              e.currentTarget.style.color = '#FFB800';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 184, 0, 0.2)';
-              e.currentTarget.style.color = '#FFB800';
+              e.currentTarget.style.background = '#FFB800';
+              e.currentTarget.style.color = '#0A0A0C';
             }}
           >
             ←
@@ -427,7 +424,7 @@ function LogoCarousel({
               right: isMobile ? '5px' : '15px',
               top: '50%',
               transform: 'translateY(-50%)',
-              background: 'rgba(255, 184, 0, 0.2)',
+              background: '#FFB800',
               border: '2px solid #FFB800',
               borderRadius: '50%',
               width: isMobile ? '30px' : '40px',
@@ -436,20 +433,19 @@ function LogoCarousel({
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              color: '#FFB800',
+              color: '#0A0A0C',
               fontSize: isMobile ? '16px' : '20px',
               fontWeight: 'bold',
               transition: 'all 0.3s ease',
               zIndex: 10,
-              backdropFilter: 'blur(5px)',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#FFB800';
-              e.currentTarget.style.color = '#0A0A0C';
+              e.currentTarget.style.background = '#0A0A0C';
+              e.currentTarget.style.color = '#FFB800';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 184, 0, 0.2)';
-              e.currentTarget.style.color = '#FFB800';
+              e.currentTarget.style.background = '#FFB800';
+              e.currentTarget.style.color = '#0A0A0C';
             }}
           >
             →
@@ -473,8 +469,8 @@ function LogoCarousel({
               width: isMobile ? '8px' : '10px',
               height: isMobile ? '8px' : '10px',
               borderRadius: '50%',
-              background: index === currentIndex ? '#FFB800' : 'rgba(255, 184, 0, 0.3)',
-              border: 'none',
+              background: index === currentIndex ? '#FFB800' : '#0A0A0C',
+              border: '1px solid #FFB800',
               cursor: 'pointer',
               transition: 'all 0.3s ease',
               padding: 0,
@@ -713,12 +709,12 @@ const HeroSection = () => {
   const colors = {
     background: '#0A0A0C',
     gold: '#FFB800',
-    goldLight: 'rgba(255, 184, 0, 0.1)',
-    goldBorder: 'rgba(255, 184, 0, 0.3)',
+    goldLight: '#FFB800',
+    goldBorder: '#FFB800',
     white: '#FFFFFF',
     softWhite: '#FAFAFA',
-    softWhite70: 'rgba(250, 250, 250, 0.7)',
-    softWhite90: 'rgba(250, 250, 250, 0.9)',
+    softWhite70: '#FAFAFA',
+    softWhite90: '#FAFAFA',
   };
 
   const baseStyles: any = {
@@ -757,7 +753,8 @@ const HeroSection = () => {
       left: 0,
       right: 0,
       bottom: 0,
-      background: 'linear-gradient(135deg, rgba(10, 10, 12, 0.60) 0%, rgba(10, 10, 12, 0.50) 100%)',
+      background: 'linear-gradient(135deg, #0A0A0C 0%, #0A0A0C 100%)',
+      opacity: 0.7,
       zIndex: 2,
     },
 
@@ -798,17 +795,16 @@ const HeroSection = () => {
       alignItems: 'center',
       justifyContent: isSmallMobile ? 'center' : 'flex-start',
       gap: isMobile ? (isSmallMobile ? '0.4rem' : '0.5rem') : '1rem',
-      backgroundColor: colors.goldLight,
-      border: `2px solid ${colors.goldBorder}`,
+      backgroundColor: colors.background,
+      border: `2px solid ${colors.gold}`,
       borderRadius: isSmallMobile ? '40px' : '60px',
       padding: isMobile ? (isSmallMobile ? '0.4rem 0.6rem' : '0.6rem 0.8rem') : '1rem 1.5rem',
       width: '100%',
       maxWidth: '100%',
       boxSizing: 'border-box',
-      backdropFilter: 'blur(10px)',
       boxShadow: active 
-        ? '0 15px 40px rgba(255, 184, 0, 0.3), 0 0 0 2px rgba(255, 255, 255, 0.1) inset' 
-        : '0 10px 30px rgba(255, 184, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
+        ? '0 15px 40px rgba(255, 184, 0, 0.3)' 
+        : '0 10px 30px rgba(255, 184, 0, 0.2)',
       transform: active ? 'translateY(-3px) scale(1.05)' : 'translateY(0) scale(1)',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       cursor: 'pointer',
@@ -828,8 +824,8 @@ const HeroSection = () => {
       flexShrink: 0,
       fontWeight: '900',
       boxShadow: active 
-        ? '0 8px 25px rgba(255, 184, 0, 0.6), 0 0 0 3px rgba(255, 255, 255, 0.2) inset' 
-        : '0 6px 20px rgba(255, 184, 0, 0.4), 0 0 0 2px rgba(255, 255, 255, 0.1) inset',
+        ? '0 8px 25px rgba(255, 184, 0, 0.6)' 
+        : '0 6px 20px rgba(255, 184, 0, 0.4)',
       transform: active ? 'scale(1.15)' : 'scale(1)',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     }),
@@ -889,7 +885,7 @@ const HeroSection = () => {
 
     subheadline: {
       fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : (isTablet ? '1.125rem' : '1.25rem'),
-      color: colors.softWhite90,
+      color: colors.white,
       lineHeight: 1.6,
       maxWidth: '600px',
       margin: 0,
@@ -899,41 +895,39 @@ const HeroSection = () => {
       marginTop: '20px',
     },
 
-    // REPLACED THREE IMAGES WITH BIG BOLD "Licensed, Certified & Trusted"
-    trustBadgeContainer: {
+    // LICENSED, CERTIFIED & TRUSTED as HEADLINE
+    trustHeadline: {
       display: 'flex',
-      justifyContent: 'space-between',
+      flexDirection: 'row',
       alignItems: 'center',
-      width: '100%',
+      justifyContent: 'flex-start',
+      gap: isMobile ? '10px' : '20px',
       marginTop: isMobile ? '20px' : '30px',
       marginBottom: isMobile ? '20px' : '30px',
-      padding: isMobile ? '15px' : '20px',
-      background: 'rgba(255, 184, 0, 0.15)',
-      border: `2px solid ${colors.goldBorder}`,
-      borderRadius: '15px',
-      backdropFilter: 'blur(10px)',
+      flexWrap: 'wrap',
     },
     
-    trustBadgeItem: {
-      textAlign: 'center' as const,
-      flex: 1,
+    trustHeadlineItem: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: isMobile ? '4px' : '8px',
     },
     
-    trustBadgeIcon: {
+    trustHeadlineCheck: {
+      color: colors.gold,
       fontSize: isMobile ? '1.5rem' : '2rem',
       fontWeight: '700',
-      color: colors.gold,
-      display: 'block',
-      marginBottom: '5px',
+      lineHeight: 1,
     },
     
-    trustBadgeText: {
-      fontSize: isMobile ? '0.9rem' : '1.2rem',
-      fontWeight: '700',
+    trustHeadlineText: {
       color: colors.white,
+      fontSize: isMobile ? '1.25rem' : '1.75rem',
+      fontWeight: '700',
       fontFamily: "'Inter', sans-serif",
       textTransform: 'uppercase' as const,
       letterSpacing: '1px',
+      textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
     },
 
     reviewsContainer: {
@@ -959,7 +953,7 @@ const HeroSection = () => {
     
     reviewText: {
       fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1.125rem',
-      color: colors.softWhite90,
+      color: colors.white,
       fontFamily: "'Inter', sans-serif",
       fontWeight: '400',
     },
@@ -975,21 +969,21 @@ const HeroSection = () => {
       display: 'flex',
       alignItems: 'center',
       gap: '0.5rem',
-      backgroundColor: active ? 'rgba(255, 184, 0, 0.25)' : 'rgba(255, 184, 0, 0.15)',
+      backgroundColor: active ? '#FFB800' : '#0A0A0C',
       padding: isMobile ? (isSmallMobile ? '0.5rem 0.75rem' : '0.75rem 1rem') : '1rem 1.25rem',
       borderRadius: '30px',
-      backdropFilter: 'blur(10px)',
-      border: active ? `2px solid ${colors.gold}` : `2px solid ${colors.goldBorder}`,
+      border: active ? '2px solid #FFB800' : '2px solid #FFB800',
       transition: 'all 0.3s ease',
       cursor: 'pointer',
       transform: active ? 'translateY(-3px) scale(1.05)' : 'translateY(0) scale(1)',
       boxShadow: active ? '0 12px 30px rgba(0, 0, 0, 0.3)' : '0 8px 20px rgba(0, 0, 0, 0.2)',
       position: 'relative',
+      color: active ? '#0A0A0C' : '#FFB800',
     }),
     
     googleText: {
       fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1rem',
-      color: colors.white,
+      color: 'inherit',
       fontWeight: '600',
       fontFamily: "'Inter', sans-serif",
       letterSpacing: '0.5px',
@@ -999,12 +993,11 @@ const HeroSection = () => {
       display: 'flex',
       alignItems: 'center',
       gap: '0.5rem',
-      backgroundColor: active ? colors.gold : 'rgba(255, 184, 0, 0.1)',
-      color: active ? colors.background : colors.white,
-      border: active ? `2px solid ${colors.gold}` : `2px solid ${colors.goldBorder}`,
+      backgroundColor: active ? '#FFB800' : '#0A0A0C',
+      color: active ? '#0A0A0C' : '#FFB800',
+      border: active ? '2px solid #FFB800' : '2px solid #FFB800',
       padding: isMobile ? (isSmallMobile ? '0.5rem 0.75rem' : '0.75rem 1rem') : '1rem 1.25rem',
       borderRadius: '30px',
-      backdropFilter: 'blur(10px)',
       transition: 'all 0.3s ease',
       cursor: 'pointer',
       transform: active ? 'translateY(-3px) scale(1.05)' : 'translateY(0) scale(1)',
@@ -1038,12 +1031,12 @@ const HeroSection = () => {
       display: 'flex',
       alignItems: 'center',
       gap: '0.5rem',
-      backgroundColor: 'rgba(10, 10, 12, 0.6)',
+      backgroundColor: '#0A0A0C',
       padding: '0.5rem 0.75rem',
       borderRadius: '20px',
       width: 'fit-content',
       maxWidth: '100%',
-      backdropFilter: 'blur(10px)',
+      border: '1px solid #FFB800',
     },
     
     bostonIcon: {
@@ -1053,7 +1046,7 @@ const HeroSection = () => {
     
     bostonText: {
       fontSize: isMobile ? (isSmallMobile ? '0.6rem' : '0.7rem') : '0.875rem',
-      color: colors.softWhite,
+      color: colors.white,
       fontWeight: '400',
       fontFamily: "'Inter', sans-serif",
     },
@@ -1068,7 +1061,7 @@ const HeroSection = () => {
       borderRadius: '20px',
       padding: isMobile ? (isSmallMobile ? '1.25rem' : '1.75rem') : '2rem',
       boxShadow: '0 20px 60px rgba(10, 10, 12, 0.3)',
-      border: `2px solid ${colors.goldBorder}`,
+      border: `2px solid ${colors.gold}`,
       width: '100%',
       boxSizing: 'border-box',
     },
@@ -1121,7 +1114,7 @@ const HeroSection = () => {
     formInput: {
       padding: isMobile ? (isSmallMobile ? '0.6rem' : '0.8rem') : '1rem',
       borderRadius: '10px',
-      border: '2px solid #E5E7EB',
+      border: '2px solid #0A0A0C',
       fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.85rem') : '0.875rem',
       transition: 'all 0.3s ease',
       outline: 'none',
@@ -1134,7 +1127,7 @@ const HeroSection = () => {
     formTextarea: {
       padding: isMobile ? (isSmallMobile ? '0.6rem' : '0.8rem') : '1rem',
       borderRadius: '10px',
-      border: '2px solid #E5E7EB',
+      border: '2px solid #0A0A0C',
       fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.85rem') : '0.875rem',
       transition: 'all 0.3s ease',
       outline: 'none',
@@ -1188,9 +1181,9 @@ const HeroSection = () => {
     successMessage: {
       marginTop: '1.5rem',
       padding: '1rem',
-      backgroundColor: 'rgba(255, 184, 0, 0.1)',
+      backgroundColor: '#FFB800',
       borderRadius: '12px',
-      border: `2px solid ${colors.gold}`,
+      border: '2px solid #0A0A0C',
       textAlign: 'center',
       width: '100%',
       boxSizing: 'border-box',
@@ -1215,9 +1208,9 @@ const HeroSection = () => {
     errorMessage: {
       marginTop: '1.5rem',
       padding: '1rem',
-      backgroundColor: 'rgba(239, 68, 68, 0.1)',
+      backgroundColor: '#EF4444',
       borderRadius: '12px',
-      border: '2px solid #EF4444',
+      border: '2px solid #0A0A0C',
       textAlign: 'center',
       width: '100%',
       boxSizing: 'border-box',
@@ -1226,7 +1219,7 @@ const HeroSection = () => {
     errorText: {
       fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.125rem',
       fontWeight: '600',
-      color: '#EF4444',
+      color: '#FFFFFF',
       marginBottom: 0,
       fontFamily: "'Inter', sans-serif",
     },
@@ -1248,7 +1241,7 @@ const HeroSection = () => {
       gap: '0.5rem',
       marginTop: '1rem',
       paddingTop: '1rem',
-      borderTop: '2px solid #E5E7EB',
+      borderTop: '2px solid #0A0A0C',
       width: '100%',
     },
     
@@ -1326,19 +1319,19 @@ const HeroSection = () => {
               We deliver lasting protection and exceptional craftsmanship on every project.
             </p>
             
-            {/* REPLACED THREE IMAGES WITH BIG BOLD "Licensed, Certified & Trusted" */}
-            <div style={baseStyles.trustBadgeContainer}>
-              <div style={baseStyles.trustBadgeItem}>
-                <span style={baseStyles.trustBadgeIcon}>✓</span>
-                <span style={baseStyles.trustBadgeText}>Licensed</span>
+            {/* LICENSED, CERTIFIED & TRUSTED AS HEADLINE - NO CARD, NO GLASS */}
+            <div style={baseStyles.trustHeadline}>
+              <div style={baseStyles.trustHeadlineItem}>
+                <span style={baseStyles.trustHeadlineCheck}>✓</span>
+                <span style={baseStyles.trustHeadlineText}>Licensed</span>
               </div>
-              <div style={baseStyles.trustBadgeItem}>
-                <span style={baseStyles.trustBadgeIcon}>✓</span>
-                <span style={baseStyles.trustBadgeText}>Certified</span>
+              <div style={baseStyles.trustHeadlineItem}>
+                <span style={baseStyles.trustHeadlineCheck}>✓</span>
+                <span style={baseStyles.trustHeadlineText}>Certified</span>
               </div>
-              <div style={baseStyles.trustBadgeItem}>
-                <span style={baseStyles.trustBadgeIcon}>✓</span>
-                <span style={baseStyles.trustBadgeText}>Trusted</span>
+              <div style={baseStyles.trustHeadlineItem}>
+                <span style={baseStyles.trustHeadlineCheck}>✓</span>
+                <span style={baseStyles.trustHeadlineText}>Trusted</span>
               </div>
             </div>
             
@@ -1558,8 +1551,8 @@ const VideoTestimonialCard = ({
   const colors = {
     background: '#0A0A0C',
     gold: '#FFB800',
-    goldLight: 'rgba(255, 184, 0, 0.1)',
-    goldBorder: 'rgba(255, 184, 0, 0.3)',
+    goldLight: '#FFB800',
+    goldBorder: '#FFB800',
     white: '#FFFFFF',
     softWhite: '#FAFAFA',
   };
@@ -1607,7 +1600,7 @@ const VideoTestimonialCard = ({
   return (
     <div 
       style={{
-        backgroundColor: activeVideo === index ? '#F9FAFB' : colors.white,
+        backgroundColor: activeVideo === index ? colors.gold : colors.white,
         borderRadius: '24px',
         overflow: 'hidden',
         boxShadow: activeVideo === index 
@@ -1615,7 +1608,7 @@ const VideoTestimonialCard = ({
           : '0 20px 40px rgba(10, 10, 12, 0.1)',
         border: activeVideo === index 
           ? `2px solid ${colors.gold}` 
-          : '1px solid rgba(255, 184, 0, 0.2)',
+          : '1px solid #FFB800',
         transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
         transform: activeVideo === index ? 'translateY(-10px)' : 'translateY(0)',
         cursor: 'pointer',
@@ -1686,11 +1679,11 @@ const VideoTestimonialCard = ({
               left: 0,
               right: 0,
               bottom: 0,
-              backgroundColor: 'rgba(10, 10, 12, 0.7)',
+              backgroundColor: '#0A0A0C',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              opacity: activeVideo === index ? 1 : 0,
+              opacity: activeVideo === index ? 0.7 : 0,
               transition: 'opacity 0.3s ease',
             }}>
               <div style={{
@@ -1725,7 +1718,7 @@ const VideoTestimonialCard = ({
         <h4 style={{
           fontSize: isMobile ? (isSmallMobile ? '1.1rem' : '1.25rem') : '1.5rem',
           fontWeight: '700',
-          color: colors.background,
+          color: activeVideo === index ? colors.background : colors.background,
           marginTop: 0,
           marginBottom: '8px',
           fontFamily: "'Inter', sans-serif",
@@ -1743,10 +1736,10 @@ const VideoTestimonialCard = ({
         </p>
         <div style={{
           fontSize: isMobile ? (isSmallMobile ? '0.7rem' : '0.75rem') : '0.875rem',
-          color: colors.gold,
+          color: colors.background,
           fontWeight: '600',
           fontFamily: "'Inter', sans-serif",
-          backgroundColor: colors.goldLight,
+          backgroundColor: colors.gold,
           padding: '4px 12px',
           borderRadius: '20px',
           display: 'inline-block',
@@ -2043,7 +2036,7 @@ function FAQSection({
       paddingBottom: isMobile ? (isSmallMobile ? '40px' : '60px') : '80px',
       paddingLeft: isMobile ? (isSmallMobile ? '16px' : '20px') : '40px',
       paddingRight: isMobile ? (isSmallMobile ? '16px' : '20px') : '40px',
-      background: 'linear-gradient(180deg, #FFFFFF 0%, #F8FAFF 100%)',
+      background: '#FFFFFF',
       position: 'relative' as const,
       backgroundColor: backgroundColor,
       ...containerStyle
@@ -2065,10 +2058,10 @@ function FAQSection({
       display: 'inline-flex',
       alignItems: 'center',
       gap: '10px',
-      background: `rgba(255, 184, 0, 0.1)`,
+      background: '#0A0A0C',
       padding: isMobile ? (isSmallMobile ? '6px 12px' : '8px 16px') : '10px 20px',
       borderRadius: '50px',
-      border: `1px solid rgba(255, 184, 0, 0.3)`,
+      border: '1px solid #FFB800',
       marginBottom: '20px',
       transition: 'all 0.3s ease',
       cursor: 'pointer',
@@ -2076,12 +2069,13 @@ function FAQSection({
     },
     badgeIcon: {
       fontSize: isMobile ? (isSmallMobile ? '16px' : '18px') : '18px',
+      color: '#FFB800',
       transition: 'all 0.3s ease',
     },
     badgeText: {
       fontSize: isMobile ? (isSmallMobile ? '10px' : '12px') : '14px',
       fontWeight: 600,
-      color: textColor,
+      color: '#FFB800',
       letterSpacing: '1px',
       transition: 'all 0.3s ease',
     },
@@ -2127,14 +2121,14 @@ function FAQSection({
       marginBottom: '12px',
       overflow: 'hidden',
       boxShadow: '0 4px 20px rgba(10, 10, 12, 0.08)',
-      border: `1px solid ${isOpen ? '#FFB800' : 'rgba(10, 10, 12, 0.1)'}`,
+      border: `1px solid ${isOpen ? '#FFB800' : '#0A0A0C'}`,
       transition: 'all 0.3s ease',
       cursor: 'pointer',
       ...faqItemStyle
     }),
     questionButton: (isOpen: boolean) => ({
       width: '100%',
-      background: isOpen ? 'rgba(255, 184, 0, 0.05)' : '#FFFFFF',
+      background: isOpen ? '#FFB800' : '#FFFFFF',
       border: 'none',
       padding: isMobile ? (isSmallMobile ? '14px' : '16px') : '20px',
       display: 'flex',
@@ -2153,21 +2147,21 @@ function FAQSection({
     questionNumber: {
       width: isMobile ? (isSmallMobile ? '28px' : '32px') : '32px',
       height: isMobile ? (isSmallMobile ? '28px' : '32px') : '32px',
-      background: `linear-gradient(135deg, #FFB800 0%, #E6A600 100%)`,
+      background: isOpen ? '#0A0A0C' : '#FFB800',
       borderRadius: '50%',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       fontSize: isMobile ? (isSmallMobile ? '10px' : '12px') : '12px',
       fontWeight: 700,
-      color: '#0A0A0C',
+      color: isOpen ? '#FFB800' : '#0A0A0C',
       flexShrink: 0,
       transition: 'all 0.3s ease',
     },
     questionText: {
       fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.125rem',
       fontWeight: 600,
-      color: textColor,
+      color: isOpen ? '#0A0A0C' : '#0A0A0C',
       fontFamily: "'Inter', sans-serif",
       marginTop: 0,
       marginRight: 0,
@@ -2186,12 +2180,13 @@ function FAQSection({
       transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)',
       flexShrink: 0,
       marginLeft: '10px',
+      color: isOpen ? '#0A0A0C' : '#FFB800',
     }),
     answerContainer: (isOpen: boolean) => ({
       maxHeight: isOpen ? '500px' : '0',
       overflow: 'hidden',
       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-      background: isOpen ? 'rgba(10, 10, 12, 0.02)' : 'transparent',
+      background: isOpen ? '#0A0A0C' : 'transparent',
     }),
     answerContent: (isOpen: boolean) => ({
       padding: isOpen 
@@ -2212,7 +2207,7 @@ function FAQSection({
     answerIcon: {
       width: '20px',
       height: '20px',
-      background: 'rgba(10, 10, 12, 0.1)',
+      background: '#FFB800',
       borderRadius: '50%',
       display: 'flex',
       alignItems: 'center',
@@ -2227,7 +2222,7 @@ function FAQSection({
     answerText: {
       fontSize: isMobile ? (isSmallMobile ? '0.85rem' : '0.9rem') : '1rem',
       fontWeight: 400,
-      color: '#666666',
+      color: '#FFFFFF',
       lineHeight: 1.6,
       marginTop: 0,
       marginRight: 0,
@@ -2240,16 +2235,16 @@ function FAQSection({
       textAlign: 'center'  as const,
       marginTop: isMobile ? (isSmallMobile ? '30px' : '40px') : '60px',
       padding: isMobile ? (isSmallMobile ? '20px' : '30px 20px') : '40px 20px',
-      background: `linear-gradient(135deg, rgba(10, 10, 12, 0.05) 0%, rgba(255, 184, 0, 0.05) 100%)`,
+      background: '#0A0A0C',
       borderRadius: '20px',
-      border: `1px solid rgba(255, 184, 0, 0.3)`,
+      border: '1px solid #FFB800',
       transition: 'all 0.3s ease',
       cursor: 'pointer',
     },
     ctaTitle: {
       fontSize: isMobile ? (isSmallMobile ? '1.25rem' : '1.5rem') : '1.75rem',
       fontWeight: 700,
-      color: textColor,
+      color: '#FFB800',
       fontFamily: "'Inter', sans-serif",
       marginBottom: '20px',
       transition: 'all 0.3s ease',
@@ -2257,7 +2252,7 @@ function FAQSection({
     ctaDescription: {
       fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.125rem',
       fontWeight: 400,
-      color: '#666666',
+      color: '#FFFFFF',
       lineHeight: 1.6,
       maxWidth: '600px',
       marginTop: 0,
@@ -2274,7 +2269,7 @@ function FAQSection({
       alignItems: 'center',
     },
     primaryButton: {
-      background: `linear-gradient(135deg, #FFB800 0%, #E6A600 100%)`,
+      background: '#FFB800',
       color: '#0A0A0C',
       border: 'none',
       padding: isMobile ? (isSmallMobile ? '14px 20px' : '16px 24px') : '16px 24px',
@@ -2283,7 +2278,7 @@ function FAQSection({
       borderRadius: '50px',
       cursor: 'pointer',
       transition: 'all 0.3s ease',
-      boxShadow: `0 8px 25px rgba(255, 184, 0, 0.3)`,
+      boxShadow: '0 8px 25px rgba(255, 184, 0, 0.3)',
       fontFamily: "'Inter', sans-serif",
       letterSpacing: '0.5px',
       width: isMobile ? '100%' : 'auto',
@@ -2291,8 +2286,8 @@ function FAQSection({
     },
     secondaryButton: {
       background: 'transparent',
-      color: textColor,
-      border: `2px solid rgba(255, 184, 0, 0.5)`,
+      color: '#FFB800',
+      border: '2px solid #FFB800',
       padding: isMobile ? (isSmallMobile ? '14px 20px' : '16px 24px') : '16px 24px',
       fontSize: isMobile ? (isSmallMobile ? '14px' : '15px') : '15px',
       fontWeight: 700,
@@ -2322,13 +2317,15 @@ function FAQSection({
           <div style={baseStyles.badge}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'translateY(-3px)';
-              e.currentTarget.style.background = 'rgba(255, 184, 0, 0.15)';
+              e.currentTarget.style.background = '#FFB800';
               e.currentTarget.style.boxShadow = '0 8px 20px rgba(255, 184, 0, 0.2)';
+              e.currentTarget.style.color = '#0A0A0C';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.background = 'rgba(255, 184, 0, 0.1)';
+              e.currentTarget.style.background = '#0A0A0C';
               e.currentTarget.style.boxShadow = 'none';
+              e.currentTarget.style.color = '#FFB800';
             }}>
             <div style={baseStyles.badgeIcon}>❓</div>
             <span style={baseStyles.badgeText}>
@@ -2379,7 +2376,7 @@ function FAQSection({
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.boxShadow = '0 4px 20px rgba(10, 10, 12, 0.08)';
-                e.currentTarget.style.borderColor = openIndex === index ? accentColor : 'rgba(10, 10, 12, 0.1)';
+                e.currentTarget.style.borderColor = openIndex === index ? accentColor : '#0A0A0C';
                 e.currentTarget.style.transform = 'translateY(0)';
               }}
             >
@@ -2387,11 +2384,11 @@ function FAQSection({
                 onClick={() => toggleFAQ(index)}
                 style={baseStyles.questionButton(openIndex === index)}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'rgba(255, 184, 0, 0.08)';
+                  e.currentTarget.style.background = openIndex === index ? '#FFB800' : '#FFB800';
                   e.currentTarget.style.transform = 'scale(1.01)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = openIndex === index ? 'rgba(255, 184, 0, 0.05)' : '#FFFFFF';
+                  e.currentTarget.style.background = openIndex === index ? '#FFB800' : '#FFFFFF';
                   e.currentTarget.style.transform = 'scale(1)';
                 }}
               >
@@ -2407,10 +2404,10 @@ function FAQSection({
                   </div>
                   <h3 style={baseStyles.questionText}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.color = accentColor;
+                      e.currentTarget.style.color = openIndex === index ? '#0A0A0C' : accentColor;
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.color = textColor;
+                      e.currentTarget.style.color = openIndex === index ? '#0A0A0C' : textColor;
                     }}>
                     {faq.question}
                   </h3>
@@ -2425,7 +2422,7 @@ function FAQSection({
                       e.currentTarget.style.transform = openIndex === index ? 'rotate(45deg) scale(1)' : 'rotate(0deg) scale(1)';
                     }}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                      <path d="M12 5V19M5 12H19" stroke={accentColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                   </div>
                 )}
@@ -2437,21 +2434,21 @@ function FAQSection({
                     <div style={baseStyles.answerIcon}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.transform = 'scale(1.1)';
-                        e.currentTarget.style.background = 'rgba(10, 10, 12, 0.2)';
+                        e.currentTarget.style.background = '#FFB800';
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.transform = 'scale(1)';
-                        e.currentTarget.style.background = 'rgba(10, 10, 12, 0.1)';
+                        e.currentTarget.style.background = '#FFB800';
                       }}>
                       A
                     </div>
                     <p style={baseStyles.answerText}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.color = textColor;
+                        e.currentTarget.style.color = '#FFB800';
                         e.currentTarget.style.transform = 'scale(1.01)';
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.color = '#666666';
+                        e.currentTarget.style.color = '#FFFFFF';
                         e.currentTarget.style.transform = 'scale(1)';
                       }}>
                       {faq.answer}
@@ -2466,32 +2463,32 @@ function FAQSection({
         <div style={baseStyles.ctaContainer}
           onMouseEnter={(e) => {
             e.currentTarget.style.transform = 'translateY(-5px)';
-            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(10, 10, 12, 0.08) 0%, rgba(255, 184, 0, 0.08) 100%)';
+            e.currentTarget.style.background = '#0A0A0C';
             e.currentTarget.style.boxShadow = '0 15px 35px rgba(10, 10, 12, 0.15)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(10, 10, 12, 0.05) 0%, rgba(255, 184, 0, 0.05) 100%)';
+            e.currentTarget.style.background = '#0A0A0C';
             e.currentTarget.style.boxShadow = 'none';
           }}>
           <h3 style={baseStyles.ctaTitle}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = accentColor;
+              e.currentTarget.style.color = '#FFFFFF';
               e.currentTarget.style.transform = 'scale(1.02)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.color = textColor;
+              e.currentTarget.style.color = '#FFB800';
               e.currentTarget.style.transform = 'scale(1)';
             }}>
             Still Have Roofing Questions?
           </h3>
           <p style={baseStyles.ctaDescription}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = textColor;
+              e.currentTarget.style.color = '#FFB800';
               e.currentTarget.style.transform = 'scale(1.01)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.color = '#666666';
+              e.currentTarget.style.color = '#FFFFFF';
               e.currentTarget.style.transform = 'scale(1)';
             }}>
             Our expert team is available 24/7 to answer any questions and schedule your free roof inspection.
@@ -2503,12 +2500,14 @@ function FAQSection({
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-3px) scale(1.05)';
                 e.currentTarget.style.boxShadow = '0 12px 30px rgba(255, 184, 0, 0.4)';
-                e.currentTarget.style.background = 'linear-gradient(135deg, #E6A600 0%, #FFB800 100%)';
+                e.currentTarget.style.background = '#0A0A0C';
+                e.currentTarget.style.color = '#FFB800';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0) scale(1)';
                 e.currentTarget.style.boxShadow = '0 8px 25px rgba(255, 184, 0, 0.3)';
-                e.currentTarget.style.background = 'linear-gradient(135deg, #FFB800 0%, #E6A600 100%)';
+                e.currentTarget.style.background = '#FFB800';
+                e.currentTarget.style.color = '#0A0A0C';
               }}
             >
               Free Inspection
@@ -2517,16 +2516,16 @@ function FAQSection({
               onClick={() => window.location.href = 'tel:+12815551234'}
               style={baseStyles.secondaryButton}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 184, 0, 0.1)';
-                e.currentTarget.style.borderColor = accentColor;
+                e.currentTarget.style.background = '#FFB800';
+                e.currentTarget.style.borderColor = '#FFB800';
                 e.currentTarget.style.transform = 'translateY(-3px) scale(1.05)';
-                e.currentTarget.style.color = accentColor;
+                e.currentTarget.style.color = '#0A0A0C';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = 'transparent';
-                e.currentTarget.style.borderColor = 'rgba(255, 184, 0, 0.5)';
+                e.currentTarget.style.borderColor = '#FFB800';
                 e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                e.currentTarget.style.color = textColor;
+                e.currentTarget.style.color = '#FFB800';
               }}
             >
               Call (281) 555-1234
@@ -2559,13 +2558,13 @@ const BodySection = () => {
   const colors = {
     background: '#0A0A0C',
     gold: '#FFB800',
-    goldLight: 'rgba(255, 184, 0, 0.1)',
-    goldBorder: 'rgba(255, 184, 0, 0.3)',
+    goldLight: '#FFB800',
+    goldBorder: '#FFB800',
     white: '#FFFFFF',
     softWhite: '#FAFAFA',
-    softWhite90: 'rgba(250, 250, 250, 0.9)',
-    softWhite70: 'rgba(250, 250, 250, 0.7)',
-    // New color scheme
+    softWhite90: '#FAFAFA',
+    softWhite70: '#FAFAFA',
+    // New color scheme - SOLID COLORS, NO GLASS
     navy: '#1A2A3A',      // Dark navy-blue
     navyLight: '#2C3E50', // Lighter navy
     navyDark: '#0F1A24',  // Darker navy
@@ -2811,7 +2810,7 @@ const BodySection = () => {
       paddingTop: isMobile ? '40px' : '80px',
       paddingBottom: isMobile ? '40px' : '80px',
       boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-      border: `1px solid ${colors.goldBorder}`,
+      border: `1px solid ${colors.gold}`,
       position: 'relative',
       overflow: 'hidden',
     },
@@ -2822,7 +2821,7 @@ const BodySection = () => {
       left: 0,
       right: 0,
       bottom: 0,
-      background: `radial-gradient(circle at 20% 80%, ${colors.goldLight} 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)`,
+      background: colors.navy,
       zIndex: 1,
     },
     
@@ -2830,18 +2829,17 @@ const BodySection = () => {
       display: 'inline-flex',
       alignItems: 'center',
       gap: isMobile ? '8px' : '12px',
-      backgroundColor: 'rgba(255, 184, 0, 0.15)',
+      backgroundColor: colors.gold,
       padding: isMobile ? '12px 20px' : '16px 32px',
       borderRadius: '50px',
       marginBottom: isMobile ? '30px' : '40px',
-      border: `2px solid ${colors.goldBorder}`,
-      backdropFilter: 'blur(10px)',
+      border: `2px solid ${colors.gold}`,
       position: 'relative',
       zIndex: 2,
     },
     
     diamondIcon: {
-      color: colors.gold,
+      color: colors.navy,
       fontWeight: '700',
       fontSize: isMobile ? '20px' : '24px',
     },
@@ -2849,7 +2847,7 @@ const BodySection = () => {
     differenceBadgeText: {
       fontSize: isMobile ? '14px' : '18px',
       fontWeight: '700',
-      color: colors.white,
+      color: colors.navy,
       letterSpacing: '3px',
       textTransform: 'uppercase',
       fontFamily: "'Inter', sans-serif",
@@ -2888,7 +2886,7 @@ const BodySection = () => {
     
     differenceDescription: {
       fontSize: isMobile ? '1.125rem' : isTablet ? '1.25rem' : '1.375rem',
-      color: colors.softWhite90,
+      color: colors.white,
       lineHeight: '1.7',
       maxWidth: '900px',
       marginTop: 0,
@@ -2914,7 +2912,7 @@ const BodySection = () => {
     },
     
     featureCard: (active: boolean) => ({
-      backgroundColor: active ? colors.navyLight : colors.gray,
+      backgroundColor: colors.navyLight,
       borderRadius: '32px',
       overflow: 'hidden',
       boxShadow: active 
@@ -2922,7 +2920,7 @@ const BodySection = () => {
         : '0 20px 60px rgba(0, 0, 0, 0.3)',
       border: active 
         ? `2px solid ${colors.gold}` 
-        : `1px solid ${colors.goldBorder}`,
+        : `1px solid ${colors.gold}`,
       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
       transform: active ? 'translateY(-15px) scale(1.02)' : 'translateY(0) scale(1)',
       position: 'relative',
@@ -2988,7 +2986,7 @@ const BodySection = () => {
     
     featureDescription: {
       fontSize: isMobile ? '1rem' : isTablet ? '1.125rem' : '1.125rem',
-      color: colors.softWhite90,
+      color: colors.white,
       lineHeight: '1.8',
       marginTop: 0,
       marginRight: 0,
@@ -3013,14 +3011,14 @@ const BodySection = () => {
       alignItems: 'flex-start',
       gap: '16px',
       padding: '12px 16px',
-      backgroundColor: 'rgba(255, 184, 0, 0.15)',
+      backgroundColor: colors.gold,
       borderRadius: '12px',
-      border: `1px solid ${colors.goldBorder}`,
+      border: `1px solid ${colors.gold}`,
       transition: 'all 0.3s ease',
     },
     
     checkIcon: {
-      color: colors.gold,
+      color: colors.navyDark,
       fontWeight: '700',
       fontSize: isMobile ? '20px' : '24px',
       flexShrink: 0,
@@ -3029,9 +3027,9 @@ const BodySection = () => {
     
     featureListItemText: {
       fontSize: isMobile ? '0.95rem' : '1.1rem',
-      color: colors.white,
+      color: colors.navyDark,
       lineHeight: '1.6',
-      fontWeight: '400',
+      fontWeight: '700',
       fontFamily: "'Inter', sans-serif",
     },
 
@@ -3048,7 +3046,7 @@ const BodySection = () => {
       paddingTop: isMobile ? '40px' : '80px',
       paddingBottom: isMobile ? '40px' : '80px',
       boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-      border: `1px solid ${colors.goldBorder}`,
+      border: `1px solid ${colors.gold}`,
       position: 'relative',
       overflow: 'hidden',
     },
@@ -3059,7 +3057,7 @@ const BodySection = () => {
       left: 0,
       right: 0,
       bottom: 0,
-      background: `radial-gradient(circle at 10% 10%, ${colors.goldLight} 0%, transparent 40%), radial-gradient(circle at 90% 90%, rgba(0, 0, 0, 0.05) 0%, transparent 40%)`,
+      background: colors.beige,
       zIndex: 1,
     },
     
@@ -3132,7 +3130,7 @@ const BodySection = () => {
     },
     
     transformationCard: (active: boolean) => ({
-      backgroundColor: active ? colors.beigeLight : colors.white,
+      backgroundColor: colors.beigeLight,
       borderRadius: '32px',
       overflow: 'hidden',
       boxShadow: active 
@@ -3140,7 +3138,7 @@ const BodySection = () => {
         : '0 20px 60px rgba(0, 0, 0, 0.15)',
       border: active 
         ? `2px solid ${colors.gold}` 
-        : `1px solid ${colors.goldBorder}`,
+        : `1px solid ${colors.gold}`,
       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
       transform: active ? 'translateY(-15px)' : 'translateY(0)',
     }),
@@ -3224,7 +3222,7 @@ const BodySection = () => {
       fontWeight: '400',
       fontFamily: "'Inter', sans-serif",
       textAlign: 'center',
-      borderTop: `2px solid ${colors.goldBorder}`,
+      borderTop: `2px solid ${colors.gold}`,
       paddingTop: isMobile ? '20px' : '30px',
     },
 
@@ -3241,7 +3239,7 @@ const BodySection = () => {
       paddingTop: isMobile ? '40px' : '80px',
       paddingBottom: isMobile ? '40px' : '80px',
       boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-      border: `1px solid ${colors.goldBorder}`,
+      border: `1px solid ${colors.gold}`,
       position: 'relative',
       overflow: 'hidden',
     },
@@ -3252,7 +3250,7 @@ const BodySection = () => {
       left: 0,
       right: 0,
       bottom: 0,
-      background: `radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.05) 0%, transparent 50%), radial-gradient(circle at 70% 70%, ${colors.goldLight} 0%, transparent 50%)`,
+      background: colors.gray,
       zIndex: 1,
     },
     
@@ -3301,7 +3299,7 @@ const BodySection = () => {
     
     videoSubtitle: {
       fontSize: isMobile ? '1.125rem' : '1.25rem',
-      color: colors.softWhite90,
+      color: colors.white,
       lineHeight: '1.6',
       maxWidth: '800px',
       marginTop: 0,
@@ -3338,7 +3336,7 @@ const BodySection = () => {
       paddingTop: isMobile ? '40px' : '80px',
       paddingBottom: isMobile ? '40px' : '80px',
       boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-      border: `1px solid ${colors.goldBorder}`,
+      border: `1px solid ${colors.gold}`,
       position: 'relative',
       overflow: 'hidden',
     },
@@ -3349,7 +3347,7 @@ const BodySection = () => {
       left: 0,
       right: 0,
       bottom: 0,
-      background: `radial-gradient(circle at 20% 20%, ${colors.goldLight} 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)`,
+      background: colors.navyLight,
       zIndex: 1,
     },
     
@@ -3375,7 +3373,7 @@ const BodySection = () => {
     
     reviewsSubtitle: {
       fontSize: isMobile ? '1.125rem' : '1.25rem',
-      color: colors.softWhite90,
+      color: colors.white,
       lineHeight: '1.6',
       maxWidth: '800px',
       marginTop: 0,
@@ -3399,7 +3397,7 @@ const BodySection = () => {
     },
     
     reviewCard: (active: boolean) => ({
-      backgroundColor: active ? colors.grayLight : colors.white,
+      backgroundColor: colors.grayLight,
       borderRadius: '32px',
       paddingTop: isMobile ? '30px' : '40px',
       paddingRight: isMobile ? '20px' : '32px',
@@ -3408,7 +3406,7 @@ const BodySection = () => {
       textAlign: 'left',
       border: active 
         ? `2px solid ${colors.gold}` 
-        : `2px solid ${colors.goldBorder}`,
+        : `2px solid ${colors.gold}`,
       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
       transform: active ? 'translateY(-15px)' : 'translateY(0)',
       boxShadow: active 
@@ -3429,7 +3427,7 @@ const BodySection = () => {
       borderRadius: '50%',
       objectFit: 'cover',
       border: `3px solid ${colors.gold}`,
-      boxShadow: `0 4px 12px ${colors.goldLight}`,
+      boxShadow: `0 4px 12px ${colors.gold}`,
     },
     
     reviewerInfo: {
@@ -3439,7 +3437,7 @@ const BodySection = () => {
     reviewerName: {
       fontSize: isMobile ? '1.25rem' : '1.5rem',
       fontWeight: '700',
-      color: colors.navyDark,
+      color: colors.white,
       marginTop: 0,
       marginRight: 0,
       marginBottom: '8px',
@@ -3449,7 +3447,7 @@ const BodySection = () => {
     
     reviewerDetails: {
       fontSize: isMobile ? '0.9rem' : '1rem',
-      color: colors.grayDark,
+      color: colors.gold,
       fontWeight: '400',
       fontFamily: "'Inter', sans-serif",
       marginBottom: '8px',
@@ -3468,7 +3466,7 @@ const BodySection = () => {
     
     reviewContent: {
       fontSize: isMobile ? '0.95rem' : '1.1rem',
-      color: colors.grayDark,
+      color: colors.white,
       lineHeight: '1.7',
       marginTop: 0,
       marginRight: 0,
@@ -3494,7 +3492,7 @@ const BodySection = () => {
       paddingTop: isMobile ? '40px' : '80px',
       paddingBottom: isMobile ? '40px' : '80px',
       boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-      border: `1px solid ${colors.goldBorder}`,
+      border: `1px solid ${colors.gold}`,
       position: 'relative',
       overflow: 'hidden',
     },
@@ -3505,7 +3503,7 @@ const BodySection = () => {
       left: 0,
       right: 0,
       bottom: 0,
-      background: `radial-gradient(circle at 20% 30%, ${colors.goldLight} 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)`,
+      background: colors.grayDark,
       zIndex: 1,
     },
     
@@ -3532,7 +3530,7 @@ const BodySection = () => {
     
     ourStoryDescription: {
       fontSize: isMobile ? '1.125rem' : isTablet ? '1.25rem' : '1.375rem',
-      color: colors.softWhite90,
+      color: colors.white,
       lineHeight: '1.8',
       marginTop: 0,
       marginRight: 'auto',
@@ -3542,10 +3540,10 @@ const BodySection = () => {
       fontFamily: "'Inter', sans-serif",
       maxWidth: '900px',
       padding: isMobile ? '20px' : '40px',
-      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      backgroundColor: colors.grayLight,
       borderRadius: '24px',
       boxShadow: '0 10px 40px rgba(0, 0, 0, 0.2)',
-      border: `1px solid ${colors.goldBorder}`,
+      border: `1px solid ${colors.gold}`,
       position: 'relative',
       zIndex: 2,
     },
@@ -3589,7 +3587,7 @@ const BodySection = () => {
       paddingTop: isMobile ? '40px' : '80px',
       paddingBottom: isMobile ? '40px' : '80px',
       boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-      border: `1px solid ${colors.goldBorder}`,
+      border: `1px solid ${colors.gold}`,
       position: 'relative',
       overflow: 'hidden',
     },
@@ -3600,7 +3598,7 @@ const BodySection = () => {
       left: 0,
       right: 0,
       bottom: 0,
-      background: `radial-gradient(circle at 10% 90%, ${colors.goldLight} 0%, transparent 50%), radial-gradient(circle at 90% 10%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)`,
+      background: colors.navy,
       zIndex: 1,
     },
     
@@ -3614,15 +3612,14 @@ const BodySection = () => {
       display: 'inline-flex',
       alignItems: 'center',
       gap: isMobile ? '8px' : '12px',
-      backgroundColor: 'rgba(255, 184, 0, 0.15)',
+      backgroundColor: colors.gold,
       paddingTop: isMobile ? '12px' : '16px',
       paddingRight: isMobile ? '20px' : '32px',
       paddingBottom: isMobile ? '12px' : '16px',
       paddingLeft: isMobile ? '20px' : '32px',
       borderRadius: '50px',
       marginBottom: isMobile ? '20px' : '30px',
-      border: `2px solid ${colors.goldBorder}`,
-      backdropFilter: 'blur(10px)',
+      border: `2px solid ${colors.gold}`,
       position: 'relative',
       zIndex: 2,
     },
@@ -3630,7 +3627,7 @@ const BodySection = () => {
     flexibleSolutionsBadgeText: {
       fontSize: isMobile ? '14px' : '18px',
       fontWeight: '700',
-      color: colors.white,
+      color: colors.navy,
       letterSpacing: '3px',
       textTransform: 'uppercase',
       fontFamily: "'Inter', sans-serif",
@@ -3668,7 +3665,7 @@ const BodySection = () => {
     
     flexibleSolutionsDescription: {
       fontSize: isMobile ? '1.125rem' : isTablet ? '1.25rem' : '1.375rem',
-      color: colors.softWhite90,
+      color: colors.white,
       lineHeight: '1.7',
       maxWidth: '900px',
       marginTop: 0,
@@ -3701,7 +3698,7 @@ const BodySection = () => {
         : '0 20px 60px rgba(0, 0, 0, 0.2)',
       border: active 
         ? `3px solid ${colors.gold}` 
-        : `2px solid ${colors.goldBorder}`,
+        : `2px solid ${colors.gold}`,
       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
       transform: active ? 'translateY(-20px)' : 'translateY(0)',
       display: 'flex',
@@ -3732,6 +3729,7 @@ const BodySection = () => {
       letterSpacing: '2px',
       textTransform: 'uppercase',
       fontFamily: "'Inter', sans-serif",
+      color: 'inherit',
     },
     
     planTitle: {
@@ -3743,6 +3741,7 @@ const BodySection = () => {
       marginLeft: 0,
       fontFamily: "'Inter', sans-serif",
       lineHeight: '1.1',
+      color: 'inherit',
     },
     
     planFrequency: {
@@ -3754,6 +3753,7 @@ const BodySection = () => {
       marginLeft: 0,
       fontFamily: "'Inter', sans-serif",
       opacity: 0.9,
+      color: 'inherit',
     },
     
     planDescription: {
@@ -3764,6 +3764,7 @@ const BodySection = () => {
       marginBottom: 0,
       marginLeft: 0,
       fontFamily: "'Inter', sans-serif",
+      color: 'inherit',
     },
     
     planContent: {
@@ -3779,7 +3780,7 @@ const BodySection = () => {
     
     planDetails: {
       fontSize: isMobile ? '0.95rem' : '1rem',
-      color: colors.grayDark,
+      color: colors.navyDark,
       lineHeight: '1.7',
       marginTop: 0,
       marginRight: 0,
@@ -3802,13 +3803,13 @@ const BodySection = () => {
       alignItems: 'flex-start',
       gap: '12px',
       padding: '12px 16px',
-      backgroundColor: colors.goldLight,
+      backgroundColor: colors.gold,
       borderRadius: '12px',
-      border: `1px solid ${colors.goldBorder}`,
+      border: `1px solid ${colors.gold}`,
     },
     
     planFeatureIcon: {
-      color: colors.gold,
+      color: colors.navyDark,
       fontWeight: '700',
       fontSize: '20px',
       flexShrink: 0,
@@ -3819,7 +3820,7 @@ const BodySection = () => {
       fontSize: isMobile ? '0.9rem' : '1rem',
       color: colors.navyDark,
       lineHeight: '1.5',
-      fontWeight: '400',
+      fontWeight: '700',
       fontFamily: "'Inter', sans-serif",
     },
     
@@ -3828,8 +3829,8 @@ const BodySection = () => {
       alignItems: 'center',
       justifyContent: 'center',
       gap: '12px',
-      backgroundColor: active ? color : 'transparent',
-      color: active ? (color === colors.beige ? colors.navyDark : colors.white) : color,
+      backgroundColor: active ? color : colors.gold,
+      color: active ? (color === colors.beige ? colors.navyDark : colors.white) : colors.navyDark,
       border: `3px solid ${color}`,
       paddingTop: isMobile ? '16px' : '20px',
       paddingRight: isMobile ? '24px' : '32px',
@@ -3856,13 +3857,12 @@ const BodySection = () => {
       paddingBottom: isMobile ? '40px' : '60px',
       paddingLeft: isMobile ? '24px' : '40px',
       textAlign: 'center',
-      border: `2px solid ${colors.goldBorder}`,
+      border: `2px solid ${colors.gold}`,
       maxWidth: '1000px',
       margin: '0 auto',
       position: 'relative',
       zIndex: 2,
-      backdropFilter: 'blur(10px)',
-      background: `linear-gradient(135deg, ${colors.beigeDark} 0%, ${colors.beige} 100%)`,
+      background: colors.beigeDark,
       boxShadow: '0 20px 60px rgba(0, 0, 0, 0.2)',
     },
     
@@ -4270,7 +4270,7 @@ const BodySection = () => {
         borderRadius: '32px',
         padding: isMobile ? '40px 20px' : '80px 40px',
         boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-        border: `1px solid ${colors.goldBorder}`,
+        border: `1px solid ${colors.gold}`,
         position: 'relative',
         overflow: 'hidden',
       }}>
@@ -4280,7 +4280,7 @@ const BodySection = () => {
           left: 0,
           right: 0,
           bottom: 0,
-          background: `radial-gradient(circle at 20% 80%, ${colors.goldLight} 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(0, 0, 0, 0.05) 0%, transparent 50%)`,
+          background: colors.beigeDark,
           zIndex: 1,
         }}></div>
         
@@ -4361,18 +4361,17 @@ const BodySection = () => {
               display: 'inline-flex',
               alignItems: 'center',
               gap: isMobile ? '8px' : '12px',
-              backgroundColor: 'rgba(255, 184, 0, 0.15)',
+              backgroundColor: colors.gold,
               paddingTop: isMobile ? '12px' : '16px',
               paddingRight: isMobile ? '20px' : '32px',
               paddingBottom: isMobile ? '12px' : '16px',
               paddingLeft: isMobile ? '20px' : '32px',
               borderRadius: '50px',
               marginBottom: isMobile ? '30px' : '40px',
-              border: `2px solid ${colors.goldBorder}`,
-              backdropFilter: 'blur(10px)',
+              border: `2px solid ${colors.gold}`,
             }}>
               <span style={{
-                color: colors.gold,
+                color: colors.navyDark,
                 fontWeight: '700',
                 fontSize: isMobile ? '20px' : '24px',
                 fontFamily: "'Inter', sans-serif",
@@ -4450,13 +4449,11 @@ const BodySection = () => {
             </p>
             
             <div style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.2)',
+              backgroundColor: colors.beigeLight,
               padding: isMobile ? '30px' : '40px',
               borderRadius: '20px',
-              border: `2px solid ${colors.goldBorder}`,
+              border: `2px solid ${colors.gold}`,
               marginBottom: isMobile ? '30px' : '40px',
-              backdropFilter: 'blur(10px)',
-              background: 'rgba(255, 255, 255, 0.1)',
               boxShadow: '0 10px 40px rgba(0, 0, 0, 0.1)',
             }}>
               <h3 style={{
@@ -4819,7 +4816,7 @@ const BodySection = () => {
           background: colors.beigeDark,
           borderRadius: '32px',
           boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-          border: `1px solid ${colors.goldBorder}`,
+          border: `1px solid ${colors.gold}`,
           position: 'relative',
           overflow: 'hidden',
         }}
