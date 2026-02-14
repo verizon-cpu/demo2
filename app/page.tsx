@@ -290,7 +290,7 @@ function LogoCarousel({
   const [isHovered, setIsHovered] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const autoRotateRef = useRef<NodeJS.Timeout>();
+  const autoRotateRef = useRef<NodeJS.Timeout>(undefined);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -617,7 +617,6 @@ const HeroSection = () => {
 
     const checkScreenSize = () => {
       const width = window.innerWidth;
-      const height = window.innerHeight;
       setIsMobile(width < 768);
       setIsTablet(width >= 768 && width < 1024);
       setIsSmallMobile(width < 480);
@@ -1130,15 +1129,6 @@ const HeroSection = () => {
       fontWeight: '400',
       width: '100%',
       boxSizing: 'border-box',
-      '&:focus': {
-        borderColor: colors.gold,
-        boxShadow: '0 0 0 3px rgba(255, 184, 0, 0.2)',
-      },
-      '&::placeholder': {
-        color: '#9CA3AF',
-        fontWeight: '400',
-        fontFamily: "'Inter', sans-serif",
-      },
     },
     
     formTextarea: {
@@ -1154,15 +1144,6 @@ const HeroSection = () => {
       boxSizing: 'border-box',
       resize: 'vertical',
       minHeight: '100px',
-      '&:focus': {
-        borderColor: colors.gold,
-        boxShadow: '0 0 0 3px rgba(255, 184, 0, 0.2)',
-      },
-      '&::placeholder': {
-        color: '#9CA3AF',
-        fontWeight: '400',
-        fontFamily: "'Inter', sans-serif",
-      },
     },
     
     formRow: {
@@ -1738,10 +1719,7 @@ const VideoTestimonialCard = ({
       </div>
       
       <div style={{
-        paddingTop: isMobile ? (isSmallMobile ? '20px' : '24px') : '32px',
-        paddingRight: isMobile ? (isSmallMobile ? '16px' : '20px') : '24px',
-        paddingBottom: isMobile ? (isSmallMobile ? '20px' : '24px') : '32px',
-        paddingLeft: isMobile ? (isSmallMobile ? '16px' : '20px') : '24px',
+        padding: isMobile ? (isSmallMobile ? '20px 16px' : '24px 20px') : '32px 24px',
         textAlign: 'left',
       }}>
         <h4 style={{
@@ -2094,8 +2072,7 @@ function FAQSection({
       marginBottom: '20px',
       transition: 'all 0.3s ease',
       cursor: 'pointer',
-      position: 'relative',
-      zIndex: 2,
+      position: 'relative' as const,
     },
     badgeIcon: {
       fontSize: isMobile ? (isSmallMobile ? '16px' : '18px') : '18px',
@@ -2121,8 +2098,7 @@ function FAQSection({
       maxWidth: '900px',
       transition: 'all 0.3s ease',
       cursor: 'pointer',
-      position: 'relative',
-      zIndex: 2,
+      position: 'relative' as const,
     },
     subtitle: {
       fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.125rem',
@@ -2136,14 +2112,13 @@ function FAQSection({
       marginLeft: 'auto',
       transition: 'all 0.3s ease',
       cursor: 'pointer',
-      position: 'relative',
-      zIndex: 2,
+      position: 'relative' as const,
     },
     faqContainer: {
       maxWidth: '900px',
       margin: '0 auto',
       width: '100%',
-      position: 'relative',
+      position: 'relative' as const,
       zIndex: 2,
     },
     faqItem: (isOpen: boolean) => ({
@@ -2219,10 +2194,13 @@ function FAQSection({
       background: isOpen ? 'rgba(10, 10, 12, 0.02)' : 'transparent',
     }),
     answerContent: (isOpen: boolean) => ({
-      paddingTop: isOpen ? (isMobile ? (isSmallMobile ? '0' : '0') : '0') : (isMobile ? (isSmallMobile ? '0' : '0') : '0'),
-      paddingRight: isOpen ? (isMobile ? (isSmallMobile ? '14px' : '16px') : '20px') : (isMobile ? (isSmallMobile ? '14px' : '16px') : '20px'),
-      paddingBottom: isOpen ? (isMobile ? (isSmallMobile ? '14px' : '16px') : '20px') : (isMobile ? (isSmallMobile ? '0' : '0') : '0'),
-      paddingLeft: isOpen ? (isMobile ? (isSmallMobile ? '60px' : '68px') : '68px') : (isMobile ? (isSmallMobile ? '14px' : '16px') : '20px'),
+      padding: isOpen 
+        ? (isMobile 
+            ? (isSmallMobile ? '0 14px 14px 60px' : '0 16px 16px 68px') 
+            : '0 20px 20px 68px')
+        : (isMobile 
+            ? (isSmallMobile ? '0 14px 0 14px' : '0 16px 0 16px') 
+            : '0 20px 0 20px'),
       opacity: isOpen ? 1 : 0,
       transition: 'opacity 0.3s ease 0.2s',
     }),
@@ -2267,8 +2245,6 @@ function FAQSection({
       border: `1px solid rgba(255, 184, 0, 0.3)`,
       transition: 'all 0.3s ease',
       cursor: 'pointer',
-      position: 'relative',
-      zIndex: 2,
     },
     ctaTitle: {
       fontSize: isMobile ? (isSmallMobile ? '1.25rem' : '1.5rem') : '1.75rem',
