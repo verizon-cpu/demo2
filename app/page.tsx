@@ -16,15 +16,15 @@ const MicroInteraction = ({
       alt="BRAVOS Flag"
       style={{
         position: 'absolute' as const,
-        top: '-20px',
-        right: '-30px',
-        zIndex: 20,
+        top: '-30px',
+        right: '-20px',
+        zIndex: 30,
         pointerEvents: 'none' as const,
         width: `${width}px`,
         height: `${height}px`,
         objectFit: 'contain' as const,
-        filter: 'drop-shadow(0 10px 20px rgba(255, 184, 0, 0.4))',
-        transform: 'rotate(5deg)',
+        filter: 'drop-shadow(0 15px 25px rgba(255, 0, 0, 0.5))',
+        transform: 'rotate(8deg)',
         ...style
       }}
     />
@@ -37,7 +37,7 @@ const LogoCarousel = ({ autoRotate = true, showNavigation = true }) => {
   const [isMobile, setIsMobile] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
-  const autoRotateRef = useRef<NodeJS.Timeout>(undefined);
+  const autoRotateRef = useRef<NodeJS.Timeout>();
 
   const logos = [
     { id: 1, src: "/image/gaf.png", alt: "GAF Certified" },
@@ -164,9 +164,9 @@ const LogoCarousel = ({ autoRotate = true, showNavigation = true }) => {
               width: isMobile ? '30px' : '40px',
               height: isMobile ? '30px' : '40px',
               borderRadius: '50%',
-              background: 'rgba(255, 184, 0, 0.2)',
-              border: '2px solid rgba(255, 184, 0, 0.5)',
-              color: '#FFB800',
+              background: 'rgba(255, 0, 0, 0.2)',
+              border: '2px solid rgba(255, 0, 0, 0.5)',
+              color: '#FF0000',
               fontSize: isMobile ? '16px' : '20px',
               display: 'flex' as const,
               alignItems: 'center',
@@ -179,12 +179,12 @@ const LogoCarousel = ({ autoRotate = true, showNavigation = true }) => {
             }}
             onMouseEnter={(e) => {
               if (currentIndex !== 0) {
-                e.currentTarget.style.background = 'rgba(255, 184, 0, 0.3)';
+                e.currentTarget.style.background = 'rgba(255, 0, 0, 0.3)';
                 e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)';
               }
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 184, 0, 0.2)';
+              e.currentTarget.style.background = 'rgba(255, 0, 0, 0.2)';
               e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
             }}
           >
@@ -201,9 +201,9 @@ const LogoCarousel = ({ autoRotate = true, showNavigation = true }) => {
               width: isMobile ? '30px' : '40px',
               height: isMobile ? '30px' : '40px',
               borderRadius: '50%',
-              background: 'rgba(255, 184, 0, 0.2)',
-              border: '2px solid rgba(255, 184, 0, 0.5)',
-              color: '#FFB800',
+              background: 'rgba(255, 0, 0, 0.2)',
+              border: '2px solid rgba(255, 0, 0, 0.5)',
+              color: '#FF0000',
               fontSize: isMobile ? '16px' : '20px',
               display: 'flex' as const,
               alignItems: 'center',
@@ -216,12 +216,12 @@ const LogoCarousel = ({ autoRotate = true, showNavigation = true }) => {
             }}
             onMouseEnter={(e) => {
               if (currentIndex < logos.length - (isMobile ? 2 : 4)) {
-                e.currentTarget.style.background = 'rgba(255, 184, 0, 0.3)';
+                e.currentTarget.style.background = 'rgba(255, 0, 0, 0.3)';
                 e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)';
               }
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 184, 0, 0.2)';
+              e.currentTarget.style.background = 'rgba(255, 0, 0, 0.2)';
               e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
             }}
           >
@@ -233,8 +233,8 @@ const LogoCarousel = ({ autoRotate = true, showNavigation = true }) => {
   );
 };
 
-// Star Rotation Ring Component
-const StarRotationRing = ({ size = 300, color = '#FFB800' }) => {
+// Star Rotation Ring Component - BIGGER and BRIGHT RED
+const StarRotationRing = ({ size = 600, color = '#FF0000' }) => {
   const [rotation, setRotation] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -256,7 +256,7 @@ const StarRotationRing = ({ size = 300, color = '#FFB800' }) => {
     };
   }, []);
 
-  const stars = Array.from({ length: 24 }, (_, i) => i);
+  const stars = Array.from({ length: 36 }, (_, i) => i); // More stars
 
   return (
     <div
@@ -265,11 +265,11 @@ const StarRotationRing = ({ size = 300, color = '#FFB800' }) => {
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: isMobile ? size * 0.7 : size,
-        height: isMobile ? size * 0.7 : size,
+        width: isMobile ? size * 0.8 : size,
+        height: isMobile ? size * 0.8 : size,
         pointerEvents: 'none' as const,
-        zIndex: 1,
-        opacity: 0.6,
+        zIndex: 0,
+        opacity: 0.8,
       }}
     >
       <div
@@ -277,14 +277,14 @@ const StarRotationRing = ({ size = 300, color = '#FFB800' }) => {
           position: 'relative' as const,
           width: '100%',
           height: '100%',
-          animation: 'spin 20s linear infinite',
+          animation: 'spin 15s linear infinite', // Faster spin
         }}
       >
         {stars.map((_, index) => {
           const angle = (index / stars.length) * 360;
           const radian = (angle * Math.PI) / 180;
-          const x = 50 + 45 * Math.cos(radian);
-          const y = 50 + 45 * Math.sin(radian);
+          const x = 50 + 48 * Math.cos(radian);
+          const y = 50 + 48 * Math.sin(radian);
 
           return (
             <div
@@ -295,9 +295,11 @@ const StarRotationRing = ({ size = 300, color = '#FFB800' }) => {
                 top: `${y}%`,
                 transform: 'translate(-50%, -50%)',
                 color: color,
-                fontSize: isMobile ? '12px' : '16px',
-                opacity: 0.3 + (index % 3) * 0.2,
-                filter: `drop-shadow(0 0 5px ${color})`,
+                fontSize: isMobile ? '20px' : '28px',
+                fontWeight: 'bold',
+                opacity: 0.4 + (index % 5) * 0.15,
+                filter: `drop-shadow(0 0 10px ${color}) drop-shadow(0 0 20px ${color})`,
+                textShadow: `0 0 15px ${color}`,
               }}
             >
               ★
@@ -409,9 +411,9 @@ function BottomCTAButtons({
 
   const callButtonStyle: React.CSSProperties = {
     ...baseButtonStyle,
-    background: 'linear-gradient(135deg, #FFB800 0%, #E6A600 100%)',
-    color: '#0A0A0C',
-    boxShadow: '0 4px 15px rgba(255, 184, 0, 0.4)',
+    background: 'linear-gradient(135deg, #FF0000 0%, #CC0000 100%)',
+    color: '#FFFFFF',
+    boxShadow: '0 4px 15px rgba(255, 0, 0, 0.4)',
   };
 
   const quoteButtonStyle: React.CSSProperties = {
@@ -423,9 +425,9 @@ function BottomCTAButtons({
 
   const bookButtonStyle: React.CSSProperties = {
     ...baseButtonStyle,
-    background: 'linear-gradient(135deg, #FFB800 0%, #E6A600 100%)',
-    color: '#0A0A0C',
-    boxShadow: '0 4px 15px rgba(255, 184, 0, 0.4)',
+    background: 'linear-gradient(135deg, #FF0000 0%, #CC0000 100%)',
+    color: '#FFFFFF',
+    boxShadow: '0 4px 15px rgba(255, 0, 0, 0.4)',
   };
 
   const buttonHoverStyle: React.CSSProperties = {
@@ -434,8 +436,8 @@ function BottomCTAButtons({
 
   const callHoverStyle: React.CSSProperties = {
     ...buttonHoverStyle,
-    boxShadow: '0 8px 20px rgba(255, 184, 0, 0.6)',
-    background: 'linear-gradient(135deg, #FFC233 0%, #FFB800 100%)',
+    boxShadow: '0 8px 20px rgba(255, 0, 0, 0.6)',
+    background: 'linear-gradient(135deg, #FF3333 0%, #FF0000 100%)',
   };
 
   const quoteHoverStyle: React.CSSProperties = {
@@ -446,8 +448,8 @@ function BottomCTAButtons({
 
   const bookHoverStyle: React.CSSProperties = {
     ...buttonHoverStyle,
-    boxShadow: '0 8px 20px rgba(255, 184, 0, 0.6)',
-    background: 'linear-gradient(135deg, #FFC233 0%, #FFB800 100%)',
+    boxShadow: '0 8px 20px rgba(255, 0, 0, 0.6)',
+    background: 'linear-gradient(135deg, #FF3333 0%, #FF0000 100%)',
   };
 
   return (
@@ -469,7 +471,7 @@ function BottomCTAButtons({
         borderRadius: '50px',
         padding: isMobile ? '6px' : '8px',
         boxShadow: '0 8px 30px rgba(10, 10, 12, 0.4)',
-        border: '1px solid rgba(255, 184, 0, 0.3)',
+        border: '1px solid rgba(255, 0, 0, 0.3)',
         width: isMobile ? 'calc(100vw - 20px)' : 'calc(100vw - 30px)',
         maxWidth: '500px',
         overflowX: 'auto' as const,
@@ -498,8 +500,8 @@ function BottomCTAButtons({
         <span style={{ position: 'relative' as const, zIndex: 2, display: 'flex' as const, alignItems: 'center', gap: isMobile ? '4px' : '5px' }}>
           {showPhoneIcon && (
             <svg width={isMobile ? "12" : "14"} height={isMobile ? "12" : "14"} viewBox="0 0 24 24" fill="none">
-              <path d="M20 10.999H22C22 5.869 18.127 2 12.99 2V4C17.052 4 20 6.943 20 10.999Z" fill="#0A0A0C"/>
-              <path d="M13 8C15.103 8 16 8.897 16 11H18C18 7.774 16.225 6 13 6V8ZM16.422 13.443C16.229 13.268 15.978 13.192 15.727 13.192C15.476 13.192 15.225 13.268 15.031 13.443L13.638 14.828C13.174 14.559 12.639 14.346 12.077 14.195C11.516 14.044 10.953 13.971 10.413 13.971C9.873 13.971 9.311 14.044 8.749 14.195C8.188 14.346 7.653 14.559 7.189 14.828L5.796 13.443C5.603 13.268 5.352 13.192 5.101 13.192C4.85 13.192 4.599 13.268 4.405 13.443L2.69 15.145C2.497 15.32 2.4 15.572 2.4 15.824C2.4 16.076 2.497 16.328 2.69 16.503L5.574 19.4C6.985 20.812 8.947 21.6 11.038 21.6C13.13 21.6 15.091 20.812 16.502 19.4L19.386 16.503C19.58 16.328 19.676 16.076 19.676 15.824C19.676 15.572 19.58 15.32 19.386 15.145L17.672 13.443H16.422Z" fill="#0A0A0C"/>
+              <path d="M20 10.999H22C22 5.869 18.127 2 12.99 2V4C17.052 4 20 6.943 20 10.999Z" fill="#FFFFFF"/>
+              <path d="M13 8C15.103 8 16 8.897 16 11H18C18 7.774 16.225 6 13 6V8ZM16.422 13.443C16.229 13.268 15.978 13.192 15.727 13.192C15.476 13.192 15.225 13.268 15.031 13.443L13.638 14.828C13.174 14.559 12.639 14.346 12.077 14.195C11.516 14.044 10.953 13.971 10.413 13.971C9.873 13.971 9.311 14.044 8.749 14.195C8.188 14.346 7.653 14.559 7.189 14.828L5.796 13.443C5.603 13.268 5.352 13.192 5.101 13.192C4.85 13.192 4.599 13.268 4.405 13.443L2.69 15.145C2.497 15.32 2.4 15.572 2.4 15.824C2.4 16.076 2.497 16.328 2.69 16.503L5.574 19.4C6.985 20.812 8.947 21.6 11.038 21.6C13.13 21.6 15.091 20.812 16.502 19.4L19.386 16.503C19.58 16.328 19.676 16.076 19.676 15.824C19.676 15.572 19.58 15.32 19.386 15.145L17.672 13.443H16.422Z" fill="#FFFFFF"/>
             </svg>
           )}
           {callText}
@@ -537,7 +539,7 @@ function BottomCTAButtons({
         <span style={{ position: 'relative' as const, zIndex: 2, display: 'flex' as const, alignItems: 'center', gap: isMobile ? '4px' : '5px' }}>
           {showBookIcon && (
             <svg width={isMobile ? "12" : "14"} height={isMobile ? "12" : "14"} viewBox="0 0 24 24" fill="none">
-              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#0A0A0C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           )}
           {bookText}
@@ -686,9 +688,9 @@ const HeroSection = () => {
   // BRAVOS Colors
   const colors = {
     background: '#0A0A0C',
-    gold: '#FFB800',
-    goldLight: 'rgba(255, 184, 0, 0.1)',
-    goldBorder: 'rgba(255, 184, 0, 0.3)',
+    gold: '#FF0000', // Changed to red
+    goldLight: 'rgba(255, 0, 0, 0.1)',
+    goldBorder: 'rgba(255, 0, 0, 0.3)',
     white: '#FFFFFF',
     softWhite: '#FAFAFA',
     softWhite70: 'rgba(250, 250, 250, 0.7)',
@@ -698,14 +700,17 @@ const HeroSection = () => {
   const baseStyles: any = {
     heroSection: {
       position: 'relative' as const,
-      minHeight: '100dvh',
-      backgroundColor: colors.background,
-      overflow: 'hidden' as const,
-      fontFamily: "'Inter', sans-serif",
+      minHeight: '100vh',
+      height: '100%',
       width: '100%',
+      backgroundColor: colors.background,
+      overflow: 'visible' as const,
+      fontFamily: "'Inter', sans-serif",
       maxWidth: '100vw',
-      boxSizing: 'border-box',
-      borderTop: '4px solid #FFB800',
+      boxSizing: 'border-box' as const,
+      borderTop: '4px solid #FF0000',
+      display: 'flex' as const,
+      flexDirection: 'column' as const,
     },
 
     backgroundContainer: {
@@ -718,11 +723,10 @@ const HeroSection = () => {
       backgroundSize: 'cover',
       backgroundPosition: isMobile ? 'center 30%' : 'center',
       backgroundRepeat: 'no-repeat',
-      backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+      backgroundAttachment: 'fixed' as const,
       zIndex: 1,
       width: '100%',
       height: '100%',
-      minHeight: '100%',
     },
     
     overlayGradient: {
@@ -731,39 +735,41 @@ const HeroSection = () => {
       left: 0,
       right: 0,
       bottom: 0,
-      background: 'linear-gradient(135deg, rgba(10, 10, 12, 0.60) 0%, rgba(10, 10, 12, 0.50) 100%)',
+      background: 'linear-gradient(135deg, rgba(10, 10, 12, 0.85) 0%, rgba(10, 10, 12, 0.75) 100%)',
       zIndex: 2,
     },
 
     heroContent: {
       position: 'relative' as const,
       zIndex: 10,
-      paddingTop: isMobile ? (isSmallMobile ? '100px' : '120px') : '140px',
-      paddingBottom: isMobile ? (isSmallMobile ? '60px' : '80px') : '80px',
-      minHeight: 'calc(100dvh - 60px)',
+      paddingTop: isMobile ? '80px' : '100px',
+      paddingBottom: isMobile ? '80px' : '100px',
+      minHeight: '100vh',
       display: 'flex' as const,
       alignItems: 'center',
-      paddingLeft: isMobile ? (isSmallMobile ? '16px' : '20px') : '40px',
-      paddingRight: isMobile ? (isSmallMobile ? '16px' : '20px') : '40px',
+      paddingLeft: isMobile ? '16px' : '40px',
+      paddingRight: isMobile ? '16px' : '40px',
       width: '100%',
-      boxSizing: 'border-box',
+      boxSizing: 'border-box' as const,
       justifyContent: 'center',
     },
     
     heroGrid: {
-      maxWidth: '1280px',
+      maxWidth: '1400px',
       margin: '0 auto',
       display: 'grid' as const,
       gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-      gap: isMobile ? (isSmallMobile ? '1.5rem' : '2rem') : '4rem',
-      alignItems: isMobile ? 'flex-start' : 'center',
+      gap: isMobile ? '2rem' : '4rem',
+      alignItems: 'center',
       width: '100%',
+      position: 'relative' as const,
+      zIndex: 15,
     },
     
     leftColumn: {
       display: 'flex' as const,
       flexDirection: 'column' as const,
-      gap: isMobile ? (isSmallMobile ? '1rem' : '1.5rem') : '2rem',
+      gap: isMobile ? '1.5rem' : '2rem',
       width: '100%',
       position: 'relative' as const,
     },
@@ -772,18 +778,18 @@ const HeroSection = () => {
       display: 'flex' as const,
       alignItems: 'center',
       justifyContent: isSmallMobile ? 'center' : 'flex-start',
-      gap: isMobile ? (isSmallMobile ? '0.4rem' : '0.5rem') : '1rem',
+      gap: isMobile ? '0.5rem' : '1rem',
       backgroundColor: colors.goldLight,
       border: `2px solid ${colors.goldBorder}`,
       borderRadius: isSmallMobile ? '40px' : '60px',
-      padding: isMobile ? (isSmallMobile ? '0.4rem 0.6rem' : '0.6rem 0.8rem') : '1rem 1.5rem',
+      padding: isMobile ? '0.6rem 0.8rem' : '1rem 1.5rem',
       width: '100%',
       maxWidth: '100%',
-      boxSizing: 'border-box',
+      boxSizing: 'border-box' as const,
       backdropFilter: 'blur(10px)',
       boxShadow: active 
-        ? '0 15px 40px rgba(255, 184, 0, 0.3), 0 0 0 2px rgba(255, 255, 255, 0.1) inset' 
-        : '0 10px 30px rgba(255, 184, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
+        ? '0 15px 40px rgba(255, 0, 0, 0.3), 0 0 0 2px rgba(255, 255, 255, 0.1) inset' 
+        : '0 10px 30px rgba(255, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
       transform: active ? 'translateY(-3px) scale(1.05)' : 'translateY(0) scale(1)',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       cursor: 'pointer',
@@ -793,8 +799,8 @@ const HeroSection = () => {
     }),
     
     numberOneBadge: (active: boolean) => ({
-      width: isMobile ? (isSmallMobile ? '32px' : '40px') : '50px',
-      height: isMobile ? (isSmallMobile ? '32px' : '40px') : '50px',
+      width: isMobile ? '40px' : '50px',
+      height: isMobile ? '40px' : '50px',
       backgroundColor: colors.gold,
       borderRadius: '50%',
       display: 'flex' as const,
@@ -803,8 +809,8 @@ const HeroSection = () => {
       flexShrink: 0,
       fontWeight: '900',
       boxShadow: active 
-        ? '0 8px 25px rgba(255, 184, 0, 0.6), 0 0 0 3px rgba(255, 255, 255, 0.2) inset' 
-        : '0 6px 20px rgba(255, 184, 0, 0.4), 0 0 0 2px rgba(255, 255, 255, 0.1) inset',
+        ? '0 8px 25px rgba(255, 0, 0, 0.6), 0 0 0 3px rgba(255, 255, 255, 0.2) inset' 
+        : '0 6px 20px rgba(255, 0, 0, 0.4), 0 0 0 2px rgba(255, 255, 255, 0.1) inset',
       transform: active ? 'scale(1.15)' : 'scale(1)',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     }),
@@ -812,17 +818,17 @@ const HeroSection = () => {
     numberOne: {
       color: colors.background,
       fontWeight: '900',
-      fontSize: isMobile ? (isSmallMobile ? '1.2rem' : '1.4rem') : '1.6rem',
+      fontSize: isMobile ? '1.4rem' : '1.6rem',
       fontFamily: "'Inter', sans-serif",
       textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
     },
     
     badgeText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.6rem' : '0.75rem') : '1rem',
+      fontSize: isMobile ? '0.75rem' : '1rem',
       fontWeight: '700',
       color: colors.gold,
       lineHeight: '1.2',
-      letterSpacing: isMobile ? (isSmallMobile ? '0.2px' : '0.3px') : '1px',
+      letterSpacing: isMobile ? '0.3px' : '1px',
       fontFamily: "'Inter', sans-serif",
       textTransform: 'uppercase' as const,
       whiteSpace: isSmallMobile ? 'normal' : 'nowrap' as const,
@@ -835,14 +841,14 @@ const HeroSection = () => {
     houstonBold: {
       fontWeight: '800',
       color: colors.gold,
-      fontSize: isMobile ? (isSmallMobile ? '0.7rem' : '0.85rem') : '1.1rem',
+      fontSize: isMobile ? '0.85rem' : '1.1rem',
       fontFamily: "'Inter', sans-serif",
       textShadow: '0 3px 6px rgba(0, 0, 0, 0.4)',
       display: 'inline',
     },
 
     headline: {
-      fontSize: isMobile ? (isSmallMobile ? '2.2rem' : '2.5rem') : (isTablet ? '3.2rem' : '4rem'),
+      fontSize: isMobile ? (isSmallMobile ? '2.2rem' : '2.8rem') : (isTablet ? '3.5rem' : '4.2rem'),
       fontWeight: '800',
       color: colors.white,
       lineHeight: 1.1,
@@ -857,13 +863,13 @@ const HeroSection = () => {
       display: 'block' as const,
       fontFamily: "'Inter', sans-serif",
       fontWeight: '800',
-      fontSize: isMobile ? (isSmallMobile ? '2rem' : '2.4rem') : (isTablet ? '3.4rem' : '4rem'),
+      fontSize: isMobile ? (isSmallMobile ? '2.5rem' : '3rem') : (isTablet ? '4rem' : '4.8rem'),
       lineHeight: 1.1,
       marginTop: isMobile ? '0.5rem' : '0',
     },
 
     subheadline: {
-      fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : (isTablet ? '1.125rem' : '1.25rem'),
+      fontSize: isMobile ? '1rem' : (isTablet ? '1.25rem' : '1.35rem'),
       color: colors.softWhite90,
       lineHeight: 1.6,
       maxWidth: '600px',
@@ -871,19 +877,17 @@ const HeroSection = () => {
       fontFamily: "'Inter', sans-serif",
       fontWeight: '400',
       textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)',
-      marginTop: '100px',
     },
 
     trustGrid: {
       display: 'flex' as const,
       flexDirection: 'column' as const,
-      gap: '1rem',
+      gap: '0.5rem',
       width: '100%',
-      marginTop: '1rem',
     },
     
     trustText: {
-      fontSize: isMobile ? (isSmallMobile ? '1.8rem' : '2rem') : '2.5rem',
+      fontSize: isMobile ? (isSmallMobile ? '1.8rem' : '2.2rem') : '2.8rem',
       fontWeight: '800',
       color: colors.white,
       fontFamily: "'Inter', sans-serif",
@@ -895,14 +899,14 @@ const HeroSection = () => {
     trustTextHighlight: {
       color: colors.gold,
       display: 'block' as const,
-      fontSize: isMobile ? (isSmallMobile ? '2rem' : '2.2rem') : '2.8rem',
+      fontSize: isMobile ? (isSmallMobile ? '2.2rem' : '2.6rem') : '3.2rem',
     },
 
     reviewsContainer: {
       display: 'flex' as const,
       flexDirection: isMobile ? 'column' as const : 'row' as const,
       alignItems: isMobile ? 'flex-start' : 'center',
-      gap: isMobile ? (isSmallMobile ? '0.5rem' : '0.75rem') : '1rem',
+      gap: isMobile ? '0.75rem' : '1rem',
       flexWrap: 'wrap' as const,
       width: '100%',
     },
@@ -914,13 +918,13 @@ const HeroSection = () => {
     
     starIcon: {
       color: colors.gold,
-      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '1rem') : '1.5rem',
+      fontSize: isMobile ? '1rem' : '1.5rem',
       fontWeight: '700',
-      textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
+      textShadow: '0 2px 4px rgba(255, 0, 0, 0.3)',
     },
     
     reviewText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1.125rem',
+      fontSize: isMobile ? '0.9rem' : '1.125rem',
       color: colors.softWhite90,
       fontFamily: "'Inter', sans-serif",
       fontWeight: '400',
@@ -930,15 +934,15 @@ const HeroSection = () => {
       color: colors.gold,
       fontWeight: '700',
       fontFamily: "'Inter', sans-serif",
-      fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.25rem',
+      fontSize: isMobile ? '1rem' : '1.25rem',
     },
     
     googleBadge: (active: boolean) => ({
       display: 'flex' as const,
       alignItems: 'center',
       gap: '0.5rem',
-      backgroundColor: active ? 'rgba(255, 184, 0, 0.25)' : 'rgba(255, 184, 0, 0.15)',
-      padding: isMobile ? (isSmallMobile ? '0.5rem 0.75rem' : '0.75rem 1rem') : '1rem 1.25rem',
+      backgroundColor: active ? 'rgba(255, 0, 0, 0.25)' : 'rgba(255, 0, 0, 0.15)',
+      padding: isMobile ? '0.75rem 1rem' : '1rem 1.25rem',
       borderRadius: '30px',
       backdropFilter: 'blur(10px)',
       border: active ? `2px solid ${colors.gold}` : `2px solid ${colors.goldBorder}`,
@@ -950,7 +954,7 @@ const HeroSection = () => {
     }),
     
     googleText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1rem',
+      fontSize: isMobile ? '0.9rem' : '1rem',
       color: colors.white,
       fontWeight: '600',
       fontFamily: "'Inter', sans-serif",
@@ -961,22 +965,22 @@ const HeroSection = () => {
       display: 'flex' as const,
       alignItems: 'center',
       gap: '0.5rem',
-      backgroundColor: active ? colors.gold : 'rgba(255, 184, 0, 0.1)',
+      backgroundColor: active ? colors.gold : 'rgba(255, 0, 0, 0.1)',
       color: active ? colors.background : colors.white,
       border: active ? `2px solid ${colors.gold}` : `2px solid ${colors.goldBorder}`,
-      padding: isMobile ? (isSmallMobile ? '0.5rem 0.75rem' : '0.75rem 1rem') : '1rem 1.25rem',
+      padding: isMobile ? '0.75rem 1rem' : '1rem 1.25rem',
       borderRadius: '30px',
       backdropFilter: 'blur(10px)',
       transition: 'all 0.3s ease',
       cursor: 'pointer',
       transform: active ? 'translateY(-3px) scale(1.05)' : 'translateY(0) scale(1)',
-      boxShadow: active ? '0 12px 30px rgba(255, 184, 0, 0.4)' : '0 8px 20px rgba(0, 0, 0, 0.2)',
+      boxShadow: active ? '0 12px 30px rgba(255, 0, 0, 0.4)' : '0 8px 20px rgba(0, 0, 0, 0.2)',
       fontWeight: '600',
       fontFamily: "'Inter', sans-serif",
     }),
     
     googleReviewsText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1rem',
+      fontSize: isMobile ? '0.9rem' : '1rem',
       fontWeight: '600',
       fontFamily: "'Inter', sans-serif",
       letterSpacing: '0.5px',
@@ -1014,25 +1018,26 @@ const HeroSection = () => {
     },
     
     bostonText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.6rem' : '0.7rem') : '0.875rem',
+      fontSize: isMobile ? '0.7rem' : '0.875rem',
       color: colors.softWhite,
       fontWeight: '400',
       fontFamily: "'Inter', sans-serif",
     },
 
     rightColumn: {
-      marginTop: isMobile ? (isSmallMobile ? '1.5rem' : '2rem') : '0',
       width: '100%',
     },
     
     bookingCard: {
       backgroundColor: colors.white,
       borderRadius: '20px',
-      padding: isMobile ? (isSmallMobile ? '1.25rem' : '1.75rem') : '2rem',
-      boxShadow: '0 20px 60px rgba(10, 10, 12, 0.3)',
+      padding: isMobile ? '1.75rem' : '2.5rem',
+      boxShadow: '0 20px 60px rgba(255, 0, 0, 0.3)',
       border: `2px solid ${colors.goldBorder}`,
       width: '100%',
-      boxSizing: 'border-box',
+      boxSizing: 'border-box' as const,
+      position: 'relative' as const,
+      zIndex: 20,
     },
     
     cardHeader: {
@@ -1041,7 +1046,7 @@ const HeroSection = () => {
     },
     
     formTitle: {
-      fontSize: isMobile ? (isSmallMobile ? '1.35rem' : '1.6rem') : '1.85rem',
+      fontSize: isMobile ? '1.6rem' : '1.85rem',
       fontWeight: '700',
       color: colors.background,
       margin: '0 0 0.5rem 0',
@@ -1051,7 +1056,7 @@ const HeroSection = () => {
     },
     
     formSubtitle: {
-      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1rem',
+      fontSize: isMobile ? '0.9rem' : '1rem',
       color: colors.background,
       opacity: 0.8,
       margin: 0,
@@ -1081,29 +1086,29 @@ const HeroSection = () => {
     },
     
     formInput: {
-      padding: isMobile ? (isSmallMobile ? '0.6rem' : '0.8rem') : '1rem',
+      padding: isMobile ? '0.8rem' : '1rem',
       borderRadius: '10px',
       border: '2px solid #E5E7EB',
-      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.85rem') : '0.875rem',
+      fontSize: isMobile ? '0.85rem' : '0.875rem',
       transition: 'all 0.3s ease',
       outline: 'none',
       fontFamily: "'Inter', sans-serif",
       fontWeight: '400',
       width: '100%',
-      boxSizing: 'border-box',
+      boxSizing: 'border-box' as const,
     },
     
     formTextarea: {
-      padding: isMobile ? (isSmallMobile ? '0.6rem' : '0.8rem') : '1rem',
+      padding: isMobile ? '0.8rem' : '1rem',
       borderRadius: '10px',
       border: '2px solid #E5E7EB',
-      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.85rem') : '0.875rem',
+      fontSize: isMobile ? '0.85rem' : '0.875rem',
       transition: 'all 0.3s ease',
       outline: 'none',
       fontFamily: "'Inter', sans-serif",
       fontWeight: '400',
       width: '100%',
-      boxSizing: 'border-box',
+      boxSizing: 'border-box' as const,
       resize: 'vertical' as const,
       minHeight: '100px',
     },
@@ -1117,12 +1122,12 @@ const HeroSection = () => {
     
     submitButton: (active: boolean) => ({
       marginTop: '0.5rem',
-      padding: isMobile ? (isSmallMobile ? '0.9rem' : '1.1rem') : '1.25rem',
+      padding: isMobile ? '1.1rem' : '1.25rem',
       backgroundColor: colors.gold,
       color: colors.background,
       border: 'none',
       borderRadius: '10px',
-      fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.125rem',
+      fontSize: isMobile ? '1rem' : '1.125rem',
       fontWeight: '700',
       cursor: 'pointer',
       display: 'flex' as const,
@@ -1132,13 +1137,13 @@ const HeroSection = () => {
       transition: 'all 0.3s ease',
       fontFamily: "'Inter', sans-serif",
       transform: active ? 'translateY(-3px)' : 'translateY(0)',
-      boxShadow: active ? '0 15px 40px rgba(255, 184, 0, 0.4)' : '0 10px 30px rgba(255, 184, 0, 0.3)',
+      boxShadow: active ? '0 15px 40px rgba(255, 0, 0, 0.4)' : '0 10px 30px rgba(255, 0, 0, 0.3)',
       width: '100%',
       position: 'relative' as const,
     }),
     
     buttonText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.125rem',
+      fontSize: isMobile ? '1rem' : '1.125rem',
       fontWeight: '700',
     },
     
@@ -1150,16 +1155,16 @@ const HeroSection = () => {
     successMessage: {
       marginTop: '1.5rem',
       padding: '1rem',
-      backgroundColor: 'rgba(255, 184, 0, 0.1)',
+      backgroundColor: 'rgba(255, 0, 0, 0.1)',
       borderRadius: '12px',
       border: `2px solid ${colors.gold}`,
       textAlign: 'center' as const,
       width: '100%',
-      boxSizing: 'border-box',
+      boxSizing: 'border-box' as const,
     },
     
     successTitle: {
-      fontSize: isMobile ? (isSmallMobile ? '1rem' : '1.1rem') : '1.25rem',
+      fontSize: isMobile ? '1.1rem' : '1.25rem',
       fontWeight: '700',
       color: colors.background,
       marginBottom: '0.5rem',
@@ -1167,7 +1172,7 @@ const HeroSection = () => {
     },
     
     successText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1rem',
+      fontSize: isMobile ? '0.9rem' : '1rem',
       color: colors.background,
       marginBottom: 0,
       fontFamily: "'Inter', sans-serif",
@@ -1182,11 +1187,11 @@ const HeroSection = () => {
       border: '2px solid #EF4444',
       textAlign: 'center' as const,
       width: '100%',
-      boxSizing: 'border-box',
+      boxSizing: 'border-box' as const,
     },
     
     errorText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.125rem',
+      fontSize: isMobile ? '1rem' : '1.125rem',
       fontWeight: '600',
       color: '#EF4444',
       marginBottom: 0,
@@ -1194,7 +1199,7 @@ const HeroSection = () => {
     },
     
     formNote: {
-      fontSize: isMobile ? (isSmallMobile ? '0.6rem' : '0.7rem') : '0.75rem',
+      fontSize: isMobile ? '0.7rem' : '0.75rem',
       color: '#6B7280',
       textAlign: 'center' as const,
       marginTop: '1rem',
@@ -1220,7 +1225,7 @@ const HeroSection = () => {
     },
     
     securityText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.6rem' : '0.7rem') : '0.75rem',
+      fontSize: isMobile ? '0.7rem' : '0.75rem',
       color: '#6B7280',
       fontWeight: '400',
       fontFamily: "'Inter', sans-serif",
@@ -1232,6 +1237,8 @@ const HeroSection = () => {
       <div style={baseStyles.backgroundContainer}>
         <div style={baseStyles.overlayGradient}></div>
       </div>
+      
+      <StarRotationRing size={isMobile ? 400 : 600} color="#FF0000" />
       
       <div style={baseStyles.heroContent}>
         <div style={baseStyles.heroGrid}>
@@ -1245,13 +1252,11 @@ const HeroSection = () => {
             >
               <MicroInteraction 
                 src="/image/pointer1.png"
-                width={200}
-                height={220}
+                width={isMobile ? 150 : 200}
+                height={isMobile ? 170 : 220}
                 style={{ 
-                  top: '-20px', 
-                  right: '-30px',
-                  filter: 'drop-shadow(0 10px 20px rgba(255, 184, 0, 0.4))',
-                  transform: 'rotate(5deg)',
+                  top: '-30px', 
+                  right: '-20px',
                 }}
               />
               
@@ -1423,12 +1428,11 @@ const HeroSection = () => {
                 >
                   <MicroInteraction 
                     src="/image/pointer1.png"
-                    width={100}
-                    height={100}
+                    width={80}
+                    height={80}
                     style={{ 
-                      top: '-10px', 
-                      right: '-5px',
-                      filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2))'
+                      top: '-15px', 
+                      right: '-10px',
                     }}
                   />
                   
@@ -1496,9 +1500,9 @@ const VideoTestimonialCard = ({
 
   const colors = {
     background: '#0A0A0C',
-    gold: '#FFB800',
-    goldLight: 'rgba(255, 184, 0, 0.1)',
-    goldBorder: 'rgba(255, 184, 0, 0.3)',
+    gold: '#FF0000',
+    goldLight: 'rgba(255, 0, 0, 0.1)',
+    goldBorder: 'rgba(255, 0, 0, 0.3)',
     white: '#FFFFFF',
     softWhite: '#FAFAFA',
   };
@@ -1554,7 +1558,7 @@ const VideoTestimonialCard = ({
           : '0 20px 40px rgba(10, 10, 12, 0.1)',
         border: activeVideo === index 
           ? `2px solid ${colors.gold}` 
-          : '1px solid rgba(255, 184, 0, 0.2)',
+          : '1px solid rgba(255, 0, 0, 0.2)',
         transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
         transform: activeVideo === index ? 'translateY(-10px)' : 'translateY(0)',
         cursor: 'pointer',
@@ -1722,7 +1726,7 @@ const StatsCounter = () => {
 
   const colors = {
     background: '#0A0A0C',
-    gold: '#FFB800',
+    gold: '#FF0000',
     softWhite: '#FAFAFA',
   };
 
@@ -1951,7 +1955,7 @@ function FAQSection({
       answer: "We provide comprehensive warranties including manufacturer warranties on materials (20-50 years depending on product) and our BRAVOS workmanship warranty for added protection and peace of mind."
     }
   ],
-  accentColor = '#FFB800',
+  accentColor = '#FF0000',
   textColor = '#0A0A0C',
   backgroundColor = '#FFFFFF',
   containerStyle = {},
@@ -2007,10 +2011,10 @@ function FAQSection({
       display: 'inline-flex' as const,
       alignItems: 'center',
       gap: '10px',
-      background: `rgba(255, 184, 0, 0.1)`,
+      background: `rgba(255, 0, 0, 0.1)`,
       padding: isMobile ? (isSmallMobile ? '6px 12px' : '8px 16px') : '10px 20px',
       borderRadius: '50px',
-      border: `1px solid rgba(255, 184, 0, 0.3)`,
+      border: `1px solid rgba(255, 0, 0, 0.3)`,
       marginBottom: '20px',
       transition: 'all 0.3s ease',
       cursor: 'pointer',
@@ -2064,14 +2068,14 @@ function FAQSection({
       marginBottom: '12px',
       overflow: 'hidden' as const,
       boxShadow: '0 4px 20px rgba(10, 10, 12, 0.08)',
-      border: `1px solid ${isOpen ? '#FFB800' : 'rgba(10, 10, 12, 0.1)'}`,
+      border: `1px solid ${isOpen ? '#FF0000' : 'rgba(10, 10, 12, 0.1)'}`,
       transition: 'all 0.3s ease',
       cursor: 'pointer',
       ...faqItemStyle
     }),
     questionButton: (isOpen: boolean) => ({
       width: '100%',
-      background: isOpen ? 'rgba(255, 184, 0, 0.05)' : '#FFFFFF',
+      background: isOpen ? 'rgba(255, 0, 0, 0.05)' : '#FFFFFF',
       border: 'none',
       padding: isMobile ? (isSmallMobile ? '14px' : '16px') : '20px',
       display: 'flex' as const,
@@ -2090,14 +2094,14 @@ function FAQSection({
     questionNumber: {
       width: isMobile ? (isSmallMobile ? '28px' : '32px') : '32px',
       height: isMobile ? (isSmallMobile ? '28px' : '32px') : '32px',
-      background: `linear-gradient(135deg, #FFB800 0%, #E6A600 100%)`,
+      background: `linear-gradient(135deg, #FF0000 0%, #CC0000 100%)`,
       borderRadius: '50%',
       display: 'flex' as const,
       alignItems: 'center',
       justifyContent: 'center',
       fontSize: isMobile ? (isSmallMobile ? '10px' : '12px') : '12px',
       fontWeight: 700,
-      color: '#0A0A0C',
+      color: '#FFFFFF',
       flexShrink: 0,
       transition: 'all 0.3s ease',
     },
@@ -2174,9 +2178,9 @@ function FAQSection({
       textAlign: 'center'  as const,
       marginTop: isMobile ? (isSmallMobile ? '30px' : '40px') : '60px',
       padding: isMobile ? (isSmallMobile ? '20px' : '30px 20px') : '40px 20px',
-      background: `linear-gradient(135deg, rgba(10, 10, 12, 0.05) 0%, rgba(255, 184, 0, 0.05) 100%)`,
+      background: `linear-gradient(135deg, rgba(10, 10, 12, 0.05) 0%, rgba(255, 0, 0, 0.05) 100%)`,
       borderRadius: '20px',
-      border: `1px solid rgba(255, 184, 0, 0.3)`,
+      border: `1px solid rgba(255, 0, 0, 0.3)`,
       transition: 'all 0.3s ease',
       cursor: 'pointer',
     },
@@ -2208,8 +2212,8 @@ function FAQSection({
       alignItems: 'center',
     },
     primaryButton: {
-      background: `linear-gradient(135deg, #FFB800 0%, #E6A600 100%)`,
-      color: '#0A0A0C',
+      background: `linear-gradient(135deg, #FF0000 0%, #CC0000 100%)`,
+      color: '#FFFFFF',
       border: 'none',
       padding: isMobile ? (isSmallMobile ? '14px 20px' : '16px 24px') : '16px 24px',
       fontSize: isMobile ? (isSmallMobile ? '14px' : '15px') : '15px',
@@ -2217,7 +2221,7 @@ function FAQSection({
       borderRadius: '50px',
       cursor: 'pointer',
       transition: 'all 0.3s ease',
-      boxShadow: `0 8px 25px rgba(255, 184, 0, 0.3)`,
+      boxShadow: `0 8px 25px rgba(255, 0, 0, 0.3)`,
       fontFamily: "'Inter', sans-serif",
       letterSpacing: '0.5px',
       width: isMobile ? '100%' : 'auto',
@@ -2226,7 +2230,7 @@ function FAQSection({
     secondaryButton: {
       background: 'transparent',
       color: textColor,
-      border: `2px solid rgba(255, 184, 0, 0.5)`,
+      border: `2px solid rgba(255, 0, 0, 0.5)`,
       padding: isMobile ? (isSmallMobile ? '14px 20px' : '16px 24px') : '16px 24px',
       fontSize: isMobile ? (isSmallMobile ? '14px' : '15px') : '15px',
       fontWeight: 700,
@@ -2242,18 +2246,18 @@ function FAQSection({
 
   return (
     <section style={baseStyles.faqSection}>
-      <StarRotationRing size={400} color="#FFB800" />
+      <StarRotationRing size={500} color="#FF0000" />
       <div style={baseStyles.container}>
         <div style={baseStyles.header}>
           <div style={baseStyles.badge}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'translateY(-3px)';
-              e.currentTarget.style.background = 'rgba(255, 184, 0, 0.15)';
-              e.currentTarget.style.boxShadow = '0 8px 20px rgba(255, 184, 0, 0.2)';
+              e.currentTarget.style.background = 'rgba(255, 0, 0, 0.15)';
+              e.currentTarget.style.boxShadow = '0 8px 20px rgba(255, 0, 0, 0.2)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.background = 'rgba(255, 184, 0, 0.1)';
+              e.currentTarget.style.background = 'rgba(255, 0, 0, 0.1)';
               e.currentTarget.style.boxShadow = 'none';
             }}>
             <div style={baseStyles.badgeIcon}>❓</div>
@@ -2313,11 +2317,11 @@ function FAQSection({
                 onClick={() => toggleFAQ(index)}
                 style={baseStyles.questionButton(openIndex === index)}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'rgba(255, 184, 0, 0.08)';
+                  e.currentTarget.style.background = 'rgba(255, 0, 0, 0.08)';
                   e.currentTarget.style.transform = 'scale(1.01)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = openIndex === index ? 'rgba(255, 184, 0, 0.05)' : '#FFFFFF';
+                  e.currentTarget.style.background = openIndex === index ? 'rgba(255, 0, 0, 0.05)' : '#FFFFFF';
                   e.currentTarget.style.transform = 'scale(1)';
                 }}
               >
@@ -2392,12 +2396,12 @@ function FAQSection({
         <div style={baseStyles.ctaContainer}
           onMouseEnter={(e) => {
             e.currentTarget.style.transform = 'translateY(-5px)';
-            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(10, 10, 12, 0.08) 0%, rgba(255, 184, 0, 0.08) 100%)';
+            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(10, 10, 12, 0.08) 0%, rgba(255, 0, 0, 0.08) 100%)';
             e.currentTarget.style.boxShadow = '0 15px 35px rgba(10, 10, 12, 0.15)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(10, 10, 12, 0.05) 0%, rgba(255, 184, 0, 0.05) 100%)';
+            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(10, 10, 12, 0.05) 0%, rgba(255, 0, 0, 0.05) 100%)';
             e.currentTarget.style.boxShadow = 'none';
           }}>
           <h3 style={baseStyles.ctaTitle}
@@ -2428,13 +2432,13 @@ function FAQSection({
               style={baseStyles.primaryButton}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-3px) scale(1.05)';
-                e.currentTarget.style.boxShadow = '0 12px 30px rgba(255, 184, 0, 0.4)';
-                e.currentTarget.style.background = 'linear-gradient(135deg, #E6A600 0%, #FFB800 100%)';
+                e.currentTarget.style.boxShadow = '0 12px 30px rgba(255, 0, 0, 0.4)';
+                e.currentTarget.style.background = 'linear-gradient(135deg, #CC0000 0%, #FF0000 100%)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                e.currentTarget.style.boxShadow = '0 8px 25px rgba(255, 184, 0, 0.3)';
-                e.currentTarget.style.background = 'linear-gradient(135deg, #FFB800 0%, #E6A600 100%)';
+                e.currentTarget.style.boxShadow = '0 8px 25px rgba(255, 0, 0, 0.3)';
+                e.currentTarget.style.background = 'linear-gradient(135deg, #FF0000 0%, #CC0000 100%)';
               }}
             >
               Free Inspection
@@ -2443,14 +2447,14 @@ function FAQSection({
               onClick={() => window.location.href = 'tel:+12815551234'}
               style={baseStyles.secondaryButton}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 184, 0, 0.1)';
+                e.currentTarget.style.background = 'rgba(255, 0, 0, 0.1)';
                 e.currentTarget.style.borderColor = accentColor;
                 e.currentTarget.style.transform = 'translateY(-3px) scale(1.05)';
                 e.currentTarget.style.color = accentColor;
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = 'transparent';
-                e.currentTarget.style.borderColor = 'rgba(255, 184, 0, 0.5)';
+                e.currentTarget.style.borderColor = 'rgba(255, 0, 0, 0.5)';
                 e.currentTarget.style.transform = 'translateY(0) scale(1)';
                 e.currentTarget.style.color = textColor;
               }}
@@ -2484,9 +2488,9 @@ const BodySection = () => {
 
   const colors = {
     background: '#0A0A0C',
-    gold: '#FFB800',
-    goldLight: 'rgba(255, 184, 0, 0.1)',
-    goldBorder: 'rgba(255, 184, 0, 0.3)',
+    gold: '#FF0000',
+    goldLight: 'rgba(255, 0, 0, 0.1)',
+    goldBorder: 'rgba(255, 0, 0, 0.3)',
     white: '#FFFFFF',
     softWhite: '#FAFAFA',
     softWhite90: 'rgba(250, 250, 250, 0.9)',
@@ -2754,7 +2758,7 @@ const BodySection = () => {
       display: 'inline-flex' as const,
       alignItems: 'center',
       gap: isMobile ? '8px' : '12px',
-      backgroundColor: 'rgba(255, 184, 0, 0.15)',
+      backgroundColor: 'rgba(255, 0, 0, 0.15)',
       padding: isMobile ? '12px 20px' : '16px 32px',
       borderRadius: '50px',
       marginBottom: isMobile ? '30px' : '40px',
@@ -2936,7 +2940,7 @@ const BodySection = () => {
       alignItems: 'flex-start',
       gap: '16px',
       padding: '12px 16px',
-      backgroundColor: 'rgba(255, 184, 0, 0.15)',
+      backgroundColor: 'rgba(255, 0, 0, 0.15)',
       borderRadius: '12px',
       border: `1px solid ${colors.goldBorder}`,
       transition: 'all 0.3s ease',
@@ -3465,7 +3469,7 @@ const BodySection = () => {
       fontFamily: "'Inter', sans-serif",
       transform: active ? 'translateY(-3px)' : 'translateY(0)',
       boxShadow: active 
-        ? '0 15px 30px rgba(255, 184, 0, 0.4)' 
+        ? '0 15px 30px rgba(255, 0, 0, 0.4)' 
         : '0 10px 25px rgba(0, 0, 0, 0.3)',
     }),
     
@@ -3506,7 +3510,7 @@ const BodySection = () => {
       display: 'inline-flex' as const,
       alignItems: 'center',
       gap: isMobile ? '8px' : '12px',
-      backgroundColor: 'rgba(255, 184, 0, 0.15)',
+      backgroundColor: 'rgba(255, 0, 0, 0.15)',
       paddingTop: isMobile ? '12px' : '16px',
       paddingRight: isMobile ? '20px' : '32px',
       paddingBottom: isMobile ? '12px' : '16px',
@@ -3794,7 +3798,7 @@ const BodySection = () => {
       fontFamily: "'Inter', sans-serif",
       transform: active ? 'translateY(-3px)' : 'translateY(0)',
       boxShadow: active 
-        ? '0 20px 40px rgba(255, 184, 0, 0.4)' 
+        ? '0 20px 40px rgba(255, 0, 0, 0.4)' 
         : '0 15px 30px rgba(0, 0, 0, 0.3)',
     }),
     
@@ -3818,7 +3822,7 @@ const BodySection = () => {
       fontFamily: "'Inter', sans-serif",
       transform: active ? 'translateY(-3px)' : 'translateY(0)',
       boxShadow: active 
-        ? '0 15px 30px rgba(255, 184, 0, 0.4)' 
+        ? '0 15px 30px rgba(255, 0, 0, 0.4)' 
         : '0 10px 25px rgba(0, 0, 0, 0.3)',
       marginTop: '40px',
       position: 'relative' as const,
@@ -3830,7 +3834,7 @@ const BodySection = () => {
     <section style={baseBodyStyles.bodyContainer}>
       {/* Section 1: The BRAVOS Difference */}
       <div style={baseBodyStyles.differenceSection}>
-        <StarRotationRing size={400} color="#FFB800" />
+        <StarRotationRing size={500} color="#FF0000" />
         <div style={baseBodyStyles.differenceSectionBg}></div>
         <div style={baseBodyStyles.differenceBadge}>
           <span style={baseBodyStyles.diamondIcon}>✦</span>
@@ -3909,7 +3913,7 @@ const BodySection = () => {
 
       {/* Section 3: Before & After Transformations */}
       <div style={baseBodyStyles.transformationsSection}>
-        <StarRotationRing size={400} color="#FFB800" />
+        <StarRotationRing size={500} color="#FF0000" />
         <div style={baseBodyStyles.transformationsSectionBg}></div>
         <div style={baseBodyStyles.transformationsHeader}>
           <div style={baseBodyStyles.transformationsTitleContainer}>
@@ -4012,7 +4016,7 @@ const BodySection = () => {
 
       {/* Section 4: Video Testimonials */}
       <div style={baseBodyStyles.videoTestimonialsSection}>
-        <StarRotationRing size={400} color="#FFB800" />
+        <StarRotationRing size={500} color="#FF0000" />
         <div style={baseBodyStyles.videoTestimonialsSectionBg}></div>
         <div style={baseBodyStyles.videoTestimonialsHeader}>
           <div style={baseBodyStyles.videoTitleContainer}>
@@ -4047,7 +4051,7 @@ const BodySection = () => {
 
       {/* Section 5: Customer Reviews */}
       <div style={baseBodyStyles.reviewsSection}>
-        <StarRotationRing size={400} color="#FFB800" />
+        <StarRotationRing size={500} color="#FF0000" />
         <div style={baseBodyStyles.reviewsSectionBg}></div>
         <div style={baseBodyStyles.reviewsHeader}>
           <h2 style={baseBodyStyles.reviewsTitle}>
@@ -4116,7 +4120,7 @@ const BodySection = () => {
         position: 'relative' as const,
         overflow: 'hidden' as const,
       }}>
-        <StarRotationRing size={400} color="#FFB800" />
+        <StarRotationRing size={500} color="#FF0000" />
         <div style={{
           position: 'absolute' as const,
           top: 0,
@@ -4171,7 +4175,7 @@ const BodySection = () => {
                 paddingLeft: isMobile ? '20px' : '30px',
                 borderRadius: '20px',
                 textAlign: 'center' as const,
-                boxShadow: '0 20px 40px rgba(255, 184, 0, 0.4)',
+                boxShadow: '0 20px 40px rgba(255, 0, 0, 0.4)',
                 transform: 'rotate(-2deg)',
                 zIndex: 3,
               }}>
@@ -4195,7 +4199,7 @@ const BodySection = () => {
               display: 'inline-flex' as const,
               alignItems: 'center',
               gap: isMobile ? '8px' : '12px',
-              backgroundColor: 'rgba(255, 184, 0, 0.15)',
+              backgroundColor: 'rgba(255, 0, 0, 0.15)',
               paddingTop: isMobile ? '12px' : '16px',
               paddingRight: isMobile ? '20px' : '32px',
               paddingBottom: isMobile ? '12px' : '16px',
@@ -4395,7 +4399,7 @@ const BodySection = () => {
 
       {/* Section 7: Our Story */}
       <div style={baseBodyStyles.ourStorySection}>
-        <StarRotationRing size={400} color="#FFB800" />
+        <StarRotationRing size={500} color="#FF0000" />
         <div style={baseBodyStyles.ourStorySectionBg}></div>
         <div style={baseBodyStyles.ourStoryContent}>
           <h2 style={baseBodyStyles.ourStoryTitle}>
@@ -4471,7 +4475,7 @@ const BodySection = () => {
 
       {/* Section 8: Roofing Services */}
       <div style={baseBodyStyles.flexibleSolutionsSection}>
-        <StarRotationRing size={400} color="#FFB800" />
+        <StarRotationRing size={500} color="#FF0000" />
         <div style={baseBodyStyles.flexibleSolutionsSectionBg}></div>
         <div style={baseBodyStyles.flexibleSolutionsHeader}>
           <div style={baseBodyStyles.flexibleSolutionsBadge}>
@@ -4619,7 +4623,7 @@ const BodySection = () => {
       <FAQSection 
         title="Frequently Asked Roofing Questions"
         subtitle="Find answers to common questions about our roofing services. If you don't see your question here, contact our team for personalized assistance."
-        accentColor="#FFB800"
+        accentColor="#FF0000"
         textColor="#0A0A0C"
         backgroundColor="#FFFFFF"
         containerStyle={{
