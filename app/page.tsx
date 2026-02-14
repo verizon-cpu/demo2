@@ -2144,7 +2144,7 @@ function FAQSection({
       gap: isMobile ? '12px' : '16px',
       flex: 1,
     },
-    questionNumber: {
+    questionNumber: (index: number, isOpen: boolean) => ({
       width: isMobile ? (isSmallMobile ? '28px' : '32px') : '32px',
       height: isMobile ? (isSmallMobile ? '28px' : '32px') : '32px',
       background: isOpen ? '#0A0A0C' : '#FFB800',
@@ -2157,11 +2157,11 @@ function FAQSection({
       color: isOpen ? '#FFB800' : '#0A0A0C',
       flexShrink: 0,
       transition: 'all 0.3s ease',
-    },
-    questionText: {
+    }),
+    questionText: (isOpen: boolean) => ({
       fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.125rem',
       fontWeight: 600,
-      color: isOpen ? '#0A0A0C' : '#0A0A0C',
+      color: isOpen ? '#0A0A0C' : textColor,
       fontFamily: "'Inter', sans-serif",
       marginTop: 0,
       marginRight: 0,
@@ -2169,7 +2169,7 @@ function FAQSection({
       marginLeft: 0,
       lineHeight: 1.4,
       transition: 'all 0.3s ease',
-    },
+    }),
     toggleIcon: (isOpen: boolean) => ({
       width: '20px',
       height: '20px',
@@ -2365,99 +2365,103 @@ function FAQSection({
         </div>
 
         <div style={baseStyles.faqContainer}>
-          {faqs.map((faq, index) => (
-            <div 
-              key={index}
-              style={baseStyles.faqItem(openIndex === index)}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = '0 8px 30px rgba(10, 10, 12, 0.12)';
-                e.currentTarget.style.borderColor = `${accentColor}`;
-                e.currentTarget.style.transform = 'translateY(-3px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = '0 4px 20px rgba(10, 10, 12, 0.08)';
-                e.currentTarget.style.borderColor = openIndex === index ? accentColor : '#0A0A0C';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
-            >
-              <button
-                onClick={() => toggleFAQ(index)}
-                style={baseStyles.questionButton(openIndex === index)}
+          {faqs.map((faq, index) => {
+            const isOpen = openIndex === index;
+            
+            return (
+              <div 
+                key={index}
+                style={baseStyles.faqItem(isOpen)}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = openIndex === index ? '#FFB800' : '#FFB800';
-                  e.currentTarget.style.transform = 'scale(1.01)';
+                  e.currentTarget.style.boxShadow = '0 8px 30px rgba(10, 10, 12, 0.12)';
+                  e.currentTarget.style.borderColor = `${accentColor}`;
+                  e.currentTarget.style.transform = 'translateY(-3px)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = openIndex === index ? '#FFB800' : '#FFFFFF';
-                  e.currentTarget.style.transform = 'scale(1)';
+                  e.currentTarget.style.boxShadow = '0 4px 20px rgba(10, 10, 12, 0.08)';
+                  e.currentTarget.style.borderColor = isOpen ? accentColor : '#0A0A0C';
+                  e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
-                <div style={baseStyles.questionContent}>
-                  <div style={baseStyles.questionNumber}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'scale(1.1)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'scale(1)';
-                    }}>
-                    Q{index + 1}
-                  </div>
-                  <h3 style={baseStyles.questionText}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.color = openIndex === index ? '#0A0A0C' : accentColor;
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.color = openIndex === index ? '#0A0A0C' : textColor;
-                    }}>
-                    {faq.question}
-                  </h3>
-                </div>
-                
-                {showToggleIcon && (
-                  <div style={baseStyles.toggleIcon(openIndex === index)}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = openIndex === index ? 'rotate(45deg) scale(1.2)' : 'rotate(0deg) scale(1.2)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = openIndex === index ? 'rotate(45deg) scale(1)' : 'rotate(0deg) scale(1)';
-                    }}>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                      <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </div>
-                )}
-              </button>
-              
-              <div style={baseStyles.answerContainer(openIndex === index)}>
-                <div style={baseStyles.answerContent(openIndex === index)}>
-                  <div style={baseStyles.answerWrapper}>
-                    <div style={baseStyles.answerIcon}
+                <button
+                  onClick={() => toggleFAQ(index)}
+                  style={baseStyles.questionButton(isOpen)}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = isOpen ? '#FFB800' : '#FFB800';
+                    e.currentTarget.style.transform = 'scale(1.01)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = isOpen ? '#FFB800' : '#FFFFFF';
+                    e.currentTarget.style.transform = 'scale(1)';
+                  }}
+                >
+                  <div style={baseStyles.questionContent}>
+                    <div style={baseStyles.questionNumber(index, isOpen)}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.transform = 'scale(1.1)';
-                        e.currentTarget.style.background = '#FFB800';
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.transform = 'scale(1)';
-                        e.currentTarget.style.background = '#FFB800';
                       }}>
-                      A
+                      Q{index + 1}
                     </div>
-                    <p style={baseStyles.answerText}
+                    <h3 style={baseStyles.questionText(isOpen)}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.color = '#FFB800';
-                        e.currentTarget.style.transform = 'scale(1.01)';
+                        e.currentTarget.style.color = isOpen ? '#0A0A0C' : accentColor;
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.color = '#FFFFFF';
-                        e.currentTarget.style.transform = 'scale(1)';
+                        e.currentTarget.style.color = isOpen ? '#0A0A0C' : textColor;
                       }}>
-                      {faq.answer}
-                    </p>
+                      {faq.question}
+                    </h3>
+                  </div>
+                  
+                  {showToggleIcon && (
+                    <div style={baseStyles.toggleIcon(isOpen)}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = isOpen ? 'rotate(45deg) scale(1.2)' : 'rotate(0deg) scale(1.2)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = isOpen ? 'rotate(45deg) scale(1)' : 'rotate(0deg) scale(1)';
+                      }}>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                  )}
+                </button>
+                
+                <div style={baseStyles.answerContainer(isOpen)}>
+                  <div style={baseStyles.answerContent(isOpen)}>
+                    <div style={baseStyles.answerWrapper}>
+                      <div style={baseStyles.answerIcon}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.transform = 'scale(1.1)';
+                          e.currentTarget.style.background = '#FFB800';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = 'scale(1)';
+                          e.currentTarget.style.background = '#FFB800';
+                        }}>
+                        A
+                      </div>
+                      <p style={baseStyles.answerText}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.color = '#FFB800';
+                          e.currentTarget.style.transform = 'scale(1.01)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.color = '#FFFFFF';
+                          e.currentTarget.style.transform = 'scale(1)';
+                        }}>
+                        {faq.answer}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <div style={baseStyles.ctaContainer}
