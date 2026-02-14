@@ -37,7 +37,7 @@ const LogoCarousel = ({ autoRotate = true, showNavigation = true }) => {
   const [isMobile, setIsMobile] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
-  const autoRotateRef = useRef<NodeJS.Timeout>();
+  const autoRotateRef = useRef<NodeJS.Timeout>(undefined);
 
   const logos = [
     { id: 1, src: "/image/gaf.png", alt: "GAF Certified" },
