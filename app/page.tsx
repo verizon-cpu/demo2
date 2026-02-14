@@ -29,7 +29,7 @@ const MicroInteraction = ({
   );
 };
 
-// Bottom CTA Buttons Component - UPDATED FOR ROOFING
+// Bottom CTA Buttons Component
 interface BottomCTAButtonsProps {
   onCallClick?: () => void;
   onQuoteClick?: () => void;
@@ -257,6 +257,123 @@ function BottomCTAButtons({
   );
 }
 
+// ========== NEW MICRO-COMPONENTS FOR ENHANCED UI/UX ==========
+
+// Value Prop Card (For "Free Quotes", "No-Mess Guarantee", "Warranty")
+const ValuePropCard = ({ icon, title, description, accentColor = '#FFB800' }: { icon: string; title: string; description: string; accentColor?: string }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  return (
+    <div
+      style={{
+        backgroundColor: 'rgba(255,255,255,0.05)',
+        backdropFilter: 'blur(10px)',
+        border: `1px solid ${isHovered ? accentColor : 'rgba(255,184,0,0.2)'}`,
+        borderRadius: '24px',
+        padding: '1.5rem 1rem',
+        textAlign: 'center',
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        transform: isHovered ? 'translateY(-8px) scale(1.02)' : 'translateY(0) scale(1)',
+        boxShadow: isHovered ? `0 20px 40px rgba(0,0,0,0.3)` : 'none',
+        cursor: 'pointer',
+        flex: 1,
+        animation: 'float 8s ease-in-out infinite',
+        animationDelay: `${Math.random() * 2}s`,
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>{icon}</div>
+      <h4 style={{ color: accentColor, margin: '0 0 0.5rem 0', fontWeight: '700', fontSize: '1.1rem' }}>{title}</h4>
+      <p style={{ color: 'rgba(255,255,255,0.8)', margin: 0, fontSize: '0.9rem' }}>{description}</p>
+    </div>
+  );
+};
+
+// Mini CTA Card (For driving to specific actions)
+const MiniCTACard = ({ title, buttonText, onClick, accentColor = '#FFB800' }: { title: string; buttonText: string; onClick: () => void; accentColor?: string }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  return (
+    <div
+      style={{
+        background: `linear-gradient(135deg, ${accentColor}20 0%, ${accentColor}05 100%)`,
+        border: `1px solid ${isHovered ? accentColor : 'rgba(255,184,0,0.2)'}`,
+        borderRadius: '20px',
+        padding: '1.25rem',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        transition: 'all 0.3s ease',
+        transform: isHovered ? 'translateX(5px)' : 'translateX(0)',
+        cursor: 'pointer',
+        marginBottom: '0.75rem',
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={onClick}
+    >
+      <span style={{ fontWeight: '600', color: '#FFFFFF', fontSize: '1rem' }}>{title}</span>
+      <span style={{ color: accentColor, fontWeight: '700', fontSize: '1.2rem' }}>→</span>
+    </div>
+  );
+};
+
+// Certification Badge Component
+const CertificationBadge = ({ name, logo, description }: { name: string; logo: string; description: string }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  return (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '1rem',
+        backgroundColor: 'rgba(255,255,255,0.03)',
+        padding: '1rem',
+        borderRadius: '16px',
+        border: `1px solid ${isHovered ? '#FFB800' : 'rgba(255,184,0,0.1)'}`,
+        transition: 'all 0.3s ease',
+        transform: isHovered ? 'translateY(-3px)' : 'translateY(0)',
+        cursor: 'pointer',
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div style={{ fontSize: '2rem' }}>{logo}</div>
+      <div>
+        <div style={{ fontWeight: '700', color: '#FFFFFF', marginBottom: '0.25rem' }}>{name}</div>
+        <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.6)' }}>{description}</div>
+      </div>
+    </div>
+  );
+};
+
+// Floating Stats Card
+const FloatingStatsCard = ({ stat, label, icon }: { stat: string; label: string; icon: string }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  return (
+    <div
+      style={{
+        background: 'linear-gradient(135deg, rgba(255,184,0,0.15) 0%, rgba(255,184,0,0.05) 100%)',
+        borderRadius: '20px',
+        padding: '1.5rem 1rem',
+        textAlign: 'center',
+        border: `1px solid ${isHovered ? '#FFB800' : 'rgba(255,184,0,0.2)'}`,
+        transition: 'all 0.3s ease',
+        transform: isHovered ? 'translateY(-5px) scale(1.02)' : 'translateY(0) scale(1)',
+        animation: 'float 7s ease-in-out infinite',
+        animationDelay: `${Math.random() * 3}s`,
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{icon}</div>
+      <div style={{ fontSize: '2rem', fontWeight: '800', color: '#FFB800', lineHeight: 1 }}>{stat}</div>
+      <div style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.8)' }}>{label}</div>
+    </div>
+  );
+};
+
+// ========== HERO SECTION ==========
+
 const HeroSection = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -290,6 +407,63 @@ const HeroSection = () => {
   const [trustCardActive, setTrustCardActive] = useState<number | null>(null);
   const [submitButtonActive, setSubmitButtonActive] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
+
+  // Inject global animations
+  useEffect(() => {
+    const styleSheet = document.createElement("style");
+    styleSheet.innerText = `
+      @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+      }
+      @keyframes pulse-glow {
+        0% { box-shadow: 0 0 0 0 rgba(255, 184, 0, 0.7); }
+        70% { box-shadow: 0 0 0 15px rgba(255, 184, 0, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(255, 184, 0, 0); }
+      }
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      @keyframes slideInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .pulse-animation {
+        animation: pulse-glow 2s infinite;
+      }
+      .float-animation {
+        animation: float 6s ease-in-out infinite;
+      }
+    `;
+    document.head.appendChild(styleSheet);
+    return () => {
+      document.head.removeChild(styleSheet);
+    };
+  }, []);
 
   useEffect(() => {
     setHasMounted(true);
@@ -475,6 +649,7 @@ const HeroSection = () => {
       flexDirection: 'column',
       gap: isMobile ? (isSmallMobile ? '1rem' : '1.5rem') : '2rem',
       width: '100%',
+      animation: 'slideInLeft 1s ease-out',
     },
 
     excellenceBadge: (active: boolean) => ({
@@ -499,6 +674,7 @@ const HeroSection = () => {
       flexWrap: isSmallMobile ? 'wrap' : 'nowrap',
       textAlign: isSmallMobile ? 'center' : 'left',
       position: 'relative',
+      animation: 'float 8s ease-in-out infinite',
     }),
     
     numberOneBadge: (active: boolean) => ({
@@ -580,27 +756,28 @@ const HeroSection = () => {
       fontFamily: "'Inter', sans-serif",
       fontWeight: '400',
       textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)',
-       marginTop: '100px',
+      marginTop: '20px',
     },
 
     trustGrid: {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(3, 1fr)',
-  gap: isMobile ? (isSmallMobile ? '0.5rem' : '0.75rem') : '1rem',
-  width: '100%',
-},
+      display: 'grid',
+      gridTemplateColumns: 'repeat(3, 1fr)',
+      gap: isMobile ? (isSmallMobile ? '0.5rem' : '0.75rem') : '1rem',
+      width: '100%',
+      animation: 'fadeInUp 1s ease-out 0.3s both',
+    },
     
     trustCard: (active: boolean) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  backgroundColor: 'transparent',
-  border: 'none',
-  padding: 0,
-  transition: 'all 0.3s ease',
-  transform: active ? 'translateY(-2px)' : 'translateY(0)',
-}),
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: 'transparent',
+      border: 'none',
+      padding: 0,
+      transition: 'all 0.3s ease',
+      transform: active ? 'translateY(-2px)' : 'translateY(0)',
+    }),
     
     trustIcon: {
       width: isMobile ? (isSmallMobile ? '100px' : '100px') : '200px',
@@ -625,6 +802,7 @@ const HeroSection = () => {
       gap: isMobile ? (isSmallMobile ? '0.5rem' : '0.75rem') : '1rem',
       flexWrap: 'wrap',
       width: '100%',
+      animation: 'fadeInUp 1s ease-out 0.6s both',
     },
     
     stars: {
@@ -714,6 +892,7 @@ const HeroSection = () => {
     bostonSection: {
       marginTop: '1rem',
       width: '100%',
+      animation: 'fadeInUp 1s ease-out 0.9s both',
     },
     
     bostonBadge: {
@@ -743,6 +922,7 @@ const HeroSection = () => {
     rightColumn: {
       marginTop: isMobile ? (isSmallMobile ? '1.5rem' : '2rem') : '0',
       width: '100%',
+      animation: 'slideInRight 1s ease-out',
     },
     
     bookingCard: {
@@ -2238,7 +2418,8 @@ function FAQSection({
   );
 }
 
-// BodySection Component - ROOFING VERSION WITH NAVY, BEIGE & GRAY SECTIONS
+// ========== BODY SECTION - COMPLETELY TRANSFORMED ==========
+
 const BodySection = () => {
   const [activeCard, setActiveCard] = useState<number | null>(null);
   const [activeStat, setActiveStat] = useState<number | null>(null);
@@ -2255,6 +2436,63 @@ const BodySection = () => {
   const [activeConsultation, setActiveConsultation] = useState(false);
   const [activeBeforeAfterButton, setActiveBeforeAfterButton] = useState(false);
   const [activeOurStory, setActiveOurStory] = useState(false);
+
+  // Inject global animations
+  useEffect(() => {
+    const styleSheet = document.createElement("style");
+    styleSheet.innerText = `
+      @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+      }
+      @keyframes pulse-glow {
+        0% { box-shadow: 0 0 0 0 rgba(255, 184, 0, 0.7); }
+        70% { box-shadow: 0 0 0 15px rgba(255, 184, 0, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(255, 184, 0, 0); }
+      }
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      @keyframes slideInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .pulse-animation {
+        animation: pulse-glow 2s infinite;
+      }
+      .float-animation {
+        animation: float 6s ease-in-out infinite;
+      }
+    `;
+    document.head.appendChild(styleSheet);
+    return () => {
+      document.head.removeChild(styleSheet);
+    };
+  }, []);
 
   const colors = {
     background: '#0A0A0C',
@@ -2300,14 +2538,14 @@ const BodySection = () => {
   const transformations = [
     {
       id: 1,
-      title: "#1 Complete Roof Transformation",
+      title: "Complete Roof Transformation",
       beforeImage: "/image/spoiledroof.jpg",
       afterImage: "/image/repairedroof.jpg",
       description: "From severe storm damage to premium architectural shingle installation with lifetime warranty"
     },
     {
       id: 2,
-      title: "#2 Metal Roof Replacement",
+      title: "Metal Roof Replacement",
       beforeImage: "/image/smetalroof.jpg",
       afterImage: "/image/rmetalroof.jpg",
       description: "Aged asphalt shingles replaced with energy-efficient standing seam metal roof"
@@ -2488,34 +2726,83 @@ const BodySection = () => {
     }
   ];
 
+  const certifications = [
+    { name: "GAF Master Elite®", logo: "🏆", description: "Top 3% of contractors" },
+    { name: "CertainTeed SELECT", logo: "⭐", description: "Premium certified" },
+    { name: "Owens Corning", logo: "🛡️", description: "Platinum preferred" },
+    { name: "OSHA Certified", logo: "✓", description: "Safety trained" }
+  ];
+
   const baseBodyStyles: any = {
     bodyContainer: {
-      backgroundColor: colors.navyDark,  // Dark navy background for main body
-      paddingTop: isMobile ? '60px' : '120px',
+      backgroundColor: colors.navyDark,
+      paddingTop: isMobile ? '60px' : '80px',
       paddingRight: isMobile ? '20px' : '40px',
-      paddingBottom: isMobile ? '60px' : '120px',
+      paddingBottom: isMobile ? '60px' : '80px',
       paddingLeft: isMobile ? '20px' : '40px',
       fontFamily: "'Inter', sans-serif",
     },
-    
-    // Section 1: BRAVOS Difference - Navy Blue
+
+    // Section 1: Value Props Row
+    valuePropsRow: {
+      maxWidth: '1400px',
+      margin: '0 auto 60px auto',
+      display: 'grid',
+      gridTemplateColumns: isMobile ? '1fr' : '2fr 1fr',
+      gap: '30px',
+      padding: isMobile ? '0' : '0',
+    },
+
+    valuePropsGrid: {
+      display: 'grid',
+      gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+      gap: '20px',
+    },
+
+    miniCTAsStack: {
+      display: 'flex',
+      flexDirection: 'column' as const,
+      gap: '10px',
+    },
+
+    // Section 2: Certifications Row
+    certificationsRow: {
+      maxWidth: '1400px',
+      margin: '0 auto 60px auto',
+      display: 'grid',
+      gridTemplateColumns: isMobile ? '1fr' : 'repeat(4, 1fr)',
+      gap: '20px',
+      padding: isMobile ? '0' : '0',
+    },
+
+    // Section 3: Floating Stats Row
+    statsRow: {
+      maxWidth: '1400px',
+      margin: '0 auto 60px auto',
+      display: 'grid',
+      gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+      gap: '20px',
+      padding: isMobile ? '0' : '0',
+    },
+
+    // Section 4: The BRAVOS Difference - Navy Blue
     differenceSection: {
       maxWidth: '1400px',
-      margin: '0 auto',
-      marginBottom: isMobile ? '80px' : '120px',
+      margin: '0 auto 80px auto',
       textAlign: 'center',
       paddingLeft: isMobile ? '20px' : '0',
       paddingRight: isMobile ? '20px' : '0',
-      background: colors.navy,  // Navy blue
+      background: colors.navy,
       borderRadius: '32px',
-      paddingTop: isMobile ? '40px' : '80px',
-      paddingBottom: isMobile ? '40px' : '80px',
+      paddingTop: isMobile ? '40px' : '60px',
+      paddingBottom: isMobile ? '40px' : '60px',
       boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
       border: `1px solid ${colors.goldBorder}`,
       position: 'relative',
       overflow: 'hidden',
+      animation: 'float 10s ease-in-out infinite',
     },
-    
+
     differenceSectionBg: {
       position: 'absolute',
       top: 0,
@@ -2525,7 +2812,7 @@ const BodySection = () => {
       background: `radial-gradient(circle at 20% 80%, ${colors.goldLight} 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)`,
       zIndex: 1,
     },
-    
+
     differenceBadge: {
       display: 'inline-flex',
       alignItems: 'center',
@@ -2539,26 +2826,26 @@ const BodySection = () => {
       position: 'relative',
       zIndex: 2,
     },
-    
+
     diamondIcon: {
       color: colors.gold,
       fontWeight: '700',
       fontSize: isMobile ? '20px' : '24px',
     },
-    
+
     differenceBadgeText: {
       fontSize: isMobile ? '14px' : '18px',
       fontWeight: '700',
-      color: colors.white,  // White text on navy
+      color: colors.white,
       letterSpacing: '3px',
       textTransform: 'uppercase',
       fontFamily: "'Inter', sans-serif",
     },
-    
+
     navySubtitle: {
       fontSize: isMobile ? '2rem' : isTablet ? '2.25rem' : '2.5rem',
       fontWeight: '700',
-      color: colors.white,  // White text on navy
+      color: colors.white,
       marginTop: 0,
       marginRight: 0,
       marginBottom: '8px',
@@ -2570,7 +2857,7 @@ const BodySection = () => {
       position: 'relative',
       zIndex: 2,
     },
-    
+
     goldSubtitle: {
       fontSize: isMobile ? '2rem' : isTablet ? '2.25rem' : '2.5rem',
       fontWeight: '700',
@@ -2585,36 +2872,36 @@ const BodySection = () => {
       position: 'relative',
       zIndex: 2,
     },
-    
+
     differenceDescription: {
       fontSize: isMobile ? '1.125rem' : isTablet ? '1.25rem' : '1.375rem',
-      color: colors.softWhite90,  // Light text on navy
+      color: colors.softWhite90,
       lineHeight: '1.7',
       maxWidth: '900px',
       marginTop: 0,
       marginRight: 'auto',
-      marginBottom: isMobile ? '60px' : isTablet ? '80px' : '80px',
+      marginBottom: isMobile ? '40px' : '60px',
       marginLeft: 'auto',
       fontWeight: '400',
       fontFamily: "'Inter', sans-serif",
       position: 'relative',
       zIndex: 2,
+      padding: isMobile ? '0 20px' : '0',
     },
-    
-    // Section 2: Features Grid - Alternating Navy and Gray
+
+    // Section 5: Features Grid
     featuresGrid: {
       display: 'grid',
       gridTemplateColumns: isMobile ? '1fr' : isTablet ? '1fr' : 'repeat(2, 1fr)',
       gap: isMobile ? '32px' : isTablet ? '48px' : '64px',
       maxWidth: '1400px',
-      margin: '0 auto',
-      marginBottom: isMobile ? '80px' : '120px',
-      paddingLeft: isMobile ? '20px' : '0',
-      paddingRight: isMobile ? '20px' : '0',
+      margin: '0 auto 80px auto',
+      paddingLeft: isMobile ? '0' : '0',
+      paddingRight: isMobile ? '0' : '0',
     },
-    
+
     featureCard: (active: boolean) => ({
-      backgroundColor: active ? colors.navyLight : colors.gray,  // Alternating colors
+      backgroundColor: active ? colors.navyLight : colors.gray,
       borderRadius: '32px',
       overflow: 'hidden',
       boxShadow: active 
@@ -2627,20 +2914,20 @@ const BodySection = () => {
       transform: active ? 'translateY(-15px) scale(1.02)' : 'translateY(0) scale(1)',
       position: 'relative',
     }),
-    
+
     featureImageContainer: {
       position: 'relative',
       height: isMobile ? '200px' : isTablet ? '250px' : '300px',
       overflow: 'hidden',
     },
-    
+
     featureImage: {
       width: '100%',
       height: '100%',
       objectFit: 'cover',
       transition: 'transform 0.5s ease',
     },
-    
+
     featureNumberBadge: {
       display: 'inline-flex',
       alignItems: 'center',
@@ -2658,25 +2945,25 @@ const BodySection = () => {
       flexShrink: 0,
       transition: 'all 0.3s ease',
     },
-    
+
     featureContent: {
       paddingTop: isMobile ? '24px' : '48px',
       paddingRight: isMobile ? '20px' : '40px',
       paddingBottom: isMobile ? '24px' : '48px',
       paddingLeft: isMobile ? '20px' : '40px',
-      background: 'transparent',  // Let card background show through
+      background: 'transparent',
     },
-    
+
     featureTitleContainer: {
       display: 'flex',
       alignItems: 'center',
       marginBottom: isMobile ? '16px' : '24px',
     },
-    
+
     featureTitle: {
       fontSize: isMobile ? '1.5rem' : isTablet ? '1.75rem' : '2rem',
       fontWeight: '700',
-      color: colors.white,  // White text on dark backgrounds
+      color: colors.white,
       marginTop: 0,
       marginRight: 0,
       marginBottom: 0,
@@ -2685,10 +2972,10 @@ const BodySection = () => {
       fontFamily: "'Inter', sans-serif",
       letterSpacing: '-0.25px',
     },
-    
+
     featureDescription: {
       fontSize: isMobile ? '1rem' : isTablet ? '1.125rem' : '1.125rem',
-      color: colors.softWhite90,  // Light text
+      color: colors.softWhite90,
       lineHeight: '1.8',
       marginTop: 0,
       marginRight: 0,
@@ -2697,7 +2984,7 @@ const BodySection = () => {
       fontWeight: '400',
       fontFamily: "'Inter', sans-serif",
     },
-    
+
     featureList: {
       display: 'flex',
       flexDirection: 'column',
@@ -2707,7 +2994,7 @@ const BodySection = () => {
       marginBottom: isMobile ? '30px' : '40px',
       marginLeft: 0,
     },
-    
+
     featureListItem: {
       display: 'flex',
       alignItems: 'flex-start',
@@ -2718,7 +3005,7 @@ const BodySection = () => {
       border: `1px solid ${colors.goldBorder}`,
       transition: 'all 0.3s ease',
     },
-    
+
     checkIcon: {
       color: colors.gold,
       fontWeight: '700',
@@ -2726,7 +3013,7 @@ const BodySection = () => {
       flexShrink: 0,
       marginTop: '2px',
     },
-    
+
     featureListItemText: {
       fontSize: isMobile ? '0.95rem' : '1.1rem',
       color: colors.white,
@@ -2735,24 +3022,23 @@ const BodySection = () => {
       fontFamily: "'Inter', sans-serif",
     },
 
-    // Section 3: Before & After - Dark Beige
+    // Section 6: Before & After - Dark Beige
     transformationsSection: {
       maxWidth: '1400px',
-      margin: '0 auto',
-      marginBottom: isMobile ? '80px' : '120px',
+      margin: '0 auto 80px auto',
       textAlign: 'center',
       paddingLeft: isMobile ? '20px' : '0',
       paddingRight: isMobile ? '20px' : '0',
-      background: colors.beige,  // Dark beige
+      background: colors.beige,
       borderRadius: '32px',
-      paddingTop: isMobile ? '40px' : '80px',
-      paddingBottom: isMobile ? '40px' : '80px',
+      paddingTop: isMobile ? '40px' : '60px',
+      paddingBottom: isMobile ? '40px' : '60px',
       boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
       border: `1px solid ${colors.goldBorder}`,
       position: 'relative',
       overflow: 'hidden',
     },
-    
+
     transformationsSectionBg: {
       position: 'absolute',
       top: 0,
@@ -2762,24 +3048,24 @@ const BodySection = () => {
       background: `radial-gradient(circle at 10% 10%, ${colors.goldLight} 0%, transparent 40%), radial-gradient(circle at 90% 90%, rgba(0, 0, 0, 0.05) 0%, transparent 40%)`,
       zIndex: 1,
     },
-    
+
     transformationsHeader: {
       marginBottom: isMobile ? '40px' : '60px',
       position: 'relative',
       zIndex: 2,
     },
-    
+
     transformationsTitleContainer: {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       marginBottom: '20px',
     },
-    
+
     navyTitle: {
       fontSize: isMobile ? '2rem' : isTablet ? '2.25rem' : '2.5rem',
       fontWeight: '700',
-      color: colors.navyDark,  // Navy text on beige
+      color: colors.navyDark,
       marginTop: 0,
       marginRight: 0,
       marginBottom: '8px',
@@ -2787,7 +3073,7 @@ const BodySection = () => {
       fontFamily: "'Inter', sans-serif",
       lineHeight: '1.1',
     },
-    
+
     goldTitle: {
       fontSize: isMobile ? '2rem' : isTablet ? '2.25rem' : '2.5rem',
       fontWeight: '700',
@@ -2800,10 +3086,10 @@ const BodySection = () => {
       textShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
       lineHeight: '1.1',
     },
-    
+
     transformationsSubtitle: {
       fontSize: isMobile ? '1.125rem' : '1.25rem',
-      color: colors.navyDark,  // Navy text on beige
+      color: colors.navyDark,
       lineHeight: '1.6',
       maxWidth: '800px',
       marginTop: 0,
@@ -2813,7 +3099,7 @@ const BodySection = () => {
       fontWeight: '400',
       fontFamily: "'Inter', sans-serif",
     },
-    
+
     beforeAfterContainer: {
       display: 'flex',
       flexDirection: 'column',
@@ -2823,9 +3109,9 @@ const BodySection = () => {
       position: 'relative',
       zIndex: 2,
     },
-    
+
     transformationCard: (active: boolean) => ({
-      backgroundColor: active ? colors.beigeLight : colors.white,  // White cards on beige section
+      backgroundColor: active ? colors.beigeLight : colors.white,
       borderRadius: '32px',
       overflow: 'hidden',
       boxShadow: active 
@@ -2837,7 +3123,7 @@ const BodySection = () => {
       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
       transform: active ? 'translateY(-15px)' : 'translateY(0)',
     }),
-    
+
     transformationTitle: {
       fontSize: isMobile ? '1.5rem' : '1.75rem',
       fontWeight: '700',
@@ -2853,7 +3139,7 @@ const BodySection = () => {
       paddingBottom: 0,
       paddingLeft: isMobile ? '20px' : '40px',
     },
-    
+
     beforeAfterGrid: {
       display: 'grid',
       gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
@@ -2863,7 +3149,7 @@ const BodySection = () => {
       paddingBottom: isMobile ? '30px' : '40px',
       paddingLeft: isMobile ? '20px' : '40px',
     },
-    
+
     imageContainer: {
       position: 'relative',
       borderRadius: '24px',
@@ -2872,7 +3158,7 @@ const BodySection = () => {
       boxShadow: '0 15px 40px rgba(0, 0, 0, 0.2)',
       transition: 'all 0.3s ease',
     },
-    
+
     imageLabel: {
       position: 'absolute',
       top: '20px',
@@ -2890,22 +3176,22 @@ const BodySection = () => {
       zIndex: 2,
       boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
     },
-    
+
     beforeLabel: {
       backgroundColor: colors.navyDark,
     },
-    
+
     afterLabel: {
       backgroundColor: colors.grayDark,
     },
-    
+
     transformationImage: {
       width: '100%',
       height: '100%',
       objectFit: 'cover',
       transition: 'transform 0.5s ease',
     },
-    
+
     transformationDescription: {
       fontSize: isMobile ? '1rem' : '1.125rem',
       color: colors.navyDark,
@@ -2921,669 +3207,6 @@ const BodySection = () => {
       paddingTop: isMobile ? '20px' : '30px',
     },
 
-    // Section 4: Video Testimonials - Dark Gray
-    videoTestimonialsSection: {
-      maxWidth: '1400px',
-      margin: '0 auto',
-      marginBottom: isMobile ? '80px' : '120px',
-      textAlign: 'center',
-      paddingLeft: isMobile ? '20px' : '0',
-      paddingRight: isMobile ? '20px' : '0',
-      background: colors.gray,  // Dark gray
-      borderRadius: '32px',
-      paddingTop: isMobile ? '40px' : '80px',
-      paddingBottom: isMobile ? '40px' : '80px',
-      boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-      border: `1px solid ${colors.goldBorder}`,
-      position: 'relative',
-      overflow: 'hidden',
-    },
-    
-    videoTestimonialsSectionBg: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      background: `radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.05) 0%, transparent 50%), radial-gradient(circle at 70% 70%, ${colors.goldLight} 0%, transparent 50%)`,
-      zIndex: 1,
-    },
-    
-    videoTestimonialsHeader: {
-      marginBottom: isMobile ? '40px' : '60px',
-      position: 'relative',
-      zIndex: 2,
-    },
-    
-    videoTitleContainer: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      marginBottom: '20px',
-    },
-    
-    videoNavyTitle: {
-      fontSize: isMobile ? '2rem' : isTablet ? '2.25rem' : '2.5rem',
-      fontWeight: '700',
-      color: colors.white,  // White text on gray
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: '8px',
-      marginLeft: 0,
-      fontFamily: "'Inter', sans-serif",
-      lineHeight: '1.1',
-    },
-    
-    videoGoldTitle: {
-      fontSize: isMobile ? '2rem' : isTablet ? '2.25rem' : '2.5rem',
-      fontWeight: '700',
-      color: colors.gold,
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: '20px',
-      marginLeft: 0,
-      fontFamily: "'Inter', sans-serif",
-      textShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
-      lineHeight: '1.1',
-    },
-    
-    videoSubtitle: {
-      fontSize: isMobile ? '1.125rem' : '1.25rem',
-      color: colors.softWhite90,
-      lineHeight: '1.6',
-      maxWidth: '800px',
-      marginTop: 0,
-      marginRight: 'auto',
-      marginBottom: 0,
-      marginLeft: 'auto',
-      fontWeight: '400',
-      fontFamily: "'Inter', sans-serif",
-    },
-    
-    videoGrid: {
-      display: 'grid',
-      gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
-      gap: isMobile ? '20px' : isTablet ? '24px' : '32px',
-      maxWidth: '1200px',
-      margin: '0 auto',
-      marginBottom: isMobile ? '60px' : '80px',
-      position: 'relative',
-      zIndex: 2,
-    },
-    
-    // Section 5: Reviews - Navy Blue (alternating)
-    reviewsSection: {
-      maxWidth: '1400px',
-      margin: '0 auto',
-      marginBottom: isMobile ? '80px' : '120px',
-      textAlign: 'center',
-      paddingLeft: isMobile ? '20px' : '0',
-      paddingRight: isMobile ? '20px' : '0',
-      background: colors.navyLight,  // Navy blue
-      borderRadius: '32px',
-      paddingTop: isMobile ? '40px' : '80px',
-      paddingBottom: isMobile ? '40px' : '80px',
-      boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-      border: `1px solid ${colors.goldBorder}`,
-      position: 'relative',
-      overflow: 'hidden',
-    },
-    
-    reviewsSectionBg: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      background: `radial-gradient(circle at 20% 20%, ${colors.goldLight} 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)`,
-      zIndex: 1,
-    },
-    
-    reviewsHeader: {
-      marginBottom: isMobile ? '40px' : '60px',
-      position: 'relative',
-      zIndex: 2,
-    },
-    
-    reviewsTitle: {
-      fontSize: isMobile ? '2rem' : isTablet ? '2.25rem' : '2.5rem',
-      fontWeight: '700',
-      color: colors.white,
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: '20px',
-      marginLeft: 0,
-      fontFamily: "'Inter', sans-serif",
-      lineHeight: '1.1',
-    },
-    
-    reviewsSubtitle: {
-      fontSize: isMobile ? '1.125rem' : '1.25rem',
-      color: colors.softWhite90,
-      lineHeight: '1.6',
-      maxWidth: '800px',
-      marginTop: 0,
-      marginRight: 'auto',
-      marginBottom: 0,
-      marginLeft: 'auto',
-      fontWeight: '400',
-      fontFamily: "'Inter', sans-serif",
-    },
-    
-    reviewsGrid: {
-      display: 'grid',
-      gridTemplateColumns: isMobile ? '1fr' : isTablet ? '1fr' : 'repeat(2, 1fr)',
-      gap: isMobile ? '20px' : isTablet ? '24px' : '32px',
-      maxWidth: '1200px',
-      margin: '0 auto',
-      position: 'relative',
-      zIndex: 2,
-    },
-    
-    reviewCard: (active: boolean) => ({
-      backgroundColor: active ? colors.grayLight : colors.white,  // White cards on navy
-      borderRadius: '32px',
-      paddingTop: isMobile ? '30px' : '40px',
-      paddingRight: isMobile ? '20px' : '32px',
-      paddingBottom: isMobile ? '30px' : '40px',
-      paddingLeft: isMobile ? '20px' : '32px',
-      textAlign: 'left',
-      border: active 
-        ? `2px solid ${colors.gold}` 
-        : `2px solid ${colors.goldBorder}`,
-      transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-      transform: active ? 'translateY(-15px)' : 'translateY(0)',
-      boxShadow: active 
-        ? '0 40px 80px rgba(0, 0, 0, 0.3)' 
-        : '0 20px 60px rgba(0, 0, 0, 0.2)',
-    }),
-    
-    reviewHeader: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: isMobile ? '16px' : '20px',
-      marginBottom: '24px',
-    },
-    
-    reviewAvatar: {
-      width: isMobile ? '60px' : '80px',
-      height: isMobile ? '60px' : '80px',
-      borderRadius: '50%',
-      objectFit: 'cover',
-      border: `3px solid ${colors.gold}`,
-      boxShadow: `0 4px 12px ${colors.goldLight}`,
-    },
-    
-    reviewerInfo: {
-      flex: 1,
-    },
-    
-    reviewerName: {
-      fontSize: isMobile ? '1.25rem' : '1.5rem',
-      fontWeight: '700',
-      color: colors.navyDark,
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: '8px',
-      marginLeft: 0,
-      fontFamily: "'Inter', sans-serif",
-    },
-    
-    reviewerDetails: {
-      fontSize: isMobile ? '0.9rem' : '1rem',
-      color: colors.grayDark,
-      fontWeight: '400',
-      fontFamily: "'Inter', sans-serif",
-      marginBottom: '8px',
-    },
-    
-    starsContainer: {
-      display: 'flex',
-      gap: '4px',
-    },
-    
-    starIcon: {
-      color: colors.gold,
-      fontSize: isMobile ? '1rem' : '1.25rem',
-      fontWeight: '700',
-    },
-    
-    reviewContent: {
-      fontSize: isMobile ? '0.95rem' : '1.1rem',
-      color: colors.grayDark,
-      lineHeight: '1.7',
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: 0,
-      marginLeft: 0,
-      fontWeight: '400',
-      fontFamily: "'Inter', sans-serif",
-      fontStyle: 'italic',
-    },
-    
-    // Section 6: Meet the Founders - Dark Beige
-    // (Inline styles at line ~4350 - will update in the JSX)
-    
-    // Section 7: Our Story - Dark Gray
-    ourStorySection: {
-      maxWidth: '1400px',
-      margin: '0 auto',
-      marginBottom: isMobile ? '80px' : '120px',
-      textAlign: 'center',
-      paddingLeft: isMobile ? '20px' : '0',
-      paddingRight: isMobile ? '20px' : '0',
-      background: colors.grayDark,  // Dark gray
-      borderRadius: '32px',
-      paddingTop: isMobile ? '40px' : '80px',
-      paddingBottom: isMobile ? '40px' : '80px',
-      boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-      border: `1px solid ${colors.goldBorder}`,
-      position: 'relative',
-      overflow: 'hidden',
-    },
-    
-    ourStorySectionBg: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      background: `radial-gradient(circle at 20% 30%, ${colors.goldLight} 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)`,
-      zIndex: 1,
-    },
-    
-    ourStoryContent: {
-      maxWidth: '1000px',
-      margin: '0 auto',
-      position: 'relative',
-      zIndex: 2,
-    },
-    
-    ourStoryTitle: {
-      fontSize: isMobile ? '2rem' : isTablet ? '2.25rem' : '2.5rem',
-      fontWeight: '700',
-      color: colors.white,
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: '30px',
-      marginLeft: 0,
-      fontFamily: "'Inter', sans-serif",
-      lineHeight: '1.2',
-    },
-    
-    ourStoryDescription: {
-      fontSize: isMobile ? '1.125rem' : isTablet ? '1.25rem' : '1.375rem',
-      color: colors.softWhite90,
-      lineHeight: '1.8',
-      marginTop: 0,
-      marginRight: 'auto',
-      marginBottom: isMobile ? '40px' : '60px',
-      marginLeft: 'auto',
-      fontWeight: '400',
-      fontFamily: "'Inter', sans-serif",
-      maxWidth: '900px',
-      padding: isMobile ? '20px' : '40px',
-      backgroundColor: 'rgba(255, 255, 255, 0.1)',  // Semi-transparent white
-      borderRadius: '24px',
-      boxShadow: '0 10px 40px rgba(0, 0, 0, 0.2)',
-      border: `1px solid ${colors.goldBorder}`,
-    },
-    
-    ourStoryButton: (active: boolean) => ({
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: '12px',
-      backgroundColor: active ? colors.gold : colors.navy,
-      color: active ? colors.navyDark : colors.white,
-      border: 'none',
-      paddingTop: isMobile ? '16px' : '20px',
-      paddingRight: isMobile ? '24px' : '40px',
-      paddingBottom: isMobile ? '16px' : '20px',
-      paddingLeft: isMobile ? '24px' : '40px',
-      borderRadius: '50px',
-      fontSize: isMobile ? '0.95rem' : '1rem',
-      fontWeight: '700',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      textDecoration: 'none',
-      fontFamily: "'Inter', sans-serif",
-      transform: active ? 'translateY(-3px)' : 'translateY(0)',
-      boxShadow: active 
-        ? '0 15px 30px rgba(255, 184, 0, 0.4)' 
-        : '0 10px 25px rgba(0, 0, 0, 0.3)',
-    }),
-    
-    // Section 8: Roofing Services - Navy Blue
-    flexibleSolutionsSection: {
-      maxWidth: '1400px',
-      margin: '0 auto',
-      marginBottom: isMobile ? '80px' : '120px',
-      textAlign: 'center',
-      paddingLeft: isMobile ? '20px' : '0',
-      paddingRight: isMobile ? '20px' : '0',
-      background: colors.navy,  // Navy blue
-      borderRadius: '32px',
-      paddingTop: isMobile ? '40px' : '80px',
-      paddingBottom: isMobile ? '40px' : '80px',
-      boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-      border: `1px solid ${colors.goldBorder}`,
-      position: 'relative',
-      overflow: 'hidden',
-    },
-    
-    flexibleSolutionsSectionBg: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      background: `radial-gradient(circle at 10% 90%, ${colors.goldLight} 0%, transparent 50%), radial-gradient(circle at 90% 10%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)`,
-      zIndex: 1,
-    },
-    
-    flexibleSolutionsHeader: {
-      marginBottom: isMobile ? '40px' : '60px',
-      position: 'relative',
-      zIndex: 2,
-    },
-    
-    flexibleSolutionsBadge: {
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: isMobile ? '8px' : '12px',
-      backgroundColor: 'rgba(255, 184, 0, 0.15)',
-      paddingTop: isMobile ? '12px' : '16px',
-      paddingRight: isMobile ? '20px' : '32px',
-      paddingBottom: isMobile ? '12px' : '16px',
-      paddingLeft: isMobile ? '20px' : '32px',
-      borderRadius: '50px',
-      marginBottom: isMobile ? '20px' : '30px',
-      border: `2px solid ${colors.goldBorder}`,
-      backdropFilter: 'blur(10px)',
-    },
-    
-    flexibleSolutionsBadgeText: {
-      fontSize: isMobile ? '14px' : '18px',
-      fontWeight: '700',
-      color: colors.white,
-      letterSpacing: '3px',
-      textTransform: 'uppercase',
-      fontFamily: "'Inter', sans-serif",
-    },
-    
-    flexibleSolutionsTitle: {
-      fontSize: isMobile ? '2.5rem' : isTablet ? '3rem' : '3.5rem',
-      fontWeight: '700',
-      color: colors.white,
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: '20px',
-      marginLeft: 0,
-      lineHeight: '1',
-      fontFamily: "'Inter', sans-serif",
-      letterSpacing: '-1px',
-      textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
-    },
-    
-    flexibleSolutionsSubtitle: {
-      fontSize: isMobile ? '1.75rem' : isTablet ? '2rem' : '2rem',
-      fontWeight: '700',
-      color: colors.white,
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: '16px',
-      marginLeft: 0,
-      fontFamily: "'Inter', sans-serif",
-      lineHeight: '1.2',
-    },
-    
-    flexibleSolutionsDescription: {
-      fontSize: isMobile ? '1.125rem' : isTablet ? '1.25rem' : '1.375rem',
-      color: colors.softWhite90,
-      lineHeight: '1.7',
-      maxWidth: '900px',
-      marginTop: 0,
-      marginRight: 'auto',
-      marginBottom: isMobile ? '40px' : '60px',
-      marginLeft: 'auto',
-      fontWeight: '400',
-      fontFamily: "'Inter', sans-serif",
-    },
-    
-    cleaningPlansGrid: {
-      display: 'grid',
-      gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
-      gap: isMobile ? '32px' : isTablet ? '24px' : '32px',
-      maxWidth: '1400px',
-      margin: '0 auto',
-      marginBottom: isMobile ? '60px' : '80px',
-      position: 'relative',
-      zIndex: 2,
-    },
-    
-    cleaningPlanCard: (active: boolean, color: string) => ({
-      backgroundColor: active ? colors.grayLight : colors.white,  // White cards on navy
-      borderRadius: '32px',
-      overflow: 'hidden',
-      boxShadow: active 
-        ? '0 40px 80px rgba(0, 0, 0, 0.3)' 
-        : '0 20px 60px rgba(0, 0, 0, 0.2)',
-      border: active 
-        ? `3px solid ${colors.gold}` 
-        : `2px solid ${colors.goldBorder}`,
-      transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-      transform: active ? 'translateY(-20px)' : 'translateY(0)',
-      display: 'flex',
-      flexDirection: 'column',
-    }),
-    
-    planHeader: (color: string) => ({
-      backgroundColor: color,  // Navy, beige, or gray based on plan
-      paddingTop: isMobile ? '30px' : '40px',
-      paddingRight: isMobile ? '24px' : '32px',
-      paddingBottom: isMobile ? '30px' : '40px',
-      paddingLeft: isMobile ? '24px' : '32px',
-      textAlign: 'center',
-      color: color === colors.beige ? colors.navyDark : colors.white,  // Dark text on beige, white on navy/gray
-    }),
-    
-    planBadge: {
-      display: 'inline-block',
-      backgroundColor: 'rgba(255, 255, 255, 0.2)',
-      paddingTop: '8px',
-      paddingRight: '20px',
-      paddingBottom: '8px',
-      paddingLeft: '20px',
-      borderRadius: '30px',
-      fontSize: '14px',
-      fontWeight: '700',
-      marginBottom: '20px',
-      letterSpacing: '2px',
-      textTransform: 'uppercase',
-      fontFamily: "'Inter', sans-serif",
-    },
-    
-    planTitle: {
-      fontSize: isMobile ? '1.75rem' : '2rem',
-      fontWeight: '700',
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: '12px',
-      marginLeft: 0,
-      fontFamily: "'Inter', sans-serif",
-      lineHeight: '1.1',
-    },
-    
-    planFrequency: {
-      fontSize: isMobile ? '1.125rem' : '1.25rem',
-      fontWeight: '600',
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: '8px',
-      marginLeft: 0,
-      fontFamily: "'Inter', sans-serif",
-      opacity: 0.9,
-    },
-    
-    planDescription: {
-      fontSize: isMobile ? '1rem' : '1.125rem',
-      fontWeight: '400',
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: 0,
-      marginLeft: 0,
-      fontFamily: "'Inter', sans-serif",
-    },
-    
-    planContent: {
-      paddingTop: isMobile ? '30px' : '40px',
-      paddingRight: isMobile ? '24px' : '32px',
-      paddingBottom: isMobile ? '30px' : '40px',
-      paddingLeft: isMobile ? '24px' : '32px',
-      flex: 1,
-      display: 'flex',
-      flexDirection: 'column',
-      background: 'transparent',
-    },
-    
-    planDetails: {
-      fontSize: isMobile ? '0.95rem' : '1rem',
-      color: colors.grayDark,
-      lineHeight: '1.7',
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: '32px',
-      marginLeft: 0,
-      fontWeight: '400',
-      fontFamily: "'Inter', sans-serif",
-      flex: 1,
-    },
-    
-    planFeatures: {
-      display: 'flex',
-      flexDirection: 'column',
-      gap: isMobile ? '12px' : '16px',
-      marginBottom: isMobile ? '30px' : '40px',
-    },
-    
-    planFeature: {
-      display: 'flex',
-      alignItems: 'flex-start',
-      gap: '12px',
-      padding: '12px 16px',
-      backgroundColor: colors.goldLight,
-      borderRadius: '12px',
-      border: `1px solid ${colors.goldBorder}`,
-    },
-    
-    planFeatureIcon: {
-      color: colors.gold,
-      fontWeight: '700',
-      fontSize: '20px',
-      flexShrink: 0,
-      marginTop: '2px',
-    },
-    
-    planFeatureText: {
-      fontSize: isMobile ? '0.9rem' : '1rem',
-      color: colors.navyDark,
-      lineHeight: '1.5',
-      fontWeight: '400',
-      fontFamily: "'Inter', sans-serif",
-    },
-    
-    planButton: (active: boolean, color: string) => ({
-      display: 'inline-flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: '12px',
-      backgroundColor: active ? color : 'transparent',
-      color: active ? (color === colors.beige ? colors.navyDark : colors.white) : color,
-      border: `3px solid ${color}`,
-      paddingTop: isMobile ? '16px' : '20px',
-      paddingRight: isMobile ? '24px' : '32px',
-      paddingBottom: isMobile ? '16px' : '20px',
-      paddingLeft: isMobile ? '24px' : '32px',
-      borderRadius: '50px',
-      fontSize: isMobile ? '0.95rem' : '1rem',
-      fontWeight: '700',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      textDecoration: 'none',
-      fontFamily: "'Inter', sans-serif",
-      transform: active ? 'translateY(-3px)' : 'translateY(0)',
-      boxShadow: active ? '0 15px 30px rgba(0, 0, 0, 0.2)' : 'none',
-      width: '100%',
-    }),
-    
-    // Section 9: Consultation Card - Dark Beige
-    consultationSection: {
-      backgroundColor: colors.beigeDark,  // Dark beige
-      borderRadius: '24px',
-      paddingTop: isMobile ? '40px' : '60px',
-      paddingRight: isMobile ? '24px' : '40px',
-      paddingBottom: isMobile ? '40px' : '60px',
-      paddingLeft: isMobile ? '24px' : '40px',
-      textAlign: 'center',
-      border: `2px solid ${colors.goldBorder}`,
-      maxWidth: '1000px',
-      margin: '0 auto',
-      position: 'relative',
-      zIndex: 2,
-      backdropFilter: 'blur(10px)',
-      background: `linear-gradient(135deg, ${colors.beigeDark} 0%, ${colors.beige} 100%)`,
-      boxShadow: '0 20px 60px rgba(0, 0, 0, 0.2)',
-    },
-    
-    consultationTitle: {
-      fontSize: isMobile ? '1.75rem' : isTablet ? '2rem' : '2.25rem',
-      fontWeight: '700',
-      color: colors.navyDark,
-      marginTop: 0,
-      marginRight: 0,
-      marginBottom: '24px',
-      marginLeft: 0,
-      fontFamily: "'Inter', sans-serif",
-      lineHeight: '1.2',
-    },
-    
-    consultationDescription: {
-      fontSize: isMobile ? '1.125rem' : isTablet ? '1.25rem' : '1.375rem',
-      color: colors.navyDark,
-      lineHeight: '1.7',
-      marginTop: 0,
-      marginRight: 'auto',
-      marginBottom: '40px',
-      marginLeft: 'auto',
-      fontWeight: '400',
-      fontFamily: "'Inter', sans-serif",
-      maxWidth: '800px',
-    },
-    
-    consultationButton: (active: boolean) => ({
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: '12px',
-      backgroundColor: active ? colors.gold : colors.navy,
-      color: active ? colors.navyDark : colors.white,
-      border: 'none',
-      paddingTop: isMobile ? '16px' : '20px',
-      paddingRight: isMobile ? '32px' : '48px',
-      paddingBottom: isMobile ? '16px' : '20px',
-      paddingLeft: isMobile ? '32px' : '48px',
-      borderRadius: '50px',
-      fontSize: isMobile ? '1rem' : '1.125rem',
-      fontWeight: '700',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      textDecoration: 'none',
-      fontFamily: "'Inter', sans-serif",
-      transform: active ? 'translateY(-3px)' : 'translateY(0)',
-      boxShadow: active 
-        ? '0 20px 40px rgba(255, 184, 0, 0.4)' 
-        : '0 15px 30px rgba(0, 0, 0, 0.3)',
-    }),
-    
     beforeAfterCTA: (active: boolean) => ({
       display: 'inline-flex',
       alignItems: 'center',
@@ -3610,11 +3233,724 @@ const BodySection = () => {
       position: 'relative',
       zIndex: 2,
     }),
+
+    // Section 7: Video Testimonials - Dark Gray
+    videoTestimonialsSection: {
+      maxWidth: '1400px',
+      margin: '0 auto 80px auto',
+      textAlign: 'center',
+      paddingLeft: isMobile ? '20px' : '0',
+      paddingRight: isMobile ? '20px' : '0',
+      background: colors.gray,
+      borderRadius: '32px',
+      paddingTop: isMobile ? '40px' : '60px',
+      paddingBottom: isMobile ? '40px' : '60px',
+      boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+      border: `1px solid ${colors.goldBorder}`,
+      position: 'relative',
+      overflow: 'hidden',
+    },
+
+    videoTestimonialsSectionBg: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: `radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.05) 0%, transparent 50%), radial-gradient(circle at 70% 70%, ${colors.goldLight} 0%, transparent 50%)`,
+      zIndex: 1,
+    },
+
+    videoTestimonialsHeader: {
+      marginBottom: isMobile ? '40px' : '60px',
+      position: 'relative',
+      zIndex: 2,
+    },
+
+    videoTitleContainer: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      marginBottom: '20px',
+    },
+
+    videoNavyTitle: {
+      fontSize: isMobile ? '2rem' : isTablet ? '2.25rem' : '2.5rem',
+      fontWeight: '700',
+      color: colors.white,
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: '8px',
+      marginLeft: 0,
+      fontFamily: "'Inter', sans-serif",
+      lineHeight: '1.1',
+    },
+
+    videoGoldTitle: {
+      fontSize: isMobile ? '2rem' : isTablet ? '2.25rem' : '2.5rem',
+      fontWeight: '700',
+      color: colors.gold,
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: '20px',
+      marginLeft: 0,
+      fontFamily: "'Inter', sans-serif",
+      textShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
+      lineHeight: '1.1',
+    },
+
+    videoSubtitle: {
+      fontSize: isMobile ? '1.125rem' : '1.25rem',
+      color: colors.softWhite90,
+      lineHeight: '1.6',
+      maxWidth: '800px',
+      marginTop: 0,
+      marginRight: 'auto',
+      marginBottom: 0,
+      marginLeft: 'auto',
+      fontWeight: '400',
+      fontFamily: "'Inter', sans-serif",
+    },
+
+    videoGrid: {
+      display: 'grid',
+      gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
+      gap: isMobile ? '20px' : isTablet ? '24px' : '32px',
+      maxWidth: '1200px',
+      margin: '0 auto',
+      marginBottom: isMobile ? '40px' : '60px',
+      position: 'relative',
+      zIndex: 2,
+    },
+
+    // Section 8: Reviews - Navy Blue
+    reviewsSection: {
+      maxWidth: '1400px',
+      margin: '0 auto 80px auto',
+      textAlign: 'center',
+      paddingLeft: isMobile ? '20px' : '0',
+      paddingRight: isMobile ? '20px' : '0',
+      background: colors.navyLight,
+      borderRadius: '32px',
+      paddingTop: isMobile ? '40px' : '60px',
+      paddingBottom: isMobile ? '40px' : '60px',
+      boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+      border: `1px solid ${colors.goldBorder}`,
+      position: 'relative',
+      overflow: 'hidden',
+    },
+
+    reviewsSectionBg: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: `radial-gradient(circle at 20% 20%, ${colors.goldLight} 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)`,
+      zIndex: 1,
+    },
+
+    reviewsHeader: {
+      marginBottom: isMobile ? '40px' : '60px',
+      position: 'relative',
+      zIndex: 2,
+    },
+
+    reviewsTitle: {
+      fontSize: isMobile ? '2rem' : isTablet ? '2.25rem' : '2.5rem',
+      fontWeight: '700',
+      color: colors.white,
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: '20px',
+      marginLeft: 0,
+      fontFamily: "'Inter', sans-serif",
+      lineHeight: '1.1',
+    },
+
+    reviewsSubtitle: {
+      fontSize: isMobile ? '1.125rem' : '1.25rem',
+      color: colors.softWhite90,
+      lineHeight: '1.6',
+      maxWidth: '800px',
+      marginTop: 0,
+      marginRight: 'auto',
+      marginBottom: 0,
+      marginLeft: 'auto',
+      fontWeight: '400',
+      fontFamily: "'Inter', sans-serif",
+    },
+
+    reviewsGrid: {
+      display: 'grid',
+      gridTemplateColumns: isMobile ? '1fr' : isTablet ? '1fr' : 'repeat(2, 1fr)',
+      gap: isMobile ? '20px' : isTablet ? '24px' : '32px',
+      maxWidth: '1200px',
+      margin: '0 auto',
+      position: 'relative',
+      zIndex: 2,
+    },
+
+    reviewCard: (active: boolean) => ({
+      backgroundColor: active ? colors.grayLight : colors.white,
+      borderRadius: '32px',
+      paddingTop: isMobile ? '30px' : '40px',
+      paddingRight: isMobile ? '20px' : '32px',
+      paddingBottom: isMobile ? '30px' : '40px',
+      paddingLeft: isMobile ? '20px' : '32px',
+      textAlign: 'left',
+      border: active 
+        ? `2px solid ${colors.gold}` 
+        : `2px solid ${colors.goldBorder}`,
+      transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+      transform: active ? 'translateY(-15px)' : 'translateY(0)',
+      boxShadow: active 
+        ? '0 40px 80px rgba(0, 0, 0, 0.3)' 
+        : '0 20px 60px rgba(0, 0, 0, 0.2)',
+    }),
+
+    reviewHeader: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: isMobile ? '16px' : '20px',
+      marginBottom: '24px',
+    },
+
+    reviewAvatar: {
+      width: isMobile ? '60px' : '80px',
+      height: isMobile ? '60px' : '80px',
+      borderRadius: '50%',
+      objectFit: 'cover',
+      border: `3px solid ${colors.gold}`,
+      boxShadow: `0 4px 12px ${colors.goldLight}`,
+    },
+
+    reviewerInfo: {
+      flex: 1,
+    },
+
+    reviewerName: {
+      fontSize: isMobile ? '1.25rem' : '1.5rem',
+      fontWeight: '700',
+      color: colors.navyDark,
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: '8px',
+      marginLeft: 0,
+      fontFamily: "'Inter', sans-serif",
+    },
+
+    reviewerDetails: {
+      fontSize: isMobile ? '0.9rem' : '1rem',
+      color: colors.grayDark,
+      fontWeight: '400',
+      fontFamily: "'Inter', sans-serif",
+      marginBottom: '8px',
+    },
+
+    starsContainer: {
+      display: 'flex',
+      gap: '4px',
+    },
+
+    starIcon: {
+      color: colors.gold,
+      fontSize: isMobile ? '1rem' : '1.25rem',
+      fontWeight: '700',
+    },
+
+    reviewContent: {
+      fontSize: isMobile ? '0.95rem' : '1.1rem',
+      color: colors.grayDark,
+      lineHeight: '1.7',
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: 0,
+      marginLeft: 0,
+      fontWeight: '400',
+      fontFamily: "'Inter', sans-serif",
+      fontStyle: 'italic',
+    },
+
+    // Section 9: Our Story - Dark Gray
+    ourStorySection: {
+      maxWidth: '1400px',
+      margin: '0 auto 80px auto',
+      textAlign: 'center',
+      paddingLeft: isMobile ? '20px' : '0',
+      paddingRight: isMobile ? '20px' : '0',
+      background: colors.grayDark,
+      borderRadius: '32px',
+      paddingTop: isMobile ? '40px' : '60px',
+      paddingBottom: isMobile ? '40px' : '60px',
+      boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+      border: `1px solid ${colors.goldBorder}`,
+      position: 'relative',
+      overflow: 'hidden',
+    },
+
+    ourStorySectionBg: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: `radial-gradient(circle at 20% 30%, ${colors.goldLight} 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)`,
+      zIndex: 1,
+    },
+
+    ourStoryContent: {
+      maxWidth: '1000px',
+      margin: '0 auto',
+      position: 'relative',
+      zIndex: 2,
+    },
+
+    ourStoryTitle: {
+      fontSize: isMobile ? '2rem' : isTablet ? '2.25rem' : '2.5rem',
+      fontWeight: '700',
+      color: colors.white,
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: '30px',
+      marginLeft: 0,
+      fontFamily: "'Inter', sans-serif",
+      lineHeight: '1.2',
+    },
+
+    ourStoryDescription: {
+      fontSize: isMobile ? '1.125rem' : isTablet ? '1.25rem' : '1.375rem',
+      color: colors.softWhite90,
+      lineHeight: '1.8',
+      marginTop: 0,
+      marginRight: 'auto',
+      marginBottom: isMobile ? '40px' : '60px',
+      marginLeft: 'auto',
+      fontWeight: '400',
+      fontFamily: "'Inter', sans-serif",
+      maxWidth: '900px',
+      padding: isMobile ? '20px' : '40px',
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      borderRadius: '24px',
+      boxShadow: '0 10px 40px rgba(0, 0, 0, 0.2)',
+      border: `1px solid ${colors.goldBorder}`,
+    },
+
+    ourStoryButton: (active: boolean) => ({
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '12px',
+      backgroundColor: active ? colors.gold : colors.navy,
+      color: active ? colors.navyDark : colors.white,
+      border: 'none',
+      paddingTop: isMobile ? '16px' : '20px',
+      paddingRight: isMobile ? '24px' : '40px',
+      paddingBottom: isMobile ? '16px' : '20px',
+      paddingLeft: isMobile ? '24px' : '40px',
+      borderRadius: '50px',
+      fontSize: isMobile ? '0.95rem' : '1rem',
+      fontWeight: '700',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      textDecoration: 'none',
+      fontFamily: "'Inter', sans-serif",
+      transform: active ? 'translateY(-3px)' : 'translateY(0)',
+      boxShadow: active 
+        ? '0 15px 30px rgba(255, 184, 0, 0.4)' 
+        : '0 10px 25px rgba(0, 0, 0, 0.3)',
+    }),
+
+    // Section 10: Roofing Services - Navy Blue
+    flexibleSolutionsSection: {
+      maxWidth: '1400px',
+      margin: '0 auto 80px auto',
+      textAlign: 'center',
+      paddingLeft: isMobile ? '20px' : '0',
+      paddingRight: isMobile ? '20px' : '0',
+      background: colors.navy,
+      borderRadius: '32px',
+      paddingTop: isMobile ? '40px' : '60px',
+      paddingBottom: isMobile ? '40px' : '60px',
+      boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+      border: `1px solid ${colors.goldBorder}`,
+      position: 'relative',
+      overflow: 'hidden',
+    },
+
+    flexibleSolutionsSectionBg: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: `radial-gradient(circle at 10% 90%, ${colors.goldLight} 0%, transparent 50%), radial-gradient(circle at 90% 10%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)`,
+      zIndex: 1,
+    },
+
+    flexibleSolutionsHeader: {
+      marginBottom: isMobile ? '40px' : '60px',
+      position: 'relative',
+      zIndex: 2,
+    },
+
+    flexibleSolutionsBadge: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: isMobile ? '8px' : '12px',
+      backgroundColor: 'rgba(255, 184, 0, 0.15)',
+      paddingTop: isMobile ? '12px' : '16px',
+      paddingRight: isMobile ? '20px' : '32px',
+      paddingBottom: isMobile ? '12px' : '16px',
+      paddingLeft: isMobile ? '20px' : '32px',
+      borderRadius: '50px',
+      marginBottom: isMobile ? '20px' : '30px',
+      border: `2px solid ${colors.goldBorder}`,
+      backdropFilter: 'blur(10px)',
+    },
+
+    flexibleSolutionsBadgeText: {
+      fontSize: isMobile ? '14px' : '18px',
+      fontWeight: '700',
+      color: colors.white,
+      letterSpacing: '3px',
+      textTransform: 'uppercase',
+      fontFamily: "'Inter', sans-serif",
+    },
+
+    flexibleSolutionsTitle: {
+      fontSize: isMobile ? '2.5rem' : isTablet ? '3rem' : '3.5rem',
+      fontWeight: '700',
+      color: colors.white,
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: '20px',
+      marginLeft: 0,
+      lineHeight: '1',
+      fontFamily: "'Inter', sans-serif",
+      letterSpacing: '-1px',
+      textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
+    },
+
+    flexibleSolutionsSubtitle: {
+      fontSize: isMobile ? '1.75rem' : isTablet ? '2rem' : '2rem',
+      fontWeight: '700',
+      color: colors.white,
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: '16px',
+      marginLeft: 0,
+      fontFamily: "'Inter', sans-serif",
+      lineHeight: '1.2',
+    },
+
+    flexibleSolutionsDescription: {
+      fontSize: isMobile ? '1.125rem' : isTablet ? '1.25rem' : '1.375rem',
+      color: colors.softWhite90,
+      lineHeight: '1.7',
+      maxWidth: '900px',
+      marginTop: 0,
+      marginRight: 'auto',
+      marginBottom: isMobile ? '40px' : '60px',
+      marginLeft: 'auto',
+      fontWeight: '400',
+      fontFamily: "'Inter', sans-serif",
+    },
+
+    cleaningPlansGrid: {
+      display: 'grid',
+      gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
+      gap: isMobile ? '32px' : isTablet ? '24px' : '32px',
+      maxWidth: '1400px',
+      margin: '0 auto 60px auto',
+      position: 'relative',
+      zIndex: 2,
+    },
+
+    cleaningPlanCard: (active: boolean, color: string) => ({
+      backgroundColor: active ? colors.grayLight : colors.white,
+      borderRadius: '32px',
+      overflow: 'hidden',
+      boxShadow: active 
+        ? '0 40px 80px rgba(0, 0, 0, 0.3)' 
+        : '0 20px 60px rgba(0, 0, 0, 0.2)',
+      border: active 
+        ? `3px solid ${colors.gold}` 
+        : `2px solid ${colors.goldBorder}`,
+      transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+      transform: active ? 'translateY(-20px)' : 'translateY(0)',
+      display: 'flex',
+      flexDirection: 'column',
+    }),
+
+    planHeader: (color: string) => ({
+      backgroundColor: color,
+      paddingTop: isMobile ? '30px' : '40px',
+      paddingRight: isMobile ? '24px' : '32px',
+      paddingBottom: isMobile ? '30px' : '40px',
+      paddingLeft: isMobile ? '24px' : '32px',
+      textAlign: 'center',
+      color: color === colors.beige ? colors.navyDark : colors.white,
+    }),
+
+    planBadge: {
+      display: 'inline-block',
+      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+      paddingTop: '8px',
+      paddingRight: '20px',
+      paddingBottom: '8px',
+      paddingLeft: '20px',
+      borderRadius: '30px',
+      fontSize: '14px',
+      fontWeight: '700',
+      marginBottom: '20px',
+      letterSpacing: '2px',
+      textTransform: 'uppercase',
+      fontFamily: "'Inter', sans-serif",
+    },
+
+    planTitle: {
+      fontSize: isMobile ? '1.75rem' : '2rem',
+      fontWeight: '700',
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: '12px',
+      marginLeft: 0,
+      fontFamily: "'Inter', sans-serif",
+      lineHeight: '1.1',
+    },
+
+    planFrequency: {
+      fontSize: isMobile ? '1.125rem' : '1.25rem',
+      fontWeight: '600',
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: '8px',
+      marginLeft: 0,
+      fontFamily: "'Inter', sans-serif",
+      opacity: 0.9,
+    },
+
+    planDescription: {
+      fontSize: isMobile ? '1rem' : '1.125rem',
+      fontWeight: '400',
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: 0,
+      marginLeft: 0,
+      fontFamily: "'Inter', sans-serif",
+    },
+
+    planContent: {
+      paddingTop: isMobile ? '30px' : '40px',
+      paddingRight: isMobile ? '24px' : '32px',
+      paddingBottom: isMobile ? '30px' : '40px',
+      paddingLeft: isMobile ? '24px' : '32px',
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      background: 'transparent',
+    },
+
+    planDetails: {
+      fontSize: isMobile ? '0.95rem' : '1rem',
+      color: colors.grayDark,
+      lineHeight: '1.7',
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: '32px',
+      marginLeft: 0,
+      fontWeight: '400',
+      fontFamily: "'Inter', sans-serif",
+      flex: 1,
+    },
+
+    planFeatures: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: isMobile ? '12px' : '16px',
+      marginBottom: isMobile ? '30px' : '40px',
+    },
+
+    planFeature: {
+      display: 'flex',
+      alignItems: 'flex-start',
+      gap: '12px',
+      padding: '12px 16px',
+      backgroundColor: colors.goldLight,
+      borderRadius: '12px',
+      border: `1px solid ${colors.goldBorder}`,
+    },
+
+    planFeatureIcon: {
+      color: colors.gold,
+      fontWeight: '700',
+      fontSize: '20px',
+      flexShrink: 0,
+      marginTop: '2px',
+    },
+
+    planFeatureText: {
+      fontSize: isMobile ? '0.9rem' : '1rem',
+      color: colors.navyDark,
+      lineHeight: '1.5',
+      fontWeight: '400',
+      fontFamily: "'Inter', sans-serif",
+    },
+
+    planButton: (active: boolean, color: string) => ({
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '12px',
+      backgroundColor: active ? color : 'transparent',
+      color: active ? (color === colors.beige ? colors.navyDark : colors.white) : color,
+      border: `3px solid ${color}`,
+      paddingTop: isMobile ? '16px' : '20px',
+      paddingRight: isMobile ? '24px' : '32px',
+      paddingBottom: isMobile ? '16px' : '20px',
+      paddingLeft: isMobile ? '24px' : '32px',
+      borderRadius: '50px',
+      fontSize: isMobile ? '0.95rem' : '1rem',
+      fontWeight: '700',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      textDecoration: 'none',
+      fontFamily: "'Inter', sans-serif",
+      transform: active ? 'translateY(-3px)' : 'translateY(0)',
+      boxShadow: active ? '0 15px 30px rgba(0, 0, 0, 0.2)' : 'none',
+      width: '100%',
+    }),
+
+    // Section 11: Consultation Card - Dark Beige
+    consultationSection: {
+      backgroundColor: colors.beigeDark,
+      borderRadius: '24px',
+      paddingTop: isMobile ? '40px' : '60px',
+      paddingRight: isMobile ? '24px' : '40px',
+      paddingBottom: isMobile ? '40px' : '60px',
+      paddingLeft: isMobile ? '24px' : '40px',
+      textAlign: 'center',
+      border: `2px solid ${colors.goldBorder}`,
+      maxWidth: '1000px',
+      margin: '0 auto',
+      position: 'relative',
+      zIndex: 2,
+      backdropFilter: 'blur(10px)',
+      background: `linear-gradient(135deg, ${colors.beigeDark} 0%, ${colors.beige} 100%)`,
+      boxShadow: '0 20px 60px rgba(0, 0, 0, 0.2)',
+    },
+
+    consultationTitle: {
+      fontSize: isMobile ? '1.75rem' : isTablet ? '2rem' : '2.25rem',
+      fontWeight: '700',
+      color: colors.navyDark,
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: '24px',
+      marginLeft: 0,
+      fontFamily: "'Inter', sans-serif",
+      lineHeight: '1.2',
+    },
+
+    consultationDescription: {
+      fontSize: isMobile ? '1.125rem' : isTablet ? '1.25rem' : '1.375rem',
+      color: colors.navyDark,
+      lineHeight: '1.7',
+      marginTop: 0,
+      marginRight: 'auto',
+      marginBottom: '40px',
+      marginLeft: 'auto',
+      fontWeight: '400',
+      fontFamily: "'Inter', sans-serif",
+      maxWidth: '800px',
+    },
+
+    consultationButton: (active: boolean) => ({
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '12px',
+      backgroundColor: active ? colors.gold : colors.navy,
+      color: active ? colors.navyDark : colors.white,
+      border: 'none',
+      paddingTop: isMobile ? '16px' : '20px',
+      paddingRight: isMobile ? '32px' : '48px',
+      paddingBottom: isMobile ? '16px' : '20px',
+      paddingLeft: isMobile ? '32px' : '48px',
+      borderRadius: '50px',
+      fontSize: isMobile ? '1rem' : '1.125rem',
+      fontWeight: '700',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      textDecoration: 'none',
+      fontFamily: "'Inter', sans-serif",
+      transform: active ? 'translateY(-3px)' : 'translateY(0)',
+      boxShadow: active 
+        ? '0 20px 40px rgba(255, 184, 0, 0.4)' 
+        : '0 15px 30px rgba(0, 0, 0, 0.3)',
+    }),
   };
 
   return (
     <section style={baseBodyStyles.bodyContainer}>
-      {/* Section 1: The BRAVOS Difference - NAVY BLUE */}
+      {/* Section 1: Value Props Row - Three key benefits + Mini CTAs */}
+      <div style={baseBodyStyles.valuePropsRow}>
+        <div style={baseBodyStyles.valuePropsGrid}>
+          <ValuePropCard 
+            icon="💰" 
+            title="Free Quotes" 
+            description="Fair, transparent pricing. No hidden fees, ever." 
+          />
+          <ValuePropCard 
+            icon="🧹" 
+            title="No-Mess Guarantee" 
+            description="We clean up like we were never there. 100% guaranteed." 
+          />
+          <ValuePropCard 
+            icon="🛡️" 
+            title="25-Year Warranty" 
+            description="Industry-leading workmanship warranty for peace of mind." 
+          />
+        </div>
+        
+        <div style={baseBodyStyles.miniCTAsStack}>
+          <MiniCTACard
+            title="📋 Get Your Free Estimate"
+            buttonText="→"
+            onClick={() => window.location.href = '/contact'}
+          />
+          <MiniCTACard
+            title="📞 Emergency Roof Repair?"
+            buttonText="Call Now"
+            onClick={() => window.location.href = 'tel:+12815551234'}
+          />
+          <MiniCTACard
+            title="⭐ Read 350+ 5-Star Reviews"
+            buttonText="Read"
+            onClick={() => window.open('https://g.page/r/YOUR_GOOGLE_REVIEWS_LINK', '_blank')}
+          />
+        </div>
+      </div>
+
+      {/* Section 2: Certifications Row */}
+      <div style={baseBodyStyles.certificationsRow}>
+        {certifications.map((cert, index) => (
+          <CertificationBadge
+            key={index}
+            name={cert.name}
+            logo={cert.logo}
+            description={cert.description}
+          />
+        ))}
+      </div>
+
+      {/* Section 3: Floating Stats Row */}
+      <div style={baseBodyStyles.statsRow}>
+        <FloatingStatsCard stat="25+" label="Years of Excellence" icon="🏆" />
+        <FloatingStatsCard stat="3,500+" label="Roofs Replaced" icon="🏠" />
+        <FloatingStatsCard stat="99.7%" label="Satisfaction Rate" icon="⭐" />
+      </div>
+
+      {/* Section 4: The BRAVOS Difference - NAVY BLUE */}
       <div style={baseBodyStyles.differenceSection}>
         <div style={baseBodyStyles.differenceSectionBg}></div>
         <div style={baseBodyStyles.differenceBadge}>
@@ -3637,7 +3973,7 @@ const BodySection = () => {
         </p>
       </div>
 
-      {/* Section 2: Features Grid - Alternating NAVY and GRAY cards */}
+      {/* Section 5: Features Grid */}
       <div style={baseBodyStyles.featuresGrid}>
         {features.map((feature, index) => (
           <div 
@@ -3683,12 +4019,19 @@ const BodySection = () => {
                   </div>
                 ))}
               </div>
+
+              {/* Mini CTA inside feature card */}
+              <MiniCTACard
+                title={`Learn more about ${feature.title.split(' ')[0]}`}
+                buttonText="→"
+                onClick={() => window.location.href = '/services'}
+              />
             </div>
           </div>
         ))}
       </div>
 
-      {/* Section 3: Before & After Transformations - DARK BEIGE */}
+      {/* Section 6: Before & After Transformations */}
       <div style={baseBodyStyles.transformationsSection}>
         <div style={baseBodyStyles.transformationsSectionBg}></div>
         <div style={baseBodyStyles.transformationsHeader}>
@@ -3752,6 +4095,15 @@ const BodySection = () => {
               <p style={baseBodyStyles.transformationDescription}>
                 {transformation.description}
               </p>
+
+              {/* Mini CTA inside before/after card */}
+              <div style={{ padding: '0 40px 40px 40px', textAlign: 'center' }}>
+                <MiniCTACard
+                  title="See more transformations in our gallery"
+                  buttonText="→"
+                  onClick={() => window.location.href = '/gallery'}
+                />
+              </div>
             </div>
           ))}
         </div>
@@ -3788,7 +4140,7 @@ const BodySection = () => {
         </button>
       </div>
 
-      {/* Section 4: Video Testimonials - DARK GRAY */}
+      {/* Section 7: Video Testimonials */}
       <div style={baseBodyStyles.videoTestimonialsSection}>
         <div style={baseBodyStyles.videoTestimonialsSectionBg}></div>
         <div style={baseBodyStyles.videoTestimonialsHeader}>
@@ -3818,9 +4170,18 @@ const BodySection = () => {
             />
           ))}
         </div>
+
+        {/* Mini CTA after videos */}
+        <div style={{ maxWidth: '400px', margin: '0 auto' }}>
+          <MiniCTACard
+            title="Watch more video testimonials"
+            buttonText="→"
+            onClick={() => window.location.href = '/testimonials'}
+          />
+        </div>
       </div>
 
-      {/* Section 5: Customer Reviews - NAVY BLUE (alternating) */}
+      {/* Section 8: Customer Reviews */}
       <div style={baseBodyStyles.reviewsSection}>
         <div style={baseBodyStyles.reviewsSectionBg}></div>
         <div style={baseBodyStyles.reviewsHeader}>
@@ -3866,303 +4227,21 @@ const BodySection = () => {
               <p style={baseBodyStyles.reviewContent}>
                 "{review.content}"
               </p>
+
+              {/* Mini share CTA */}
+              <div style={{ marginTop: '20px' }}>
+                <MiniCTACard
+                  title="Read full review on Google"
+                  buttonText="→"
+                  onClick={() => window.open('https://g.page/r/YOUR_GOOGLE_REVIEWS_LINK', '_blank')}
+                />
+              </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Section 6: Meet the Founders Section - DARK BEIGE */}
-      <div style={{
-        maxWidth: '1400px',
-        margin: '0 auto',
-        marginBottom: isMobile ? '80px' : '120px',
-        paddingTop: isMobile ? '0' : '0',
-        paddingRight: isMobile ? '20px' : '40px',
-        paddingBottom: isMobile ? '0' : '0',
-        paddingLeft: isMobile ? '20px' : '40px',
-        background: colors.beigeDark,  // Dark beige
-        borderRadius: '32px',
-        padding: isMobile ? '40px 20px' : '80px 40px',
-        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-        border: `1px solid ${colors.goldBorder}`,
-        position: 'relative',
-        overflow: 'hidden',
-      }}>
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: `radial-gradient(circle at 20% 80%, ${colors.goldLight} 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(0, 0, 0, 0.05) 0%, transparent 50%)`,
-          zIndex: 1,
-        }}></div>
-        
-        <div style={{
-          display: 'flex',
-          flexDirection: isMobile ? 'column' : 'row',
-          gap: isMobile ? '40px' : isTablet ? '50px' : '80px',
-          alignItems: 'center',
-          position: 'relative',
-          zIndex: 2,
-        }}>
-          
-          <div style={{
-            flex: 1,
-            position: 'relative',
-          }}>
-            <div style={{
-              backgroundColor: colors.navyDark,
-              borderRadius: '30px',
-              padding: '8px',
-              position: 'relative',
-              boxShadow: '0 40px 80px rgba(0, 0, 0, 0.4)',
-            }}>
-              <img 
-                src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                alt="BRAVOS Founders"
-                style={{
-                  width: '100%',
-                  height: isMobile ? '400px' : isTablet ? '500px' : '600px',
-                  objectFit: 'cover',
-                  borderRadius: '24px',
-                  border: `4px solid ${colors.gold}`,
-                }}
-              />
-              
-              <div style={{
-                position: 'absolute',
-                bottom: isMobile ? '-20px' : isTablet ? '-25px' : '-30px',
-                left: isMobile ? '20px' : '40px',
-                right: isMobile ? '20px' : '40px',
-                backgroundColor: colors.gold,
-                paddingTop: isMobile ? '20px' : '30px',
-                paddingRight: isMobile ? '20px' : '30px',
-                paddingBottom: isMobile ? '20px' : '30px',
-                paddingLeft: isMobile ? '20px' : '30px',
-                borderRadius: '20px',
-                textAlign: 'center',
-                boxShadow: '0 20px 40px rgba(255, 184, 0, 0.4)',
-                transform: 'rotate(-2deg)',
-                zIndex: 3,
-              }}>
-                <div style={{
-                  fontSize: isMobile ? '18px' : isTablet ? '20px' : '24px',
-                  fontWeight: '700',
-                  color: colors.navyDark,
-                  fontFamily: "'Inter', sans-serif",
-                }}>
-                  Quality Inspectors & Founders
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div style={{
-            flex: 1,
-            textAlign: isMobile ? 'center' : 'left',
-          }}>
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: isMobile ? '8px' : '12px',
-              backgroundColor: 'rgba(255, 184, 0, 0.15)',
-              paddingTop: isMobile ? '12px' : '16px',
-              paddingRight: isMobile ? '20px' : '32px',
-              paddingBottom: isMobile ? '12px' : '16px',
-              paddingLeft: isMobile ? '20px' : '32px',
-              borderRadius: '50px',
-              marginBottom: isMobile ? '30px' : '40px',
-              border: `2px solid ${colors.goldBorder}`,
-              backdropFilter: 'blur(10px)',
-            }}>
-              <span style={{
-                color: colors.gold,
-                fontWeight: '700',
-                fontSize: isMobile ? '20px' : '24px',
-                fontFamily: "'Inter', sans-serif",
-              }}>
-                ✦
-              </span>
-              <span style={{
-                fontSize: isMobile ? '14px' : '18px',
-                fontWeight: '700',
-                color: colors.navyDark,
-                letterSpacing: '3px',
-                textTransform: 'uppercase',
-                fontFamily: "'Inter', sans-serif",
-              }}>
-                Meet The Visionaries
-              </span>
-            </div>
-            
-            <div style={{
-              marginBottom: isMobile ? '20px' : '30px',
-            }}>
-              <h2 style={{
-                fontSize: isMobile ? '2rem' : isTablet ? '2.5rem' : '3rem',
-                fontWeight: '700',
-                color: colors.navyDark,
-                marginTop: 0,
-                marginRight: 0,
-                marginBottom: '8px',
-                marginLeft: 0,
-                fontFamily: "'Inter', sans-serif",
-                lineHeight: '1',
-                letterSpacing: '-1px',
-                textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-              }}>
-                Meet The Founders:
-              </h2>
-              <h2 style={{
-                fontSize: isMobile ? '3rem' : isTablet ? '4rem' : '5rem',
-                fontWeight: '700',
-                color: colors.navyDark,
-                marginTop: 0,
-                marginRight: 0,
-                marginBottom: '8px',
-                marginLeft: 0,
-                fontFamily: "'Inter', sans-serif",
-                lineHeight: '0.9',
-              }}>
-                David{" "}
-                <span style={{
-                  color: colors.gold,
-                  fontSize: isMobile ? '3.5rem' : isTablet ? '4.5rem' : '6rem',
-                  display: 'inline-block',
-                  margin: '0 20px',
-                  transform: 'translateY(5px)',
-                }}>
-                  &
-                </span>
-                {" "}Sarah
-              </h2>
-            </div>
-            
-            <p style={{
-              fontSize: isMobile ? '1.125rem' : isTablet ? '1.25rem' : '1.375rem',
-              color: colors.navyDark,
-              lineHeight: '1.7',
-              marginTop: 0,
-              marginRight: 0,
-              marginBottom: isMobile ? '20px' : '30px',
-              marginLeft: 0,
-              fontWeight: '400',
-              fontFamily: "'Inter', sans-serif",
-            }}>
-              The husband-and-wife team behind Houston's most trusted roofing company. 
-              Their commitment to craftsmanship and integrity has built BRAVOS into the region's premier roofing contractor.
-            </p>
-            
-            <div style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.2)',
-              padding: isMobile ? '30px' : '40px',
-              borderRadius: '20px',
-              border: `2px solid ${colors.goldBorder}`,
-              marginBottom: isMobile ? '30px' : '40px',
-              backdropFilter: 'blur(10px)',
-              background: 'rgba(255, 255, 255, 0.1)',
-              boxShadow: '0 10px 40px rgba(0, 0, 0, 0.1)',
-            }}>
-              <h3 style={{
-                fontSize: isMobile ? '1.5rem' : isTablet ? '1.75rem' : '2rem',
-                fontWeight: '700',
-                color: colors.navyDark,
-                marginTop: 0,
-                marginRight: 0,
-                marginBottom: isMobile ? '16px' : '20px',
-                marginLeft: 0,
-                fontFamily: "'Inter', sans-serif",
-              }}>
-                Our Story of Excellence
-              </h3>
-              <p style={{
-                fontSize: isMobile ? '0.95rem' : '1rem',
-                color: colors.navyDark,
-                lineHeight: '1.8',
-                marginTop: 0,
-                marginRight: 0,
-                marginBottom: isMobile ? '16px' : '20px',
-                marginLeft: 0,
-                fontWeight: '400',
-                fontFamily: "'Inter', sans-serif",
-              }}>
-                With over 25 years of combined experience in the roofing industry, David and Sarah founded BRAVOS with one mission: 
-                to provide Houston homeowners with honest, high-quality roofing solutions backed by exceptional customer service.
-              </p>
-              <p style={{
-                fontSize: isMobile ? '0.95rem' : '1rem',
-                color: colors.navyDark,
-                lineHeight: '1.8',
-                marginTop: 0,
-                marginRight: 0,
-                marginBottom: 0,
-                marginLeft: 0,
-                fontWeight: '400',
-                fontFamily: "'Inter', sans-serif",
-              }}>
-                What started as a family operation has grown into Houston's #1 rated roofing company, serving over 3,500 homeowners 
-                and maintaining a 99.7% satisfaction rate. Their hands-on approach means they're personally invested in every project.
-              </p>
-            </div>
-            
-            <button
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '12px',
-                backgroundColor: colors.navyDark,
-                color: colors.white,
-                border: 'none',
-                paddingTop: isMobile ? '16px' : '20px',
-                paddingRight: isMobile ? '24px' : '40px',
-                paddingBottom: isMobile ? '16px' : '20px',
-                paddingLeft: isMobile ? '24px' : '40px',
-                borderRadius: '50px',
-                fontSize: isMobile ? '0.95rem' : '1rem',
-                fontWeight: '700',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                textDecoration: 'none',
-                fontFamily: "'Inter', sans-serif",
-                transform: activeButton === 'learnMore' ? 'translateY(-3px)' : 'translateY(0)',
-                boxShadow: activeButton === 'learnMore' 
-                  ? '0 20px 40px rgba(0, 0, 0, 0.4)' 
-                  : '0 10px 30px rgba(0, 0, 0, 0.3)',
-              }}
-              onMouseEnter={() => setActiveButton('learnMore')}
-              onMouseLeave={() => setActiveButton(null)}
-              onTouchStart={() => handleTouchStart(setActiveButton, 'learnMore')}
-              onTouchEnd={() => handleTouchEnd(setActiveButton, null)}
-              onClick={() => {
-                window.location.href = '/about';
-              }}
-            >
-              Learn More About Us
-              <svg 
-                width="20" 
-                height="20" 
-                viewBox="0 0 24 24" 
-                fill="none"
-                style={{
-                  transition: 'transform 0.3s ease',
-                  transform: activeButton === 'learnMore' ? 'translateX(5px)' : 'translateX(0)'
-                }}
-              >
-                <path 
-                  d="M5 12H19M19 12L12 5M19 12L12 19" 
-                  stroke="currentColor" 
-                  strokeWidth="2" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Section 7: Our Story Section - DARK GRAY */}
+      {/* Section 9: Our Story */}
       <div style={baseBodyStyles.ourStorySection}>
         <div style={baseBodyStyles.ourStorySectionBg}></div>
         <div style={baseBodyStyles.ourStoryContent}>
@@ -4235,7 +4314,7 @@ const BodySection = () => {
         </div>
       </div>
 
-      {/* Section 8: Roofing Services Section - NAVY BLUE */}
+      {/* Section 10: Roofing Services */}
       <div style={baseBodyStyles.flexibleSolutionsSection}>
         <div style={baseBodyStyles.flexibleSolutionsSectionBg}></div>
         <div style={baseBodyStyles.flexibleSolutionsHeader}>
@@ -4336,7 +4415,7 @@ const BodySection = () => {
           ))}
         </div>
         
-        {/* Section 9: Consultation Card - DARK BEIGE */}
+        {/* Section 11: Consultation Card */}
         <div style={baseBodyStyles.consultationSection}>
           <h3 style={baseBodyStyles.consultationTitle}>
             Not Sure What Your Roof Needs?
@@ -4378,7 +4457,7 @@ const BodySection = () => {
         </div>
       </div>
 
-      {/* FAQ Section - DARK BEIGE */}
+      {/* FAQ Section */}
       <FAQSection 
         title="Frequently Asked Roofing Questions"
         subtitle="Find answers to common questions about our roofing services. If you don't see your question here, contact our team for personalized assistance."
@@ -4392,7 +4471,7 @@ const BodySection = () => {
           paddingBottom: isMobile ? '60px' : '80px',
           paddingLeft: isMobile ? '20px' : '40px',
           paddingRight: isMobile ? '20px' : '40px',
-          background: colors.beigeDark,  // Dark beige to match section 9
+          background: colors.beigeDark,
           borderRadius: '32px',
           boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
           border: `1px solid ${colors.goldBorder}`,
@@ -4403,6 +4482,8 @@ const BodySection = () => {
     </section>
   );
 };
+
+// ========== HOME PAGE ==========
 
 const HomePage = () => {
   return (
