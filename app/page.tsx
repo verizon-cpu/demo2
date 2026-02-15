@@ -621,7 +621,7 @@ function BottomCTAButtons({
         padding: isMobile ? '6px' : '8px',
         boxShadow: '0 8px 30px rgba(10, 10, 12, 0.4)',
         border: '1px solid #FFB800',
-        width: isMobile ? 'calc(100vw - 20px)' : 'calc(100vw - 30px)',
+        width: isMobile ? 'calc(100% - 20px)' : 'calc(100% - 30px)',
         maxWidth: '500px',
         overflowX: 'auto',
         WebkitOverflowScrolling: 'touch',
