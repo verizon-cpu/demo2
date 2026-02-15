@@ -743,7 +743,7 @@ function LogoCarousel({
   interval = 3000,
   showNavigation = true,
   backgroundColor = 'transparent',
-  height = 80
+  height = 500
 }: LogoCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
