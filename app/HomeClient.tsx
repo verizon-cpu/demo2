@@ -4723,11 +4723,13 @@ const BodySection = () => {
       marginTop: '40px',
       position: 'relative',
       zIndex: 2,
+      pointerEvents: 'auto',
     }),
   };
 
-  const handleBeforeAfterClick = () => {
-    // Use window.location.href for navigation to ensure it works
+  const handleBeforeAfterClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     window.location.href = '/gallery';
   };
 
