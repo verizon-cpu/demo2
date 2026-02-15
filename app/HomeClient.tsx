@@ -743,7 +743,7 @@ function LogoCarousel({
   interval = 3000,
   showNavigation = true,
   backgroundColor = 'transparent',
-  height = 500
+  height = 80
 }: LogoCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -827,8 +827,8 @@ function LogoCarousel({
             transition={{ type: "spring", stiffness: 300 }}
             style={{
               flex: '0 0 auto',
-              width: isMobile ? '80px' : '120px',
-              height: isMobile ? height * 0.6 : height,
+              width: isMobile ? '200px' : '200px',
+              height: isMobile ? height * 0.8 : height,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
