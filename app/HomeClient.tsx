@@ -728,16 +728,16 @@ function BottomCTAButtons({
 // Logo Carousel Component - WITHOUT LINES
 function LogoCarousel({
   logos = [
-    { src: "/image/logo1.png", alt: "GAF Certified" },
-    { src: "/image/logo2.png", alt: "Owens Corning" },
-    { src: "/image/logo3.png", alt: "CertainTeed" },
-    { src: "/image/logo4.png", alt: "Malarkey" },
-    { src: "/image/logo5.png", alt: "IKO" },
-    { src: "/image/logo6.png", alt: "Atlas" },
-    { src: "/image/logo7.png", alt: "Tamko" },
-    { src: "/image/logo8.png", alt: "GAF" },
-    { src: "/image/logo9.png", alt: "CertainTeed" },
-    { src: "/image/logo10.png", alt: "Owens Corning" }
+    { src: "/image/award1.png", alt: "GAF Certified" },
+    { src: "/image/flag.png", alt: "Owens Corning" },
+    { src: "/image/licensed1.png", alt: "CertainTeed" },
+    { src: "/image/lifetime1.png", alt: "Malarkey" },
+    { src: "/image/roofer1.png", alt: "IKO" },
+    { src: "/image/pointer1.png", alt: "Atlas" },
+    { src: "/image/award1.png", alt: "Tamko" },
+    { src: "/image/flag.png", alt: "GAF" },
+    { src: "/image/lifetime1.png", alt: "CertainTeed" },
+    { src: "/image/flag.png", alt: "Owens Corning" }
   ],
   autoRotate = true,
   interval = 3000,
@@ -2696,7 +2696,7 @@ const HeroSection = () => {
               >
                 {/* Wavy flag image with animation */}
                 <WavyFlag 
-                  src="/image/wavy-flag.png"
+                  src="/image/flag.png"
                   width={isMobile ? 60 : 80}
                   height={isMobile ? 40 : 50}
                 />
