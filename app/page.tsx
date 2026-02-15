@@ -2701,7 +2701,7 @@ const HeroSection = () => {
                     height={220}
                     style={{ 
                       top: '80px', 
-                      right: '70px',
+                      right: '-100px',
                       filter: 'drop-shadow(0 4px 8px rgba(255, 184, 0, 0.3))'
                     }}
                     animate={true}
