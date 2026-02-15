@@ -337,8 +337,10 @@ function LogoCarousel({
         overflow: 'hidden',
         position: 'relative',
         backgroundColor,
-        padding: isMobile ? '20px 0' : '30px 0',
-        margin: isMobile ? '20px 0' : '30px 0',
+        padding: isMobile ? '40px 0' : '60px 0',
+        margin: isMobile ? '40px 0' : '60px 0',
+        borderTop: `2px solid #FFB800`,
+        borderBottom: `2px solid #FFB800`,
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -1335,7 +1337,7 @@ const HeroSection = () => {
               </div>
             </div>
             
-            {/* TEN LOGO CAROUSEL - AUTO ROTATING WITH MANUAL NAVIGATION */}
+            {/* FIRST LOGO CAROUSEL - BETWEEN HERO AND BODY SECTIONS */}
             <LogoCarousel />
             
             <div style={baseStyles.reviewsContainer}>
@@ -2805,7 +2807,7 @@ const BodySection = () => {
     differenceSection: {
       maxWidth: '1400px',
       margin: '0 auto',
-      marginBottom: isMobile ? '80px' : '120px',
+      marginBottom: isMobile ? '40px' : '60px',
       textAlign: 'center',
       paddingLeft: isMobile ? '20px' : '0',
       paddingRight: isMobile ? '20px' : '0',
@@ -2895,7 +2897,7 @@ const BodySection = () => {
       maxWidth: '900px',
       marginTop: 0,
       marginRight: 'auto',
-      marginBottom: isMobile ? '60px' : isTablet ? '80px' : '80px',
+      marginBottom: isMobile ? '40px' : '60px',
       marginLeft: 'auto',
       fontWeight: '400',
       fontFamily: "'Inter', sans-serif",
@@ -2910,7 +2912,7 @@ const BodySection = () => {
       gap: isMobile ? '32px' : isTablet ? '48px' : '64px',
       maxWidth: '1400px',
       margin: '0 auto',
-      marginBottom: isMobile ? '80px' : '120px',
+      marginBottom: isMobile ? '40px' : '60px',
       paddingLeft: isMobile ? '20px' : '0',
       paddingRight: isMobile ? '20px' : '0',
     },
@@ -3041,7 +3043,7 @@ const BodySection = () => {
     transformationsSection: {
       maxWidth: '1400px',
       margin: '0 auto',
-      marginBottom: isMobile ? '80px' : '120px',
+      marginBottom: isMobile ? '40px' : '60px',
       textAlign: 'center',
       paddingLeft: isMobile ? '20px' : '0',
       paddingRight: isMobile ? '20px' : '0',
@@ -3234,7 +3236,7 @@ const BodySection = () => {
     videoTestimonialsSection: {
       maxWidth: '1400px',
       margin: '0 auto',
-      marginBottom: isMobile ? '80px' : '120px',
+      marginBottom: isMobile ? '40px' : '60px',
       textAlign: 'center',
       paddingLeft: isMobile ? '20px' : '0',
       paddingRight: isMobile ? '20px' : '0',
@@ -3322,7 +3324,7 @@ const BodySection = () => {
       gap: isMobile ? '20px' : isTablet ? '24px' : '32px',
       maxWidth: '1200px',
       margin: '0 auto',
-      marginBottom: isMobile ? '60px' : '80px',
+      marginBottom: isMobile ? '40px' : '60px',
       position: 'relative',
       zIndex: 2,
     },
@@ -3331,7 +3333,7 @@ const BodySection = () => {
     reviewsSection: {
       maxWidth: '1400px',
       margin: '0 auto',
-      marginBottom: isMobile ? '80px' : '120px',
+      marginBottom: isMobile ? '40px' : '60px',
       textAlign: 'center',
       paddingLeft: isMobile ? '20px' : '0',
       paddingRight: isMobile ? '20px' : '0',
@@ -3482,12 +3484,243 @@ const BodySection = () => {
     },
     
     // Section 6: Meet the Founders - Dark Beige
+    foundersSection: {
+      maxWidth: '1400px',
+      margin: '0 auto',
+      marginBottom: isMobile ? '40px' : '60px',
+      paddingLeft: isMobile ? '20px' : '0',
+      paddingRight: isMobile ? '20px' : '0',
+      background: colors.beigeDark,
+      borderRadius: '32px',
+      padding: isMobile ? '40px 20px' : '80px 40px',
+      boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+      border: `1px solid ${colors.gold}`,
+      position: 'relative',
+      overflow: 'hidden',
+    },
+    
+    foundersSectionBg: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: colors.beigeDark,
+      zIndex: 1,
+    },
+    
+    foundersContainer: {
+      display: 'flex',
+      flexDirection: isMobile ? 'column' : 'row',
+      gap: isMobile ? '40px' : isTablet ? '50px' : '80px',
+      alignItems: 'center',
+      position: 'relative',
+      zIndex: 2,
+    },
+    
+    foundersImageWrapper: {
+      flex: 1,
+      position: 'relative',
+    },
+    
+    foundersImageContainer: {
+      backgroundColor: colors.navyDark,
+      borderRadius: '30px',
+      padding: '8px',
+      position: 'relative',
+      boxShadow: '0 40px 80px rgba(0, 0, 0, 0.4)',
+    },
+    
+    foundersImage: {
+      width: '100%',
+      height: isMobile ? '400px' : isTablet ? '500px' : '600px',
+      objectFit: 'cover',
+      borderRadius: '24px',
+      border: `4px solid ${colors.gold}`,
+    },
+    
+    foundersImageBadge: {
+      position: 'absolute',
+      bottom: isMobile ? '-20px' : isTablet ? '-25px' : '-30px',
+      left: isMobile ? '20px' : '40px',
+      right: isMobile ? '20px' : '40px',
+      backgroundColor: colors.gold,
+      paddingTop: isMobile ? '20px' : '30px',
+      paddingRight: isMobile ? '20px' : '30px',
+      paddingBottom: isMobile ? '20px' : '30px',
+      paddingLeft: isMobile ? '20px' : '30px',
+      borderRadius: '20px',
+      textAlign: 'center',
+      boxShadow: '0 20px 40px rgba(255, 184, 0, 0.4)',
+      transform: 'rotate(-2deg)',
+      zIndex: 3,
+    },
+    
+    foundersImageBadgeText: {
+      fontSize: isMobile ? '18px' : isTablet ? '20px' : '24px',
+      fontWeight: '700',
+      color: colors.navyDark,
+      fontFamily: "'Inter', sans-serif",
+    },
+    
+    foundersContent: {
+      flex: 1,
+      textAlign: isMobile ? 'center' : 'left',
+    },
+    
+    foundersBadge: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: isMobile ? '8px' : '12px',
+      backgroundColor: colors.gold,
+      paddingTop: isMobile ? '12px' : '16px',
+      paddingRight: isMobile ? '20px' : '32px',
+      paddingBottom: isMobile ? '12px' : '16px',
+      paddingLeft: isMobile ? '20px' : '32px',
+      borderRadius: '50px',
+      marginBottom: isMobile ? '30px' : '40px',
+      border: `2px solid ${colors.gold}`,
+    },
+    
+    foundersBadgeIcon: {
+      color: colors.navyDark,
+      fontWeight: '700',
+      fontSize: isMobile ? '20px' : '24px',
+      fontFamily: "'Inter', sans-serif",
+    },
+    
+    foundersBadgeText: {
+      fontSize: isMobile ? '14px' : '18px',
+      fontWeight: '700',
+      color: colors.navyDark,
+      letterSpacing: '3px',
+      textTransform: 'uppercase',
+      fontFamily: "'Inter', sans-serif",
+    },
+    
+    foundersTitleContainer: {
+      marginBottom: isMobile ? '20px' : '30px',
+    },
+    
+    foundersSubtitle: {
+      fontSize: isMobile ? '2rem' : isTablet ? '2.5rem' : '3rem',
+      fontWeight: '700',
+      color: colors.navyDark,
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: '8px',
+      marginLeft: 0,
+      fontFamily: "'Inter', sans-serif",
+      lineHeight: '1',
+      letterSpacing: '-1px',
+      textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+    },
+    
+    foundersName: {
+      fontSize: isMobile ? '3rem' : isTablet ? '4rem' : '5rem',
+      fontWeight: '700',
+      color: colors.navyDark,
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: '8px',
+      marginLeft: 0,
+      fontFamily: "'Inter', sans-serif",
+      lineHeight: '0.9',
+    },
+    
+    foundersAmpersand: {
+      color: colors.gold,
+      fontSize: isMobile ? '3.5rem' : isTablet ? '4.5rem' : '6rem',
+      display: 'inline-block',
+      margin: '0 20px',
+      transform: 'translateY(5px)',
+    },
+    
+    foundersDescription: {
+      fontSize: isMobile ? '1.125rem' : isTablet ? '1.25rem' : '1.375rem',
+      color: colors.navyDark,
+      lineHeight: '1.7',
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: isMobile ? '20px' : '30px',
+      marginLeft: 0,
+      fontWeight: '400',
+      fontFamily: "'Inter', sans-serif",
+    },
+    
+    foundersStoryBox: {
+      backgroundColor: colors.beigeLight,
+      padding: isMobile ? '30px' : '40px',
+      borderRadius: '20px',
+      border: `2px solid ${colors.gold}`,
+      marginBottom: isMobile ? '30px' : '40px',
+      boxShadow: '0 10px 40px rgba(0, 0, 0, 0.1)',
+    },
+    
+    foundersStoryTitle: {
+      fontSize: isMobile ? '1.5rem' : isTablet ? '1.75rem' : '2rem',
+      fontWeight: '700',
+      color: colors.navyDark,
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: isMobile ? '16px' : '20px',
+      marginLeft: 0,
+      fontFamily: "'Inter', sans-serif",
+    },
+    
+    foundersStoryText: {
+      fontSize: isMobile ? '0.95rem' : '1rem',
+      color: colors.navyDark,
+      lineHeight: '1.8',
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: isMobile ? '16px' : '20px',
+      marginLeft: 0,
+      fontWeight: '400',
+      fontFamily: "'Inter', sans-serif",
+    },
+    
+    foundersStoryTextLast: {
+      fontSize: isMobile ? '0.95rem' : '1rem',
+      color: colors.navyDark,
+      lineHeight: '1.8',
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: 0,
+      marginLeft: 0,
+      fontWeight: '400',
+      fontFamily: "'Inter', sans-serif",
+    },
+    
+    foundersButton: (active: boolean) => ({
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '12px',
+      backgroundColor: active ? colors.gold : colors.navyDark,
+      color: active ? colors.navyDark : colors.white,
+      border: 'none',
+      paddingTop: isMobile ? '16px' : '20px',
+      paddingRight: isMobile ? '24px' : '40px',
+      paddingBottom: isMobile ? '16px' : '20px',
+      paddingLeft: isMobile ? '24px' : '40px',
+      borderRadius: '50px',
+      fontSize: isMobile ? '0.95rem' : '1rem',
+      fontWeight: '700',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      textDecoration: 'none',
+      fontFamily: "'Inter', sans-serif",
+      transform: active ? 'translateY(-3px)' : 'translateY(0)',
+      boxShadow: active 
+        ? '0 20px 40px rgba(255, 184, 0, 0.4)' 
+        : '0 15px 30px rgba(0, 0, 0, 0.3)',
+    }),
     
     // Section 7: Our Story - Dark Gray
     ourStorySection: {
       maxWidth: '1400px',
       margin: '0 auto',
-      marginBottom: isMobile ? '80px' : '120px',
+      marginBottom: isMobile ? '40px' : '60px',
       textAlign: 'center',
       paddingLeft: isMobile ? '20px' : '0',
       paddingRight: isMobile ? '20px' : '0',
@@ -3582,7 +3815,7 @@ const BodySection = () => {
     flexibleSolutionsSection: {
       maxWidth: '1400px',
       margin: '0 auto',
-      marginBottom: isMobile ? '80px' : '120px',
+      marginBottom: isMobile ? '40px' : '60px',
       textAlign: 'center',
       paddingLeft: isMobile ? '20px' : '0',
       paddingRight: isMobile ? '20px' : '0',
@@ -3688,7 +3921,7 @@ const BodySection = () => {
       gap: isMobile ? '32px' : isTablet ? '24px' : '32px',
       maxWidth: '1400px',
       margin: '0 auto',
-      marginBottom: isMobile ? '60px' : '80px',
+      marginBottom: isMobile ? '40px' : '60px',
       position: 'relative',
       zIndex: 2,
     },
@@ -3980,10 +4213,10 @@ const BodySection = () => {
           With over 25 years of industry experience, BRAVOS has earned its reputation as Houston's most trusted roofing contractor. 
           We combine master craftsmanship with premium materials to deliver roofs that protect your home and enhance its beauty.
         </p>
-        
-        {/* TEN LOGO CAROUSEL - AUTO ROTATING WITH MANUAL NAVIGATION */}
-        <LogoCarousel />
       </div>
+
+      {/* LOGO CAROUSEL - BETWEEN SECTION 1 AND SECTION 2 */}
+      <LogoCarousel />
 
       {/* Section 2: Features Grid - Alternating NAVY and GRAY cards */}
       <div style={baseBodyStyles.featuresGrid}>
@@ -4035,8 +4268,8 @@ const BodySection = () => {
           </div>
         ))}
       </div>
-      
-      {/* TEN LOGO CAROUSEL BETWEEN SECTIONS */}
+
+      {/* LOGO CAROUSEL - BETWEEN SECTION 2 AND SECTION 3 */}
       <LogoCarousel />
 
       {/* Section 3: Before & After Transformations - DARK BEIGE */}
@@ -4147,10 +4380,10 @@ const BodySection = () => {
             />
           </svg>
         </button>
-        
-        {/* TEN LOGO CAROUSEL BETWEEN SECTIONS */}
-        <LogoCarousel />
       </div>
+
+      {/* LOGO CAROUSEL - BETWEEN SECTION 3 AND SECTION 4 */}
+      <LogoCarousel />
 
       {/* Section 4: Video Testimonials - DARK GRAY */}
       <div style={baseBodyStyles.videoTestimonialsSection}>
@@ -4192,10 +4425,10 @@ const BodySection = () => {
             />
           ))}
         </div>
-        
-        {/* TEN LOGO CAROUSEL BETWEEN SECTIONS */}
-        <LogoCarousel />
       </div>
+
+      {/* LOGO CAROUSEL - BETWEEN SECTION 4 AND SECTION 5 */}
+      <LogoCarousel />
 
       {/* Section 5: Customer Reviews - NAVY BLUE (alternating) */}
       <div style={baseBodyStyles.reviewsSection}>
@@ -4256,37 +4489,14 @@ const BodySection = () => {
             </div>
           ))}
         </div>
-        
-        {/* TEN LOGO CAROUSEL BETWEEN SECTIONS */}
-        <LogoCarousel />
       </div>
 
+      {/* LOGO CAROUSEL - BETWEEN SECTION 5 AND SECTION 6 */}
+      <LogoCarousel />
+
       {/* Section 6: Meet the Founders Section - DARK BEIGE */}
-      <div style={{
-        maxWidth: '1400px',
-        margin: '0 auto',
-        marginBottom: isMobile ? '80px' : '120px',
-        paddingTop: isMobile ? '0' : '0',
-        paddingRight: isMobile ? '20px' : '40px',
-        paddingBottom: isMobile ? '0' : '0',
-        paddingLeft: isMobile ? '20px' : '40px',
-        background: colors.beigeDark,
-        borderRadius: '32px',
-        padding: isMobile ? '40px 20px' : '80px 40px',
-        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-        border: `1px solid ${colors.gold}`,
-        position: 'relative',
-        overflow: 'hidden',
-      }}>
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: colors.beigeDark,
-          zIndex: 1,
-        }}></div>
+      <div style={baseBodyStyles.foundersSection}>
+        <div style={baseBodyStyles.foundersSectionBg}></div>
         
         {/* BIG ROTATING STAR RING BEHIND TITLE */}
         <RotatingStarRing 
@@ -4297,235 +4507,64 @@ const BodySection = () => {
           style={{ top: '50%', left: '50%' }}
         />
         
-        <div style={{
-          display: 'flex',
-          flexDirection: isMobile ? 'column' : 'row',
-          gap: isMobile ? '40px' : isTablet ? '50px' : '80px',
-          alignItems: 'center',
-          position: 'relative',
-          zIndex: 2,
-        }}>
+        <div style={baseBodyStyles.foundersContainer}>
           
-          <div style={{
-            flex: 1,
-            position: 'relative',
-          }}>
-            <div style={{
-              backgroundColor: colors.navyDark,
-              borderRadius: '30px',
-              padding: '8px',
-              position: 'relative',
-              boxShadow: '0 40px 80px rgba(0, 0, 0, 0.4)',
-            }}>
+          <div style={baseBodyStyles.foundersImageWrapper}>
+            <div style={baseBodyStyles.foundersImageContainer}>
               <img 
                 src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
                 alt="BRAVOS Founders"
-                style={{
-                  width: '100%',
-                  height: isMobile ? '400px' : isTablet ? '500px' : '600px',
-                  objectFit: 'cover',
-                  borderRadius: '24px',
-                  border: `4px solid ${colors.gold}`,
-                }}
+                style={baseBodyStyles.foundersImage}
               />
               
-              <div style={{
-                position: 'absolute',
-                bottom: isMobile ? '-20px' : isTablet ? '-25px' : '-30px',
-                left: isMobile ? '20px' : '40px',
-                right: isMobile ? '20px' : '40px',
-                backgroundColor: colors.gold,
-                paddingTop: isMobile ? '20px' : '30px',
-                paddingRight: isMobile ? '20px' : '30px',
-                paddingBottom: isMobile ? '20px' : '30px',
-                paddingLeft: isMobile ? '20px' : '30px',
-                borderRadius: '20px',
-                textAlign: 'center',
-                boxShadow: '0 20px 40px rgba(255, 184, 0, 0.4)',
-                transform: 'rotate(-2deg)',
-                zIndex: 3,
-              }}>
-                <div style={{
-                  fontSize: isMobile ? '18px' : isTablet ? '20px' : '24px',
-                  fontWeight: '700',
-                  color: colors.navyDark,
-                  fontFamily: "'Inter', sans-serif",
-                }}>
+              <div style={baseBodyStyles.foundersImageBadge}>
+                <div style={baseBodyStyles.foundersImageBadgeText}>
                   Quality Inspectors & Founders
                 </div>
               </div>
             </div>
           </div>
           
-          <div style={{
-            flex: 1,
-            textAlign: isMobile ? 'center' : 'left',
-          }}>
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: isMobile ? '8px' : '12px',
-              backgroundColor: colors.gold,
-              paddingTop: isMobile ? '12px' : '16px',
-              paddingRight: isMobile ? '20px' : '32px',
-              paddingBottom: isMobile ? '12px' : '16px',
-              paddingLeft: isMobile ? '20px' : '32px',
-              borderRadius: '50px',
-              marginBottom: isMobile ? '30px' : '40px',
-              border: `2px solid ${colors.gold}`,
-            }}>
-              <span style={{
-                color: colors.navyDark,
-                fontWeight: '700',
-                fontSize: isMobile ? '20px' : '24px',
-                fontFamily: "'Inter', sans-serif",
-              }}>
-                ✦
-              </span>
-              <span style={{
-                fontSize: isMobile ? '14px' : '18px',
-                fontWeight: '700',
-                color: colors.navyDark,
-                letterSpacing: '3px',
-                textTransform: 'uppercase',
-                fontFamily: "'Inter', sans-serif",
-              }}>
-                Meet The Visionaries
-              </span>
+          <div style={baseBodyStyles.foundersContent}>
+            <div style={baseBodyStyles.foundersBadge}>
+              <span style={baseBodyStyles.foundersBadgeIcon}>✦</span>
+              <span style={baseBodyStyles.foundersBadgeText}>Meet The Visionaries</span>
             </div>
             
-            <div style={{
-              marginBottom: isMobile ? '20px' : '30px',
-            }}>
-              <h2 style={{
-                fontSize: isMobile ? '2rem' : isTablet ? '2.5rem' : '3rem',
-                fontWeight: '700',
-                color: colors.navyDark,
-                marginTop: 0,
-                marginRight: 0,
-                marginBottom: '8px',
-                marginLeft: 0,
-                fontFamily: "'Inter', sans-serif",
-                lineHeight: '1',
-                letterSpacing: '-1px',
-                textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-              }}>
+            <div style={baseBodyStyles.foundersTitleContainer}>
+              <h2 style={baseBodyStyles.foundersSubtitle}>
                 Meet The Founders:
               </h2>
-              <h2 style={{
-                fontSize: isMobile ? '3rem' : isTablet ? '4rem' : '5rem',
-                fontWeight: '700',
-                color: colors.navyDark,
-                marginTop: 0,
-                marginRight: 0,
-                marginBottom: '8px',
-                marginLeft: 0,
-                fontFamily: "'Inter', sans-serif",
-                lineHeight: '0.9',
-              }}>
+              <h2 style={baseBodyStyles.foundersName}>
                 David{" "}
-                <span style={{
-                  color: colors.gold,
-                  fontSize: isMobile ? '3.5rem' : isTablet ? '4.5rem' : '6rem',
-                  display: 'inline-block',
-                  margin: '0 20px',
-                  transform: 'translateY(5px)',
-                }}>
+                <span style={baseBodyStyles.foundersAmpersand}>
                   &
                 </span>
                 {" "}Sarah
               </h2>
             </div>
             
-            <p style={{
-              fontSize: isMobile ? '1.125rem' : isTablet ? '1.25rem' : '1.375rem',
-              color: colors.navyDark,
-              lineHeight: '1.7',
-              marginTop: 0,
-              marginRight: 0,
-              marginBottom: isMobile ? '20px' : '30px',
-              marginLeft: 0,
-              fontWeight: '400',
-              fontFamily: "'Inter', sans-serif",
-            }}>
+            <p style={baseBodyStyles.foundersDescription}>
               The husband-and-wife team behind Houston's most trusted roofing company. 
               Their commitment to craftsmanship and integrity has built BRAVOS into the region's premier roofing contractor.
             </p>
             
-            <div style={{
-              backgroundColor: colors.beigeLight,
-              padding: isMobile ? '30px' : '40px',
-              borderRadius: '20px',
-              border: `2px solid ${colors.gold}`,
-              marginBottom: isMobile ? '30px' : '40px',
-              boxShadow: '0 10px 40px rgba(0, 0, 0, 0.1)',
-            }}>
-              <h3 style={{
-                fontSize: isMobile ? '1.5rem' : isTablet ? '1.75rem' : '2rem',
-                fontWeight: '700',
-                color: colors.navyDark,
-                marginTop: 0,
-                marginRight: 0,
-                marginBottom: isMobile ? '16px' : '20px',
-                marginLeft: 0,
-                fontFamily: "'Inter', sans-serif",
-              }}>
+            <div style={baseBodyStyles.foundersStoryBox}>
+              <h3 style={baseBodyStyles.foundersStoryTitle}>
                 Our Story of Excellence
               </h3>
-              <p style={{
-                fontSize: isMobile ? '0.95rem' : '1rem',
-                color: colors.navyDark,
-                lineHeight: '1.8',
-                marginTop: 0,
-                marginRight: 0,
-                marginBottom: isMobile ? '16px' : '20px',
-                marginLeft: 0,
-                fontWeight: '400',
-                fontFamily: "'Inter', sans-serif",
-              }}>
+              <p style={baseBodyStyles.foundersStoryText}>
                 With over 25 years of combined experience in the roofing industry, David and Sarah founded BRAVOS with one mission: 
                 to provide Houston homeowners with honest, high-quality roofing solutions backed by exceptional customer service.
               </p>
-              <p style={{
-                fontSize: isMobile ? '0.95rem' : '1rem',
-                color: colors.navyDark,
-                lineHeight: '1.8',
-                marginTop: 0,
-                marginRight: 0,
-                marginBottom: 0,
-                marginLeft: 0,
-                fontWeight: '400',
-                fontFamily: "'Inter', sans-serif",
-              }}>
+              <p style={baseBodyStyles.foundersStoryTextLast}>
                 What started as a family operation has grown into Houston's #1 rated roofing company, serving over 3,500 homeowners 
                 and maintaining a 99.7% satisfaction rate. Their hands-on approach means they're personally invested in every project.
               </p>
             </div>
             
             <button
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '12px',
-                backgroundColor: colors.navyDark,
-                color: colors.white,
-                border: 'none',
-                paddingTop: isMobile ? '16px' : '20px',
-                paddingRight: isMobile ? '24px' : '40px',
-                paddingBottom: isMobile ? '16px' : '20px',
-                paddingLeft: isMobile ? '24px' : '40px',
-                borderRadius: '50px',
-                fontSize: isMobile ? '0.95rem' : '1rem',
-                fontWeight: '700',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                textDecoration: 'none',
-                fontFamily: "'Inter', sans-serif",
-                transform: activeButton === 'learnMore' ? 'translateY(-3px)' : 'translateY(0)',
-                boxShadow: activeButton === 'learnMore' 
-                  ? '0 20px 40px rgba(0, 0, 0, 0.4)' 
-                  : '0 10px 30px rgba(0, 0, 0, 0.3)',
-              }}
+              style={baseBodyStyles.foundersButton(activeButton === 'learnMore')}
               onMouseEnter={() => setActiveButton('learnMore')}
               onMouseLeave={() => setActiveButton(null)}
               onTouchStart={() => handleTouchStart(setActiveButton, 'learnMore')}
@@ -4556,10 +4595,10 @@ const BodySection = () => {
             </button>
           </div>
         </div>
-        
-        {/* TEN LOGO CAROUSEL BETWEEN SECTIONS */}
-        <LogoCarousel />
       </div>
+
+      {/* LOGO CAROUSEL - BETWEEN SECTION 6 AND SECTION 7 */}
+      <LogoCarousel />
 
       {/* Section 7: Our Story Section - DARK GRAY */}
       <div style={baseBodyStyles.ourStorySection}>
@@ -4642,10 +4681,10 @@ const BodySection = () => {
             </svg>
           </button>
         </div>
-        
-        {/* TEN LOGO CAROUSEL BETWEEN SECTIONS */}
-        <LogoCarousel />
       </div>
+
+      {/* LOGO CAROUSEL - BETWEEN SECTION 7 AND SECTION 8 */}
+      <LogoCarousel />
 
       {/* Section 8: Roofing Services Section - NAVY BLUE */}
       <div style={baseBodyStyles.flexibleSolutionsSection}>
@@ -4758,9 +4797,6 @@ const BodySection = () => {
           ))}
         </div>
         
-        {/* TEN LOGO CAROUSEL BETWEEN SECTIONS */}
-        <LogoCarousel />
-        
         {/* Section 9: Consultation Card - DARK BEIGE */}
         <div style={baseBodyStyles.consultationSection}>
           <h3 style={baseBodyStyles.consultationTitle}>
@@ -4802,6 +4838,9 @@ const BodySection = () => {
           </button>
         </div>
       </div>
+
+      {/* LOGO CAROUSEL - BETWEEN SECTION 8 AND FAQ SECTION */}
+      <LogoCarousel />
 
       {/* FAQ Section - DARK BEIGE */}
       <FAQSection 
