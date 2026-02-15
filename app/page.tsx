@@ -609,7 +609,7 @@ function BottomCTAButtons({
         position: 'fixed',
         bottom: isMobile ? '10px' : '15px',
         left: '20%',
-        transform: 'translateX(-50%)',
+        transform: 'translateX(-40%)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -2701,7 +2701,7 @@ const HeroSection = () => {
                     height={220}
                     style={{ 
                       top: '80px', 
-                      right: '-20px',
+                      right: '20px',
                       filter: 'drop-shadow(0 4px 8px rgba(255, 184, 0, 0.3))'
                     }}
                     animate={true}
