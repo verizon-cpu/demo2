@@ -2707,7 +2707,7 @@ const HeroSection = () => {
                     width={200}
                     height={220}
                     style={{ 
-                      top: '-20px', 
+                      top: '-100px', 
                       right: '-400px',
                       filter: 'drop-shadow(0 4px 8px rgba(255, 184, 0, 0.3))'
                     }}
