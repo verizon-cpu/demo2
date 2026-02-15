@@ -4722,14 +4722,17 @@ const BodySection = () => {
         : '0 10px 25px rgba(0, 0, 0, 0.3)',
       marginTop: '40px',
       position: 'relative',
-      zIndex: 2,
+      zIndex: 100,
       pointerEvents: 'auto',
+      cursor: 'pointer',
+      isolation: 'isolate',
     }),
   };
 
   const handleBeforeAfterClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    // Use window.location.href for navigation
     window.location.href = '/gallery';
   };
 

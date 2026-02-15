@@ -28,9 +28,46 @@ export default function RootLayout({
         color: '#5E5E60',
         fontFamily: 'var(--font-dm-sans)',
       }}>
+
+        {/* 🔥 Roofing Contractor Schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "RoofingContractor",
+              "@id": "https://yourdomain.com/#roofingcontractor",
+              name: "BRAVOS Roofing",
+              url: "https://yourdomain.com",
+              telephone: "+1 2344561221",
+              address: {
+                "@type": "PostalAddress",
+                streetAddress: "249 Rutledge St",
+                addressLocality: "Brooklyn",
+                addressRegion: "NY",
+                postalCode: "11211",
+                addressCountry: "US"
+              },
+              areaServed: [
+                {
+                  "@type": "City",
+                  name: "Brooklyn"
+                },
+                {
+                  "@type": "City",
+                  name: "New York"
+                }
+              ],
+              priceRange: "$$",
+              openingHours: "Mo-Su 00:00-23:59"
+            })
+          }}
+        />
+
         <Header isTransparent={true} />
         <main style={{ paddingTop: '80px' }}>{children}</main>
         <Footer />
+
       </body>
     </html>
   );
