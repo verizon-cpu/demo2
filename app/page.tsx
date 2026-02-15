@@ -484,7 +484,7 @@ const RotatingStarRing: React.FC<RotatingStarRingProps> = ({
 
 // ==================== BOTTOM CTA BUTTONS ====================
 
-// Bottom CTA Buttons Component
+// Bottom CTA Buttons Component - FIXED POSITIONING - CENTERED ON ALL DEVICES
 function BottomCTAButtons({
   onCallClick = () => window.location.href = '/contact',
   onQuoteClick = () => window.location.href = '/contact',
@@ -608,110 +608,117 @@ function BottomCTAButtons({
       style={{
         position: 'fixed',
         bottom: isMobile ? '10px' : '15px',
-        left: '20%',
-        transform: 'translateX(-40%)',
+        left: 0,
+        right: 0,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: isMobile ? '6px' : '8px',
         zIndex: 9999,
         pointerEvents: 'auto',
-        background: '#0A0A0C',
-        borderRadius: '50px',
-        padding: isMobile ? '6px' : '8px',
-        boxShadow: '0 8px 30px rgba(10, 10, 12, 0.4)',
-        border: '1px solid #FFB800',
-        width: isMobile ? 'calc(100% - 20px)' : 'calc(100% - 30px)',
-        maxWidth: '500px',
-        overflowX: 'auto',
-        WebkitOverflowScrolling: 'touch',
-        transition: 'all 0.3s ease',
-        ...containerStyle
-      }}
-      onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
-        e.currentTarget.style.transform = 'translateX(-50%) translateY(-5px)';
-        e.currentTarget.style.boxShadow = '0 15px 40px rgba(10, 10, 12, 0.5)';
-      }}
-      onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
-        e.currentTarget.style.transform = 'translateX(-50%) translateY(0)';
-        e.currentTarget.style.boxShadow = '0 8px 30px rgba(10, 10, 12, 0.4)';
       }}
     >
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={handleCallClick}
-        onMouseEnter={() => setHoveredButton('call')}
-        onMouseLeave={() => setHoveredButton(null)}
+      <div
         style={{
-          ...callButtonStyle,
-          ...(hoveredButton === 'call' ? callHoverStyle : {})
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: isMobile ? '6px' : '8px',
+          background: '#0A0A0C',
+          borderRadius: '50px',
+          padding: isMobile ? '6px' : '8px',
+          boxShadow: '0 8px 30px rgba(10, 10, 12, 0.4)',
+          border: '1px solid #FFB800',
+          width: 'fit-content',
+          maxWidth: isMobile ? 'calc(100% - 20px)' : '500px',
+          margin: '0 auto',
+          transition: 'all 0.3s ease',
+          ...containerStyle
+        }}
+        onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+          e.currentTarget.style.transform = 'translateY(-5px)';
+          e.currentTarget.style.boxShadow = '0 15px 40px rgba(10, 10, 12, 0.5)';
+        }}
+        onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = '0 8px 30px rgba(10, 10, 12, 0.4)';
         }}
       >
-        <span style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', gap: isMobile ? '4px' : '5px' }}>
-          {showPhoneIcon && (
-            <motion.svg
-              animate={{ rotate: [0, 15, -15, 0] }}
-              transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-              width={isMobile ? "12" : "14"} height={isMobile ? "12" : "14"} viewBox="0 0 24 24" fill="none"
-            >
-              <path d="M20 10.999H22C22 5.869 18.127 2 12.99 2V4C17.052 4 20 6.943 20 10.999Z" fill="#0A0A0C"/>
-              <path d="M13 8C15.103 8 16 8.897 16 11H18C18 7.774 16.225 6 13 6V8ZM16.422 13.443C16.229 13.268 15.978 13.192 15.727 13.192C15.476 13.192 15.225 13.268 15.031 13.443L13.638 14.828C13.174 14.559 12.639 14.346 12.077 14.195C11.516 14.044 10.953 13.971 10.413 13.971C9.873 13.971 9.311 14.044 8.749 14.195C8.188 14.346 7.653 14.559 7.189 14.828L5.796 13.443C5.603 13.268 5.352 13.192 5.101 13.192C4.85 13.192 4.599 13.268 4.405 13.443L2.69 15.145C2.497 15.32 2.4 15.572 2.4 15.824C2.4 16.076 2.497 16.328 2.69 16.503L5.574 19.4C6.985 20.812 8.947 21.6 11.038 21.6C13.13 21.6 15.091 20.812 16.502 19.4L19.386 16.503C19.58 16.328 19.676 16.076 19.676 15.824C19.676 15.572 19.58 15.32 19.386 15.145L17.672 13.443H16.422Z" fill="#0A0A0C"/>
-            </motion.svg>
-          )}
-          {callText}
-        </span>
-      </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleCallClick}
+          onMouseEnter={() => setHoveredButton('call')}
+          onMouseLeave={() => setHoveredButton(null)}
+          style={{
+            ...callButtonStyle,
+            ...(hoveredButton === 'call' ? callHoverStyle : {})
+          }}
+        >
+          <span style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', gap: isMobile ? '4px' : '5px' }}>
+            {showPhoneIcon && (
+              <motion.svg
+                animate={{ rotate: [0, 15, -15, 0] }}
+                transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                width={isMobile ? "12" : "14"} height={isMobile ? "12" : "14"} viewBox="0 0 24 24" fill="none"
+              >
+                <path d="M20 10.999H22C22 5.869 18.127 2 12.99 2V4C17.052 4 20 6.943 20 10.999Z" fill="#0A0A0C"/>
+                <path d="M13 8C15.103 8 16 8.897 16 11H18C18 7.774 16.225 6 13 6V8ZM16.422 13.443C16.229 13.268 15.978 13.192 15.727 13.192C15.476 13.192 15.225 13.268 15.031 13.443L13.638 14.828C13.174 14.559 12.639 14.346 12.077 14.195C11.516 14.044 10.953 13.971 10.413 13.971C9.873 13.971 9.311 14.044 8.749 14.195C8.188 14.346 7.653 14.559 7.189 14.828L5.796 13.443C5.603 13.268 5.352 13.192 5.101 13.192C4.85 13.192 4.599 13.268 4.405 13.443L2.69 15.145C2.497 15.32 2.4 15.572 2.4 15.824C2.4 16.076 2.497 16.328 2.69 16.503L5.574 19.4C6.985 20.812 8.947 21.6 11.038 21.6C13.13 21.6 15.091 20.812 16.502 19.4L19.386 16.503C19.58 16.328 19.676 16.076 19.676 15.824C19.676 15.572 19.58 15.32 19.386 15.145L17.672 13.443H16.422Z" fill="#0A0A0C"/>
+              </motion.svg>
+            )}
+            {callText}
+          </span>
+        </motion.button>
 
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={handleQuoteClick}
-        onMouseEnter={() => setHoveredButton('quote')}
-        onMouseLeave={() => setHoveredButton(null)}
-        style={{
-          ...quoteButtonStyle,
-          ...(hoveredButton === 'quote' ? quoteHoverStyle : {})
-        }}
-      >
-        <span style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', gap: isMobile ? '4px' : '5px' }}>
-          {showQuoteIcon && (
-            <motion.svg
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ duration: 2, repeat: Infinity, repeatDelay: 2 }}
-              width={isMobile ? "12" : "14"} height={isMobile ? "12" : "14"} viewBox="0 0 24 24" fill="none"
-            >
-              <path d="M9 12H15M12 9V15M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </motion.svg>
-          )}
-          {quoteText}
-        </span>
-      </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleQuoteClick}
+          onMouseEnter={() => setHoveredButton('quote')}
+          onMouseLeave={() => setHoveredButton(null)}
+          style={{
+            ...quoteButtonStyle,
+            ...(hoveredButton === 'quote' ? quoteHoverStyle : {})
+          }}
+        >
+          <span style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', gap: isMobile ? '4px' : '5px' }}>
+            {showQuoteIcon && (
+              <motion.svg
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ duration: 2, repeat: Infinity, repeatDelay: 2 }}
+                width={isMobile ? "12" : "14"} height={isMobile ? "12" : "14"} viewBox="0 0 24 24" fill="none"
+              >
+                <path d="M9 12H15M12 9V15M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </motion.svg>
+            )}
+            {quoteText}
+          </span>
+        </motion.button>
 
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={handleBookClick}
-        onMouseEnter={() => setHoveredButton('book')}
-        onMouseLeave={() => setHoveredButton(null)}
-        style={{
-          ...bookButtonStyle,
-          ...(hoveredButton === 'book' ? bookHoverStyle : {})
-        }}
-      >
-        <span style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', gap: isMobile ? '4px' : '5px' }}>
-          {showBookIcon && (
-            <motion.svg
-              animate={{ x: [0, 5, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-              width={isMobile ? "12" : "14"} height={isMobile ? "12" : "14"} viewBox="0 0 24 24" fill="none"
-            >
-              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#0A0A0C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </motion.svg>
-          )}
-          {bookText}
-        </span>
-      </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleBookClick}
+          onMouseEnter={() => setHoveredButton('book')}
+          onMouseLeave={() => setHoveredButton(null)}
+          style={{
+            ...bookButtonStyle,
+            ...(hoveredButton === 'book' ? bookHoverStyle : {})
+          }}
+        >
+          <span style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', gap: isMobile ? '4px' : '5px' }}>
+            {showBookIcon && (
+              <motion.svg
+                animate={{ x: [0, 5, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+                width={isMobile ? "12" : "14"} height={isMobile ? "12" : "14"} viewBox="0 0 24 24" fill="none"
+              >
+                <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#0A0A0C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </motion.svg>
+            )}
+            {bookText}
+          </span>
+        </motion.button>
+      </div>
     </motion.div>
   );
 }
