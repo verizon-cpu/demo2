@@ -4874,131 +4874,129 @@ const BodySection = () => {
 
       {/* Section 3: Before & After Transformations - DARK BEIGE */}
       <SlideInText direction="up">
-        <AnimatedCard active={activeBeforeAfter !== null}>
-          <div style={baseBodyStyles.transformationsSection}>
-            <div style={baseBodyStyles.transformationsSectionBg}></div>
-            
-            {/* BIG ROTATING STAR RING BEHIND TITLE */}
-            <RotatingStarRing 
-              size={700}
-              color={colors.gold}
-              opacity={0.2}
-              speed={28}
-              style={{ top: '30%', left: '50%' }}
-            />
-            
-            <div style={baseBodyStyles.transformationsHeader}>
-              <div style={baseBodyStyles.transformationsTitleContainer}>
-                <h2 style={baseBodyStyles.navyTitle}>
-                  See the BRAVOS Difference:
-                </h2>
-                <motion.h2 
-                  style={baseBodyStyles.goldTitle}
-                  animate={{ scale: [1, 1.05, 1] }}
-                  transition={{ duration: 3, repeat: Infinity }}
-                >
-                  Before & After
-                </motion.h2>
-              </div>
-              <p style={baseBodyStyles.transformationsSubtitle}>
-                Witness how we transform damaged, aging roofs into stunning, durable protection systems.
-              </p>
-            </div>
-            
-            <div style={baseBodyStyles.beforeAfterContainer}>
-              {transformations.map((transformation, index) => (
-                <SlideInText direction={index % 2 === 0 ? 'left' : 'right'} delay={index * 0.2} key={transformation.id}>
-                  <AnimatedCard active={activeBeforeAfter === index} delay={index * 0.1}>
-                    <div 
-                      style={baseBodyStyles.transformationCard(activeBeforeAfter === index)}
-                      onMouseEnter={() => setActiveBeforeAfter(index)}
-                      onMouseLeave={() => setActiveBeforeAfter(null)}
-                      onTouchStart={() => handleTouchStart(setActiveBeforeAfter, index)}
-                      onTouchEnd={() => handleTouchEnd(setActiveBeforeAfter, null)}
-                    >
-                      <h3 style={baseBodyStyles.transformationTitle}>
-                        {transformation.title}
-                      </h3>
-                      
-                      <div style={baseBodyStyles.beforeAfterGrid}>
-                        <motion.div 
-                          style={baseBodyStyles.imageContainer}
-                          whileHover={{ scale: 1.02 }}
-                        >
-                          <div style={{...baseBodyStyles.imageLabel, ...baseBodyStyles.beforeLabel}}>
-                            BEFORE
-                          </div>
-                          <motion.img 
-                            src={transformation.beforeImage} 
-                            alt="Before roof transformation"
-                            style={baseBodyStyles.transformationImage}
-                            animate={activeBeforeAfter === index ? { scale: 1.05 } : { scale: 1 }}
-                            transition={{ duration: 0.3 }}
-                          />
-                        </motion.div>
-                        
-                        <motion.div 
-                          style={baseBodyStyles.imageContainer}
-                          whileHover={{ scale: 1.02 }}
-                        >
-                          <div style={{...baseBodyStyles.imageLabel, ...baseBodyStyles.afterLabel}}>
-                            AFTER
-                          </div>
-                          <motion.img 
-                            src={transformation.afterImage} 
-                            alt="After roof transformation"
-                            style={baseBodyStyles.transformationImage}
-                            animate={activeBeforeAfter === index ? { scale: 1.05 } : { scale: 1 }}
-                            transition={{ duration: 0.3 }}
-                          />
-                        </motion.div>
-                      </div>
-                      
-                      <motion.p 
-                        style={baseBodyStyles.transformationDescription}
-                        animate={{ opacity: [0.8, 1, 0.8] }}
-                        transition={{ duration: 3, repeat: Infinity }}
-                      >
-                        {transformation.description}
-                      </motion.p>
-                    </div>
-                  </AnimatedCard>
-                </SlideInText>
-              ))}
-            </div>
-            
-            <PulsingButton>
-              <motion.button
-                style={baseBodyStyles.beforeAfterCTA(activeBeforeAfterButton)}
-                onMouseEnter={() => setActiveBeforeAfterButton(true)}
-                onMouseLeave={() => setActiveBeforeAfterButton(false)}
-                onTouchStart={() => handleTouchStart(setActiveBeforeAfterButton, true)}
-                onTouchEnd={() => handleTouchEnd(setActiveBeforeAfterButton, false)}
-                onClick={handleBeforeAfterClick}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+        <div style={baseBodyStyles.transformationsSection}>
+          <div style={baseBodyStyles.transformationsSectionBg}></div>
+          
+          {/* BIG ROTATING STAR RING BEHIND TITLE */}
+          <RotatingStarRing 
+            size={700}
+            color={colors.gold}
+            opacity={0.2}
+            speed={28}
+            style={{ top: '30%', left: '50%' }}
+          />
+          
+          <div style={baseBodyStyles.transformationsHeader}>
+            <div style={baseBodyStyles.transformationsTitleContainer}>
+              <h2 style={baseBodyStyles.navyTitle}>
+                See the BRAVOS Difference:
+              </h2>
+              <motion.h2 
+                style={baseBodyStyles.goldTitle}
+                animate={{ scale: [1, 1.05, 1] }}
+                transition={{ duration: 3, repeat: Infinity }}
               >
-                See More Transformations
-                <motion.svg 
-                  width="20" 
-                  height="20" 
-                  viewBox="0 0 24 24" 
-                  fill="none"
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                >
-                  <path 
-                    d="M5 12H19M19 12L12 5M19 12L12 19" 
-                    stroke="currentColor" 
-                    strokeWidth="2" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round"
-                  />
-                </motion.svg>
-              </motion.button>
-            </PulsingButton>
+                Before & After
+              </motion.h2>
+            </div>
+            <p style={baseBodyStyles.transformationsSubtitle}>
+              Witness how we transform damaged, aging roofs into stunning, durable protection systems.
+            </p>
           </div>
-        </AnimatedCard>
+          
+          <div style={baseBodyStyles.beforeAfterContainer}>
+            {transformations.map((transformation, index) => (
+              <SlideInText direction={index % 2 === 0 ? 'left' : 'right'} delay={index * 0.2} key={transformation.id}>
+                <AnimatedCard active={activeBeforeAfter === index} delay={index * 0.1}>
+                  <div 
+                    style={baseBodyStyles.transformationCard(activeBeforeAfter === index)}
+                    onMouseEnter={() => setActiveBeforeAfter(index)}
+                    onMouseLeave={() => setActiveBeforeAfter(null)}
+                    onTouchStart={() => handleTouchStart(setActiveBeforeAfter, index)}
+                    onTouchEnd={() => handleTouchEnd(setActiveBeforeAfter, null)}
+                  >
+                    <h3 style={baseBodyStyles.transformationTitle}>
+                      {transformation.title}
+                    </h3>
+                    
+                    <div style={baseBodyStyles.beforeAfterGrid}>
+                      <motion.div 
+                        style={baseBodyStyles.imageContainer}
+                        whileHover={{ scale: 1.02 }}
+                      >
+                        <div style={{...baseBodyStyles.imageLabel, ...baseBodyStyles.beforeLabel}}>
+                          BEFORE
+                        </div>
+                        <motion.img 
+                          src={transformation.beforeImage} 
+                          alt="Before roof transformation"
+                          style={baseBodyStyles.transformationImage}
+                          animate={activeBeforeAfter === index ? { scale: 1.05 } : { scale: 1 }}
+                          transition={{ duration: 0.3 }}
+                        />
+                      </motion.div>
+                      
+                      <motion.div 
+                        style={baseBodyStyles.imageContainer}
+                        whileHover={{ scale: 1.02 }}
+                      >
+                        <div style={{...baseBodyStyles.imageLabel, ...baseBodyStyles.afterLabel}}>
+                          AFTER
+                        </div>
+                        <motion.img 
+                          src={transformation.afterImage} 
+                          alt="After roof transformation"
+                          style={baseBodyStyles.transformationImage}
+                          animate={activeBeforeAfter === index ? { scale: 1.05 } : { scale: 1 }}
+                          transition={{ duration: 0.3 }}
+                        />
+                      </motion.div>
+                    </div>
+                    
+                    <motion.p 
+                      style={baseBodyStyles.transformationDescription}
+                      animate={{ opacity: [0.8, 1, 0.8] }}
+                      transition={{ duration: 3, repeat: Infinity }}
+                    >
+                      {transformation.description}
+                    </motion.p>
+                  </div>
+                </AnimatedCard>
+              </SlideInText>
+            ))}
+          </div>
+          
+          <PulsingButton>
+            <motion.button
+              style={baseBodyStyles.beforeAfterCTA(activeBeforeAfterButton)}
+              onMouseEnter={() => setActiveBeforeAfterButton(true)}
+              onMouseLeave={() => setActiveBeforeAfterButton(false)}
+              onTouchStart={() => handleTouchStart(setActiveBeforeAfterButton, true)}
+              onTouchEnd={() => handleTouchEnd(setActiveBeforeAfterButton, false)}
+              onClick={handleBeforeAfterClick}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              See More Transformations
+              <motion.svg 
+                width="20" 
+                height="20" 
+                viewBox="0 0 24 24" 
+                fill="none"
+                animate={{ x: [0, 5, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              >
+                <path 
+                  d="M5 12H19M19 12L12 5M19 12L12 19" 
+                  stroke="currentColor" 
+                  strokeWidth="2" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
+                />
+              </motion.svg>
+            </motion.button>
+          </PulsingButton>
+        </div>
       </SlideInText>
 
       {/* LOGO CAROUSEL - BETWEEN SECTION 3 AND SECTION 4 */}
