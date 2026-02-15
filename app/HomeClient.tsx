@@ -4724,7 +4724,6 @@ const BodySection = () => {
       position: 'relative',
       zIndex: 100,
       pointerEvents: 'auto',
-      cursor: 'pointer',
       isolation: 'isolate',
     }),
   };
@@ -4732,7 +4731,6 @@ const BodySection = () => {
   const handleBeforeAfterClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    // Use window.location.href for navigation
     window.location.href = '/gallery';
   };
 
