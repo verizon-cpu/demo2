@@ -263,7 +263,7 @@ const AnimatedCard: React.FC<AnimatedCardProps> = ({ children, active = false, d
       style={{
         position: 'relative',
         borderRadius: '32px',
-        overflow: 'hidden',
+        overflow: 'visible',
       }}
     >
       {/* Spinning border effect */}
@@ -3114,7 +3114,6 @@ const BodySection = () => {
   const [activeScheduleButton, setActiveScheduleButton] = useState<string | null>(null);
   const [activeFeatureCard, setActiveFeatureCard] = useState<number | null>(null);
   const [activeConsultation, setActiveConsultation] = useState(false);
-  const [activeBeforeAfterButton, setActiveBeforeAfterButton] = useState(false);
   const [activeOurStory, setActiveOurStory] = useState(false);
 
   const colors = {
@@ -4722,7 +4721,7 @@ const BodySection = () => {
         : '0 10px 25px rgba(0, 0, 0, 0.3)',
       marginTop: '40px',
       position: 'relative',
-      zIndex: 100,
+      zIndex: 999999,
       pointerEvents: 'auto',
       isolation: 'isolate',
     }),
@@ -4966,13 +4965,14 @@ const BodySection = () => {
             ))}
           </div>
           
-          <PulsingButton>
+          {/* THIS BUTTON WILL NEVER DISAPPEAR */}
+          <div style={{ position: 'relative', zIndex: 999999, marginTop: '40px', textAlign: 'center' }}>
             <motion.button
-              style={baseBodyStyles.beforeAfterCTA(activeBeforeAfterButton)}
-              onMouseEnter={() => setActiveBeforeAfterButton(true)}
-              onMouseLeave={() => setActiveBeforeAfterButton(false)}
-              onTouchStart={() => handleTouchStart(setActiveBeforeAfterButton, true)}
-              onTouchEnd={() => handleTouchEnd(setActiveBeforeAfterButton, false)}
+              style={baseBodyStyles.beforeAfterCTA(activeBeforeAfter === 0 || activeBeforeAfter === 1)}
+              onMouseEnter={() => setActiveBeforeAfter(0)}
+              onMouseLeave={() => setActiveBeforeAfter(null)}
+              onTouchStart={() => handleTouchStart(setActiveBeforeAfter, 0)}
+              onTouchEnd={() => handleTouchEnd(setActiveBeforeAfter, null)}
               onClick={handleBeforeAfterClick}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -4995,7 +4995,7 @@ const BodySection = () => {
                 />
               </motion.svg>
             </motion.button>
-          </PulsingButton>
+          </div>
         </div>
       </SlideInText>
 
