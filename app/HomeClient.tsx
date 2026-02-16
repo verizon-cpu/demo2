@@ -2263,7 +2263,7 @@ const HeroSection = () => {
       marginLeft: isMobile ? 0 : 'auto',
       marginRight: isMobile ? 0 : 'auto',
       minHeight: isMobile ? (isSmallMobile ? '40px' : '45px') : 'auto',
-       marginTop: isMobile ? '50px' : '50px',
+       marginTop: isMobile ? '170px' : '170px',
     }),
     
     numberOneBadge: (active: boolean) => ({
