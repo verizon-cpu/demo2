@@ -1,44 +1,19 @@
 import type { Metadata } from "next";
-import RoofRepairClient from "./service";
 
 export const metadata: Metadata = {
-  title: "Roof Repair in Brooklyn, NY | BRAVOS Roofing",
-  description:
-    "Professional roof repair in Brooklyn, NY. Emergency leak repair and flat roof services. Call BRAVOS Roofing today.",
+  title: "Roofing Services | BRAVOS Roofing Brooklyn",
+  description: "Professional roofing services including roof repair, replacement, installation, and maintenance in Brooklyn, NY.",
 };
 
-export default function Page() {
+export default function ServicePage() {
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Service",
-            name: "Roof Repair in Brooklyn",
-            provider: {
-              "@type": "RoofingContractor",
-              name: "BRAVOS Roofing",
-              telephone: "+1 2344561221",
-              address: {
-                "@type": "PostalAddress",
-                streetAddress: "249 Rutledge St",
-                addressLocality: "Brooklyn",
-                addressRegion: "NY",
-                postalCode: "11211",
-                addressCountry: "US"
-              }
-            },
-            areaServed: {
-              "@type": "City",
-              name: "Brooklyn"
-            }
-          })
-        }}
-      />
-
-      <service />
-    </>
+    <div style={{ padding: '40px 20px', maxWidth: '1200px', margin: '0 auto' }}>
+      <h1 style={{ fontSize: '2.5rem', color: '#0A0A0C', marginBottom: '20px' }}>
+        Our Roofing Services
+      </h1>
+      <p style={{ fontSize: '1.125rem', color: '#4B5563' }}>
+        Coming soon! Learn about our professional roofing services.
+      </p>
+    </div>
   );
 }

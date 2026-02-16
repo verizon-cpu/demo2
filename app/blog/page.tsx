@@ -1,60 +1,27 @@
 import type { Metadata } from "next";
-import BlogClient from "./blog";
+// Import your blog component if it exists
+// import Blog from "./Blog"; // or whatever your component is named
 
 export const metadata: Metadata = {
-  title: "How to Fix a Roof Leak in Brooklyn | BRAVOS Roofing",
-  description:
-    "Learn how to identify and fix a roof leak in Brooklyn homes. Expert advice from BRAVOS Roofing professionals.",
-  keywords: [
-    "roof leak repair Brooklyn",
-    "fix roof leak NYC",
-    "Brooklyn roofing tips",
-    "roofing contractor Brooklyn"
-  ],
-  openGraph: {
-    title: "How to Fix a Roof Leak in Brooklyn",
-    description:
-      "Step-by-step guide to identifying and repairing roof leaks in Brooklyn homes.",
-    type: "article",
-    url: "https://yourdomain.com/blog/how-to-fix-roof-leak-brooklyn",
-  },
+  title: "Roofing Blog | BRAVOS Roofing Brooklyn",
+  description: "Expert roofing tips, maintenance guides, and industry insights from Brooklyn's trusted roofing professionals.",
 };
 
-export default function Page() {
+export default function BlogPage() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Article",
-            headline: "How to Fix a Roof Leak in Brooklyn",
-            description:
-              "Step-by-step guide on identifying and fixing roof leaks in Brooklyn homes.",
-            author: {
-              "@type": "Organization",
-              name: "BRAVOS Roofing"
-            },
-            publisher: {
-              "@type": "Organization",
-              name: "BRAVOS Roofing",
-              logo: {
-                "@type": "ImageObject",
-                url: "https://yourdomain.com/logo.png"
-              }
-            },
-            datePublished: "2026-02-10",
-            dateModified: "2026-02-10",
-            mainEntityOfPage: {
-              "@type": "WebPage",
-              "@id": "https://yourdomain.com/blog/how-to-fix-roof-leak-brooklyn"
-            }
-          })
-        }}
-      />
-
-      <blog />
+      {/* If you have a blog component to render, use it with proper capitalization */}
+      {/* <Blog /> */}
+      
+      {/* If you don't have a blog component yet, just render content directly */}
+      <div style={{ padding: '40px 20px', maxWidth: '1200px', margin: '0 auto' }}>
+        <h1 style={{ fontSize: '2.5rem', color: '#0A0A0C', marginBottom: '20px' }}>
+          BRAVOS Roofing Blog
+        </h1>
+        <p style={{ fontSize: '1.125rem', color: '#4B5563' }}>
+          Coming soon! Check back for expert roofing tips and insights.
+        </p>
+      </div>
     </>
   );
 }
