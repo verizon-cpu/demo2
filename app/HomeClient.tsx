@@ -2805,7 +2805,7 @@ const HeroSection = () => {
 
     microInteractionContainer: {
       position: 'absolute',
-      top: isMobile ? (isSmallMobile ? '-15px' : '-10px') : '0px',
+      top: isMobile ? (isSmallMobile ? '50px' : '45px') : '0px',
       right: isMobile ? (isSmallMobile ? '-20px' : '-25px') : '-50px',
       zIndex: 20,
       pointerEvents: 'none',
