@@ -2491,29 +2491,29 @@ const HeroSection = () => {
       boxShadow: '0 25px 60px rgba(10, 10, 12, 0.4)',
       border: `2px solid ${colors.gold}`,
       width: '100%',
-      maxWidth: isMobile ? '100%' : '70px',
+      maxWidth: isMobile ? '100%' : '400px',
       margin: '0 auto',
       boxSizing: 'border-box',
       overflow: 'hidden',
     },
     
     cardHeader: {
-      textAlign: 'center',
+      textAlign: 'left',
       marginBottom: isMobile ? '1rem' : '1.5rem',
     },
     
     formTitle: {
-      fontSize: isMobile ? (isSmallMobile ? '1.2rem' : '1.3rem') : '1.75rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.5rem' : '0.5rem') : '0.5rem',
       fontWeight: '700',
       color: colors.background,
       margin: '0 0 0.25rem 0',
-      lineHeight: '1.2',
+      lineHeight: '0,5',
       fontFamily: "'Inter', sans-serif",
       letterSpacing: '-0.5px',
     },
     
     formSubtitle: {
-      fontSize: isMobile ? (isSmallMobile ? '0.7rem' : '0.75rem') : '0.9rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.5rem' : '0.5rem') : '0.5rem',
       color: colors.background,
       opacity: 0.8,
       margin: 0,
@@ -2524,7 +2524,7 @@ const HeroSection = () => {
     form: {
       display: 'flex',
       flexDirection: 'column',
-      gap: isMobile ? '0.75rem' : '1rem',
+      gap: isMobile ? '0.5rem' : '0.5rem',
       width: '100%',
     },
     
