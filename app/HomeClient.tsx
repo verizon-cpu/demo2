@@ -845,7 +845,7 @@ function LogoCarousel({
                 maxWidth: '100%',
                 maxHeight: '100%',
                 objectFit: 'contain',
-                transform: isMobile ? 'scale(2)' : 'scale(3)',
+                transform: isMobile ? 'scale(2)' : 'scale(1)',
               }}
             />
           </motion.div>
