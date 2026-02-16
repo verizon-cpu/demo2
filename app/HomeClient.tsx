@@ -2148,6 +2148,8 @@ const HeroSection = () => {
       maxWidth: '100vw',
       boxSizing: 'border-box',
       borderTop: '4px solid #FFB800',
+      display: 'flex',
+      flexDirection: 'column',
     },
 
     backgroundContainer: {
@@ -2164,7 +2166,6 @@ const HeroSection = () => {
       zIndex: 1,
       width: '100%',
       height: '100%',
-      minHeight: '100%',
     },
     
     overlayGradient: {
@@ -2181,8 +2182,8 @@ const HeroSection = () => {
     heroContent: {
       position: 'relative',
       zIndex: 10,
-      paddingTop: isMobile ? (isSmallMobile ? '80px' : '100px') : '120px',
-      paddingBottom: isMobile ? (isSmallMobile ? '40px' : '60px') : '60px',
+      paddingTop: isMobile ? (isSmallMobile ? '60px' : '80px') : '100px',
+      paddingBottom: isMobile ? (isSmallMobile ? '30px' : '40px') : '50px',
       minHeight: 'calc(100dvh - 60px)',
       display: 'flex',
       alignItems: 'center',
@@ -2198,15 +2199,15 @@ const HeroSection = () => {
       margin: '0 auto',
       display: 'grid',
       gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-      gap: isMobile ? (isSmallMobile ? '2rem' : '2.5rem') : '4rem',
-      alignItems: isMobile ? 'stretch' : 'center',
+      gap: isMobile ? (isSmallMobile ? '1.5rem' : '2rem') : '4rem',
+      alignItems: 'flex-start',
       width: '100%',
     },
     
     leftColumn: {
       display: 'flex',
       flexDirection: 'column',
-      gap: isMobile ? (isSmallMobile ? '1rem' : '1.25rem') : '2rem',
+      gap: isMobile ? (isSmallMobile ? '0.75rem' : '1rem') : '1.5rem',
       width: '100%',
       position: 'relative',
     },
@@ -2287,7 +2288,7 @@ const HeroSection = () => {
     },
 
     headline: {
-      fontSize: isMobile ? (isSmallMobile ? '1.8rem' : '2.2rem') : (isTablet ? '3.2rem' : '4rem'),
+      fontSize: isMobile ? (isSmallMobile ? '1.8rem' : '2rem') : (isTablet ? '3rem' : '3.5rem'),
       fontWeight: '800',
       color: colors.white,
       lineHeight: 1.1,
@@ -2302,21 +2303,21 @@ const HeroSection = () => {
       display: 'block',
       fontFamily: "'Inter', sans-serif",
       fontWeight: '800',
-      fontSize: isMobile ? (isSmallMobile ? '1.8rem' : '2.2rem') : (isTablet ? '3.4rem' : '4rem'),
+      fontSize: isMobile ? (isSmallMobile ? '1.6rem' : '1.8rem') : (isTablet ? '3.2rem' : '3.8rem'),
       lineHeight: 1.1,
       marginTop: isMobile ? '0.25rem' : '0',
     },
 
     subheadline: {
-      fontSize: isMobile ? (isSmallMobile ? '0.85rem' : '0.95rem') : (isTablet ? '1.125rem' : '1.25rem'),
+      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : (isTablet ? '1rem' : '1.125rem'),
       color: colors.white,
-      lineHeight: 1.6,
+      lineHeight: 1.5,
       maxWidth: '600px',
       margin: 0,
       fontFamily: "'Inter', sans-serif",
       fontWeight: '400',
       textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)',
-      marginTop: isMobile ? '10px' : '20px',
+      marginTop: isMobile ? '10px' : '15px',
     },
 
     // LICENSED, CERTIFIED & TRUSTED as HEADLINE
@@ -2325,29 +2326,29 @@ const HeroSection = () => {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'flex-start',
-      gap: isMobile ? '12px' : '20px',
-      marginTop: isMobile ? '15px' : '30px',
-      marginBottom: isMobile ? '15px' : '30px',
+      gap: isMobile ? '8px' : '15px',
+      marginTop: isMobile ? '10px' : '15px',
+      marginBottom: isMobile ? '10px' : '15px',
       flexWrap: 'wrap',
     },
     
     trustHeadlineItem: {
       display: 'flex',
       alignItems: 'center',
-      gap: isMobile ? '4px' : '8px',
+      gap: isMobile ? '3px' : '5px',
     },
     
     trustHeadlineCheck: {
       color: colors.gold,
-      fontSize: isMobile ? '1.2rem' : '2rem',
+      fontSize: isMobile ? '1rem' : '1.5rem',
       fontWeight: '700',
       lineHeight: 1,
     },
     
     trustHeadlineText: {
       color: colors.white,
-      fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.75rem',
-      fontWeight: '700',
+      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1.25rem',
+      fontWeight: '600',
       fontFamily: "'Inter', sans-serif",
       textTransform: 'uppercase' as const,
       letterSpacing: isMobile ? '0.5px' : '1px',
@@ -2358,10 +2359,10 @@ const HeroSection = () => {
       display: 'flex',
       flexDirection: isMobile ? 'column' : 'row',
       alignItems: isMobile ? 'flex-start' : 'center',
-      gap: isMobile ? (isSmallMobile ? '0.75rem' : '0.9rem') : '1rem',
+      gap: isMobile ? (isSmallMobile ? '0.4rem' : '0.5rem') : '0.75rem',
       flexWrap: 'wrap',
       width: '100%',
-      marginTop: isMobile ? '10px' : '0',
+      marginTop: isMobile ? '5px' : '0',
     },
     
     stars: {
@@ -2371,13 +2372,13 @@ const HeroSection = () => {
     
     starIcon: {
       color: colors.gold,
-      fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.5rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1.25rem',
       fontWeight: '700',
       textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
     },
     
     reviewText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1.125rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.7rem' : '0.75rem') : '1rem',
       color: colors.white,
       fontFamily: "'Inter', sans-serif",
       fontWeight: '400',
@@ -2387,7 +2388,7 @@ const HeroSection = () => {
       color: colors.gold,
       fontWeight: '700',
       fontFamily: "'Inter', sans-serif",
-      fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.25rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1.125rem',
     },
     
     googleBadge: (active: boolean) => ({
@@ -2395,7 +2396,7 @@ const HeroSection = () => {
       alignItems: 'center',
       gap: '0.5rem',
       backgroundColor: active ? '#FFB800' : '#0A0A0C',
-      padding: isMobile ? (isSmallMobile ? '0.5rem 0.8rem' : '0.6rem 0.9rem') : '1rem 1.25rem',
+      padding: isMobile ? (isSmallMobile ? '0.3rem 0.5rem' : '0.4rem 0.6rem') : '0.75rem 1rem',
       borderRadius: '30px',
       border: active ? '2px solid #FFB800' : '2px solid #FFB800',
       transition: 'all 0.3s ease',
@@ -2407,7 +2408,7 @@ const HeroSection = () => {
     }),
     
     googleText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.6rem' : '0.7rem') : '0.875rem',
       color: 'inherit',
       fontWeight: '600',
       fontFamily: "'Inter', sans-serif",
@@ -2421,7 +2422,7 @@ const HeroSection = () => {
       backgroundColor: active ? '#FFB800' : '#0A0A0C',
       color: active ? '#0A0A0C' : '#FFB800',
       border: active ? '2px solid #FFB800' : '2px solid #FFB800',
-      padding: isMobile ? (isSmallMobile ? '0.5rem 0.8rem' : '0.6rem 0.9rem') : '1rem 1.25rem',
+      padding: isMobile ? (isSmallMobile ? '0.3rem 0.5rem' : '0.4rem 0.6rem') : '0.75rem 1rem',
       borderRadius: '30px',
       transition: 'all 0.3s ease',
       cursor: 'pointer',
@@ -2432,7 +2433,7 @@ const HeroSection = () => {
     }),
     
     googleReviewsText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.6rem' : '0.7rem') : '0.875rem',
       fontWeight: '600',
       fontFamily: "'Inter', sans-serif",
       letterSpacing: '0.5px',
@@ -2440,15 +2441,16 @@ const HeroSection = () => {
     
     reviewsCTAContainer: {
       display: 'flex',
-      flexDirection: isMobile ? 'row' : 'row',
+      flexDirection: 'row',
       alignItems: 'center',
-      gap: isMobile ? '0.75rem' : '0.75rem',
+      gap: isMobile ? '0.5rem' : '0.75rem',
       flexWrap: 'wrap',
       width: '100%',
+      marginTop: isMobile ? '5px' : '0',
     },
 
     bostonSection: {
-      marginTop: isMobile ? '0.75rem' : '1rem',
+      marginTop: isMobile ? '0.5rem' : '0.75rem',
       width: '100%',
     },
     
@@ -2457,7 +2459,7 @@ const HeroSection = () => {
       alignItems: 'center',
       gap: '0.5rem',
       backgroundColor: '#0A0A0C',
-      padding: isMobile ? (isSmallMobile ? '0.4rem 0.6rem' : '0.5rem 0.8rem') : '0.5rem 0.75rem',
+      padding: isMobile ? (isSmallMobile ? '0.2rem 0.4rem' : '0.3rem 0.5rem') : '0.5rem 0.75rem',
       borderRadius: '20px',
       width: 'fit-content',
       maxWidth: '100%',
@@ -2465,55 +2467,49 @@ const HeroSection = () => {
     },
     
     bostonIcon: {
-      width: isMobile ? '14px' : '16px',
-      height: isMobile ? '14px' : '16px',
+      width: isMobile ? '10px' : '14px',
+      height: isMobile ? '10px' : '14px',
     },
     
     bostonText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.6rem' : '0.7rem') : '0.875rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.5rem' : '0.55rem') : '0.75rem',
       color: colors.white,
       fontWeight: '400',
       fontFamily: "'Inter', sans-serif",
     },
 
     rightColumn: {
-      marginTop: isMobile ? (isSmallMobile ? '0.5rem' : '0.75rem') : '0',
+      marginTop: isMobile ? '0' : '0',
       width: '100%',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
     },
     
     bookingCard: {
       backgroundColor: colors.white,
-      borderRadius: '24px',
-      padding: isMobile ? (isSmallMobile ? '1rem' : '1.25rem') : '2rem',
-      boxShadow: '0 25px 60px rgba(10, 10, 12, 0.4)',
+      borderRadius: '20px',
+      padding: isMobile ? (isSmallMobile ? '1rem' : '1.25rem') : '1.5rem',
+      boxShadow: '0 20px 40px rgba(10, 10, 12, 0.3)',
       border: `2px solid ${colors.gold}`,
       width: '100%',
-      maxWidth: isMobile ? '100%' : '400px',
-      margin: '0 auto',
       boxSizing: 'border-box',
-      overflow: 'hidden',
     },
     
     cardHeader: {
-      textAlign: 'left',
-      marginBottom: isMobile ? '1rem' : '1.5rem',
+      textAlign: 'center',
+      marginBottom: isMobile ? '0.75rem' : '1rem',
     },
     
     formTitle: {
-      fontSize: isMobile ? (isSmallMobile ? '0.5rem' : '0.5rem') : '0.5rem',
+      fontSize: isMobile ? (isSmallMobile ? '1.1rem' : '1.25rem') : '1.5rem',
       fontWeight: '700',
       color: colors.background,
       margin: '0 0 0.25rem 0',
-      lineHeight: '0,5',
+      lineHeight: '1.2',
       fontFamily: "'Inter', sans-serif",
       letterSpacing: '-0.5px',
     },
     
     formSubtitle: {
-      fontSize: isMobile ? (isSmallMobile ? '0.5rem' : '0.5rem') : '0.5rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.6rem' : '0.65rem') : '0.875rem',
       color: colors.background,
       opacity: 0.8,
       margin: 0,
@@ -2524,29 +2520,29 @@ const HeroSection = () => {
     form: {
       display: 'flex',
       flexDirection: 'column',
-      gap: isMobile ? '0.5rem' : '0.5rem',
+      gap: isMobile ? '0.5rem' : '0.75rem',
       width: '100%',
     },
     
     formGroup: {
       display: 'flex',
       flexDirection: 'column',
-      gap: '0.2rem',
+      gap: '0.15rem',
       width: '100%',
     },
     
     inputLabel: {
-      fontSize: isMobile ? (isSmallMobile ? '0.7rem' : '0.75rem') : '0.8rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.6rem' : '0.65rem') : '0.75rem',
       fontWeight: '600',
       color: colors.background,
       fontFamily: "'Inter', sans-serif",
     },
     
     formInput: {
-      padding: isMobile ? (isSmallMobile ? '0.5rem' : '0.6rem') : '0.8rem',
-      borderRadius: '10px',
+      padding: isMobile ? (isSmallMobile ? '0.4rem' : '0.5rem') : '0.75rem',
+      borderRadius: '8px',
       border: '2px solid #0A0A0C',
-      fontSize: isMobile ? (isSmallMobile ? '0.75rem' : '0.8rem') : '0.85rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.6rem' : '0.65rem') : '0.875rem',
       transition: 'all 0.3s ease',
       outline: 'none',
       fontFamily: "'Inter', sans-serif",
@@ -2556,10 +2552,10 @@ const HeroSection = () => {
     },
     
     formTextarea: {
-      padding: isMobile ? (isSmallMobile ? '0.5rem' : '0.6rem') : '0.8rem',
-      borderRadius: '10px',
+      padding: isMobile ? (isSmallMobile ? '0.4rem' : '0.5rem') : '0.75rem',
+      borderRadius: '8px',
       border: '2px solid #0A0A0C',
-      fontSize: isMobile ? (isSmallMobile ? '0.75rem' : '0.8rem') : '0.85rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.6rem' : '0.65rem') : '0.875rem',
       transition: 'all 0.3s ease',
       outline: 'none',
       fontFamily: "'Inter', sans-serif",
@@ -2567,7 +2563,7 @@ const HeroSection = () => {
       width: '100%',
       boxSizing: 'border-box',
       resize: 'vertical',
-      minHeight: isMobile ? '60px' : '80px',
+      minHeight: isMobile ? '50px' : '80px',
     },
     
     formRow: {
@@ -2579,12 +2575,12 @@ const HeroSection = () => {
     
     submitButton: (active: boolean) => ({
       marginTop: '0.25rem',
-      padding: isMobile ? (isSmallMobile ? '0.7rem' : '0.8rem') : '1rem',
+      padding: isMobile ? (isSmallMobile ? '0.5rem' : '0.6rem') : '1rem',
       backgroundColor: colors.gold,
       color: colors.background,
       border: 'none',
-      borderRadius: '10px',
-      fontSize: isMobile ? (isSmallMobile ? '0.85rem' : '0.9rem') : '1rem',
+      borderRadius: '8px',
+      fontSize: isMobile ? (isSmallMobile ? '0.7rem' : '0.75rem') : '1rem',
       fontWeight: '700',
       cursor: 'pointer',
       display: 'flex',
@@ -2593,14 +2589,14 @@ const HeroSection = () => {
       gap: '0.5rem',
       transition: 'all 0.3s ease',
       fontFamily: "'Inter', sans-serif",
-      transform: active ? 'translateY(-2px)' : 'translateY(0)',
-      boxShadow: active ? '0 12px 30px rgba(255, 184, 0, 0.4)' : '0 8px 20px rgba(255, 184, 0, 0.3)',
+      transform: active ? 'translateY(-3px)' : 'translateY(0)',
+      boxShadow: active ? '0 15px 40px rgba(255, 184, 0, 0.4)' : '0 10px 30px rgba(255, 184, 0, 0.3)',
       width: '100%',
       position: 'relative',
     }),
     
     buttonText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.85rem' : '0.9rem') : '1rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.7rem' : '0.75rem') : '1rem',
       fontWeight: '700',
     },
     
@@ -2611,9 +2607,9 @@ const HeroSection = () => {
     
     successMessage: {
       marginTop: '0.75rem',
-      padding: '0.6rem',
+      padding: '0.5rem',
       backgroundColor: '#FFB800',
-      borderRadius: '10px',
+      borderRadius: '8px',
       border: '2px solid #0A0A0C',
       textAlign: 'center',
       width: '100%',
@@ -2621,15 +2617,15 @@ const HeroSection = () => {
     },
     
     successTitle: {
-      fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.1rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1rem',
       fontWeight: '700',
       color: colors.background,
-      marginBottom: '0.2rem',
+      marginBottom: '0.15rem',
       fontFamily: "'Inter', sans-serif",
     },
     
     successText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.7rem' : '0.75rem') : '0.85rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.6rem' : '0.65rem') : '0.875rem',
       color: colors.background,
       marginBottom: 0,
       fontFamily: "'Inter', sans-serif",
@@ -2638,9 +2634,9 @@ const HeroSection = () => {
     
     errorMessage: {
       marginTop: '0.75rem',
-      padding: '0.6rem',
+      padding: '0.5rem',
       backgroundColor: '#EF4444',
-      borderRadius: '10px',
+      borderRadius: '8px',
       border: '2px solid #0A0A0C',
       textAlign: 'center',
       width: '100%',
@@ -2648,7 +2644,7 @@ const HeroSection = () => {
     },
     
     errorText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.85rem' : '0.9rem') : '1rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.7rem' : '0.75rem') : '0.875rem',
       fontWeight: '600',
       color: '#FFFFFF',
       marginBottom: 0,
@@ -2656,7 +2652,7 @@ const HeroSection = () => {
     },
     
     formNote: {
-      fontSize: isMobile ? (isSmallMobile ? '0.5rem' : '0.55rem') : '0.7rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.45rem' : '0.5rem') : '0.7rem',
       color: '#6B7280',
       textAlign: 'center',
       marginTop: '0.5rem',
@@ -2669,7 +2665,7 @@ const HeroSection = () => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: '0.4rem',
+      gap: '0.5rem',
       marginTop: '0.5rem',
       paddingTop: '0.5rem',
       borderTop: '2px solid #0A0A0C',
@@ -2677,12 +2673,12 @@ const HeroSection = () => {
     },
     
     securityIcon: {
-      width: isMobile ? '12px' : '14px',
-      height: isMobile ? '12px' : '14px',
+      width: isMobile ? '10px' : '14px',
+      height: isMobile ? '10px' : '14px',
     },
     
     securityText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.5rem' : '0.55rem') : '0.7rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.45rem' : '0.5rem') : '0.7rem',
       color: '#6B7280',
       fontWeight: '400',
       fontFamily: "'Inter', sans-serif",
@@ -2870,9 +2866,6 @@ const HeroSection = () => {
               </motion.div>
             </SlideInText>
             
-            {/* FIRST LOGO CAROUSEL - IN HERO SECTION */}
-            <LogoCarousel />
-            
             <SlideInText direction="left" delay={1}>
               <div style={baseStyles.reviewsContainer}>
                 <motion.div 
@@ -2903,7 +2896,7 @@ const HeroSection = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <svg width={isMobile ? "18" : "20"} height={isMobile ? "18" : "20"} viewBox="0 0 24 24">
+                    <svg width={isMobile ? "14" : "16"} height={isMobile ? "14" : "16"} viewBox="0 0 24 24">
                       <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                       <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                       <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -2921,7 +2914,7 @@ const HeroSection = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <svg width={isMobile ? "16" : "16"} height={isMobile ? "16" : "16"} viewBox="0 0 24 24" fill="none">
+                    <svg width={isMobile ? "12" : "14"} height={isMobile ? "12" : "14"} viewBox="0 0 24 24" fill="none">
                       <path d="M21 11.5C21.0034 12.8199 20.6951 14.1219 20.1 15.3C19.3944 16.7118 18.3098 17.8992 16.9674 18.7293C15.6251 19.5594 14.0782 19.9994 12.5 20C11.1801 20.0035 9.87812 19.6951 8.7 19.1L3 21L4.9 15.3C4.30493 14.1219 3.99656 12.8199 4 11.5C4.00061 9.92179 4.44061 8.37488 5.27072 7.03258C6.10083 5.69028 7.28825 4.6056 8.7 3.9C9.87812 3.30493 11.1801 2.99656 12.5 3H13C15.0843 3.11499 17.053 3.99478 18.5291 5.47087C20.0052 6.94696 20.885 8.91568 21 11V11.5Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                     <span style={baseStyles.googleReviewsText}>Read Reviews</span>
@@ -2956,7 +2949,7 @@ const HeroSection = () => {
             <div style={baseStyles.rightColumn}>
               <motion.div 
                 style={baseStyles.bookingCard}
-                whileHover={{ scale: 1.02, boxShadow: '0 30px 80px rgba(255, 184, 0, 0.3)' }}
+                whileHover={{ scale: 1.02, boxShadow: '0 30px 60px rgba(255, 184, 0, 0.3)' }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <div style={baseStyles.cardHeader}>
@@ -3076,7 +3069,7 @@ const HeroSection = () => {
                         animate={{ x: [0, 5, 0] }}
                         transition={{ duration: 1.5, repeat: Infinity }}
                       >
-                        <svg width={isMobile ? "16" : "18"} height={isMobile ? "16" : "18"} viewBox="0 0 24 24" fill="none">
+                        <svg width={isMobile ? "14" : "16"} height={isMobile ? "14" : "16"} viewBox="0 0 24 24" fill="none">
                           <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#0A0A0C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                       </motion.span>
