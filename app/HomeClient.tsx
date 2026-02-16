@@ -2195,10 +2195,10 @@ const HeroSection = () => {
     },
     
     heroGrid: {
-      maxWidth: '1400px',
+      maxWidth: '1280px',
       margin: '0 auto',
       display: 'grid',
-      gridTemplateColumns: isMobile ? '1fr' : '1.2fr 0.9fr', // Adjusted ratio to give form more space
+      gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
       gap: isMobile ? (isSmallMobile ? '1.5rem' : '2rem') : '4rem',
       alignItems: 'flex-start',
       width: '100%',
@@ -2355,13 +2355,36 @@ const HeroSection = () => {
       textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
     },
 
-    // Logo Carousel Container in Hero
-    heroLogoCarouselContainer: {
-      marginTop: isMobile ? '20px' : '30px',
-      marginBottom: isMobile ? '10px' : '15px',
-      width: '100%',
-      position: 'relative',
-      zIndex: 5,
+    // NEW SECTION: Three images below Licensed, Certified & Trusted
+    trustImagesRow: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      gap: isMobile ? '12px' : '20px',
+      marginTop: isMobile ? '8px' : '12px',
+      marginBottom: isMobile ? '8px' : '12px',
+      flexWrap: 'wrap',
+    },
+    
+    trustImageItem: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: isMobile ? (isSmallMobile ? '80px' : '100px') : '120px',
+      height: isMobile ? (isSmallMobile ? '40px' : '50px') : '60px',
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      borderRadius: '8px',
+      padding: isMobile ? '6px' : '8px',
+      border: '1px solid rgba(255, 184, 0, 0.3)',
+      transition: 'all 0.3s ease',
+    },
+    
+    trustImage: {
+      maxWidth: '100%',
+      maxHeight: '100%',
+      objectFit: 'contain' as const,
+      filter: 'brightness(0) invert(1)',
     },
 
     reviewsContainer: {
@@ -2490,7 +2513,6 @@ const HeroSection = () => {
     rightColumn: {
       marginTop: isMobile ? '0' : '0',
       width: '100%',
-      minWidth: isMobile ? '100%' : '400px', // Ensure minimum width for form
     },
     
     bookingCard: {
@@ -2501,8 +2523,6 @@ const HeroSection = () => {
       border: `2px solid ${colors.gold}`,
       width: '100%',
       boxSizing: 'border-box',
-      maxWidth: isMobile ? '100%' : '500px', // Limit max width on desktop
-      marginLeft: 'auto', // Push to the right
     },
     
     cardHeader: {
@@ -2878,10 +2898,48 @@ const HeroSection = () => {
               </motion.div>
             </SlideInText>
 
-            {/* LOGO CAROUSEL ADDED HERE - BELOW THE LICENSED, CERTIFIED, TRUSTED SECTION */}
-            <div style={baseStyles.heroLogoCarouselContainer}>
-              <LogoCarousel />
-            </div>
+            {/* NEW: THREE IMAGES HORIZONTALLY */}
+            <SlideInText direction="left" delay={0.9}>
+              <motion.div 
+                style={baseStyles.trustImagesRow}
+                animate={{ opacity: [0.9, 1, 0.9] }}
+                transition={{ duration: 3, repeat: Infinity }}
+              >
+                <motion.div 
+                  style={baseStyles.trustImageItem}
+                  whileHover={{ scale: 1.1, borderColor: '#FFB800' }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <img 
+                    src="/image/award1.png" 
+                    alt="GAF Certified"
+                    style={baseStyles.trustImage}
+                  />
+                </motion.div>
+                <motion.div 
+                  style={baseStyles.trustImageItem}
+                  whileHover={{ scale: 1.1, borderColor: '#FFB800' }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <img 
+                    src="/image/flag.png" 
+                    alt="Owens Corning"
+                    style={baseStyles.trustImage}
+                  />
+                </motion.div>
+                <motion.div 
+                  style={baseStyles.trustImageItem}
+                  whileHover={{ scale: 1.1, borderColor: '#FFB800' }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <img 
+                    src="/image/licensed1.png" 
+                    alt="CertainTeed"
+                    style={baseStyles.trustImage}
+                  />
+                </motion.div>
+              </motion.div>
+            </SlideInText>
             
             <SlideInText direction="left" delay={1}>
               <div style={baseStyles.reviewsContainer}>
