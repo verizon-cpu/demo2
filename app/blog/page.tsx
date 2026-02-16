@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import BlogClient from "./BlogClient";
+import BlogClient from "./blog";
 
 export const metadata: Metadata = {
   title: "How to Fix a Roof Leak in Brooklyn | BRAVOS Roofing",
@@ -54,7 +54,7 @@ export default function Page() {
         }}
       />
 
-      <BlogClient />
+      <blog />
     </>
   );
 }

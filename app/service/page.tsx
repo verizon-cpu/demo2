@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import RoofRepairClient from "./RoofRepairClient";
+import RoofRepairClient from "./service";
 
 export const metadata: Metadata = {
   title: "Roof Repair in Brooklyn, NY | BRAVOS Roofing",
@@ -38,7 +38,7 @@ export default function Page() {
         }}
       />
 
-      <RoofRepairClient />
+      <service />
     </>
   );
 }
