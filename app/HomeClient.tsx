@@ -2023,6 +2023,10 @@ const HeroSection = () => {
   const [trustCardActive, setTrustCardActive] = useState<number | null>(null);
   const [submitButtonActive, setSubmitButtonActive] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
+  
+  // State for image modal
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImageAlt, setSelectedImageAlt] = useState<string>('');
 
   useEffect(() => {
     setHasMounted(true);
@@ -2064,6 +2068,19 @@ const HeroSection = () => {
       return () => clearTimeout(timer);
     }
   }, [formStatus]);
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (selectedImage) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [selectedImage]);
 
   const handleFormChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -2123,6 +2140,16 @@ const HeroSection = () => {
 
   const handleTouchEnd = (setter: (value: any) => void, resetValue: any = null) => {
     setTimeout(() => setter(resetValue), 150);
+  };
+
+  const handleImageClick = (src: string, alt: string) => {
+    setSelectedImage(src);
+    setSelectedImageAlt(alt);
+  };
+
+  const closeModal = () => {
+    setSelectedImage(null);
+    setSelectedImageAlt('');
   };
 
   // BRAVOS Colors
@@ -2355,15 +2382,15 @@ const HeroSection = () => {
       textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
     },
 
-    // NEW SECTION: Three images below Licensed, Certified & Trusted
+    // THREE IMAGES SECTION - NO CARD, JUST IMAGES
     trustImagesRow: {
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'flex-start',
-      gap: isMobile ? '12px' : '20px',
-      marginTop: isMobile ? '8px' : '12px',
-      marginBottom: isMobile ? '8px' : '12px',
+      gap: isMobile ? '15px' : '25px',
+      marginTop: isMobile ? '10px' : '15px',
+      marginBottom: isMobile ? '10px' : '15px',
       flexWrap: 'wrap',
     },
     
@@ -2371,20 +2398,20 @@ const HeroSection = () => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      width: isMobile ? (isSmallMobile ? '80px' : '100px') : '120px',
-      height: isMobile ? (isSmallMobile ? '40px' : '50px') : '60px',
-      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      cursor: 'pointer',
+      transition: 'transform 0.3s ease',
+      width: isMobile ? (isSmallMobile ? '100px' : '120px') : '150px',
+      height: isMobile ? (isSmallMobile ? '100px' : '120px') : '150px',
       borderRadius: '8px',
-      padding: isMobile ? '6px' : '8px',
-      border: '1px solid rgba(255, 184, 0, 0.3)',
-      transition: 'all 0.3s ease',
+      overflow: 'hidden',
+      border: '2px solid rgba(255, 184, 0, 0.3)',
     },
     
     trustImage: {
-      maxWidth: '100%',
-      maxHeight: '100%',
-      objectFit: 'contain' as const,
-      filter: 'brightness(0) invert(1)',
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover' as const,
+      transition: 'transform 0.3s ease',
     },
 
     reviewsContainer: {
@@ -2716,6 +2743,56 @@ const HeroSection = () => {
       fontFamily: "'Inter', sans-serif",
     },
 
+    // Modal Styles
+    modalOverlay: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.95)',
+      zIndex: 99999,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'pointer',
+    },
+    
+    modalContent: {
+      position: 'relative',
+      maxWidth: '90vw',
+      maxHeight: '90vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    
+    modalImage: {
+      maxWidth: '100%',
+      maxHeight: '90vh',
+      objectFit: 'contain' as const,
+      borderRadius: '8px',
+    },
+    
+    closeButton: {
+      position: 'absolute',
+      top: '-40px',
+      right: '-40px',
+      width: '40px',
+      height: '40px',
+      borderRadius: '50%',
+      backgroundColor: '#FFB800',
+      color: '#0A0A0C',
+      border: 'none',
+      fontSize: '24px',
+      fontWeight: '700',
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      transition: 'all 0.3s ease',
+    },
+
     // Animation elements positioning - FIXED FOR MOBILE
     wavyFlagContainer: {
       position: 'absolute',
@@ -2898,7 +2975,7 @@ const HeroSection = () => {
               </motion.div>
             </SlideInText>
 
-            {/* NEW: THREE IMAGES HORIZONTALLY */}
+            {/* THREE IMAGES HORIZONTALLY - NO CARDS, CLICK TO ENLARGE */}
             <SlideInText direction="left" delay={0.9}>
               <motion.div 
                 style={baseStyles.trustImagesRow}
@@ -2907,34 +2984,40 @@ const HeroSection = () => {
               >
                 <motion.div 
                   style={baseStyles.trustImageItem}
-                  whileHover={{ scale: 1.1, borderColor: '#FFB800' }}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => handleImageClick("/image/image1.jpg", "Image 1")}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
                   <img 
-                    src="/image/award1.png" 
-                    alt="GAF Certified"
+                    src="/image/image1.jpg" 
+                    alt="Image 1"
                     style={baseStyles.trustImage}
                   />
                 </motion.div>
                 <motion.div 
                   style={baseStyles.trustImageItem}
-                  whileHover={{ scale: 1.1, borderColor: '#FFB800' }}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => handleImageClick("/image/image2.jpg", "Image 2")}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
                   <img 
-                    src="/image/flag.png" 
-                    alt="Owens Corning"
+                    src="/image/image2.jpg" 
+                    alt="Image 2"
                     style={baseStyles.trustImage}
                   />
                 </motion.div>
                 <motion.div 
                   style={baseStyles.trustImageItem}
-                  whileHover={{ scale: 1.1, borderColor: '#FFB800' }}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => handleImageClick("/image/image3.jpg", "Image 3")}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
                   <img 
-                    src="/image/licensed1.png" 
-                    alt="CertainTeed"
+                    src="/image/image3.jpg" 
+                    alt="Image 3"
                     style={baseStyles.trustImage}
                   />
                 </motion.div>
@@ -3204,6 +3287,42 @@ const HeroSection = () => {
           </SlideInText>
         </div>
       </div>
+
+      {/* Image Modal for Enlargement */}
+      <AnimatePresence>
+        {selectedImage && (
+          <motion.div 
+            style={baseStyles.modalOverlay}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={closeModal}
+          >
+            <motion.div 
+              style={baseStyles.modalContent}
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.8 }}
+              transition={{ type: "spring", stiffness: 300 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <motion.button 
+                style={baseStyles.closeButton}
+                whileHover={{ scale: 1.1, backgroundColor: '#0A0A0C', color: '#FFB800' }}
+                whileTap={{ scale: 0.95 }}
+                onClick={closeModal}
+              >
+                ×
+              </motion.button>
+              <img 
+                src={selectedImage} 
+                alt={selectedImageAlt}
+                style={baseStyles.modalImage}
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
