@@ -2869,6 +2869,9 @@ const HeroSection = () => {
               </motion.div>
             </SlideInText>
             
+            {/* FIRST LOGO CAROUSEL - IN HERO SECTION */}
+            <LogoCarousel />
+            
             <SlideInText direction="left" delay={1}>
               <div style={baseStyles.reviewsContainer}>
                 <motion.div 
