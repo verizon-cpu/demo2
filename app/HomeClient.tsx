@@ -2487,22 +2487,23 @@ const HeroSection = () => {
     bookingCard: {
       backgroundColor: colors.white,
       borderRadius: '24px',
-      padding: isMobile ? (isSmallMobile ? '1.25rem' : '1.5rem') : '2rem',
+      padding: isMobile ? (isSmallMobile ? '1rem' : '1.25rem') : '2rem',
       boxShadow: '0 25px 60px rgba(10, 10, 12, 0.4)',
       border: `2px solid ${colors.gold}`,
       width: '100%',
-      maxWidth: isMobile ? '100%' : '500px',
+      maxWidth: isMobile ? '100%' : '480px',
       margin: '0 auto',
       boxSizing: 'border-box',
+      overflow: 'hidden',
     },
     
     cardHeader: {
       textAlign: 'center',
-      marginBottom: isMobile ? '1.25rem' : '1.75rem',
+      marginBottom: isMobile ? '1rem' : '1.5rem',
     },
     
     formTitle: {
-      fontSize: isMobile ? (isSmallMobile ? '1.2rem' : '1.4rem') : '1.85rem',
+      fontSize: isMobile ? (isSmallMobile ? '1.2rem' : '1.3rem') : '1.75rem',
       fontWeight: '700',
       color: colors.background,
       margin: '0 0 0.25rem 0',
@@ -2512,7 +2513,7 @@ const HeroSection = () => {
     },
     
     formSubtitle: {
-      fontSize: isMobile ? (isSmallMobile ? '0.75rem' : '0.85rem') : '1rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.7rem' : '0.75rem') : '0.9rem',
       color: colors.background,
       opacity: 0.8,
       margin: 0,
@@ -2523,29 +2524,29 @@ const HeroSection = () => {
     form: {
       display: 'flex',
       flexDirection: 'column',
-      gap: isMobile ? '1rem' : '1.25rem',
+      gap: isMobile ? '0.75rem' : '1rem',
       width: '100%',
     },
     
     formGroup: {
       display: 'flex',
       flexDirection: 'column',
-      gap: '0.25rem',
+      gap: '0.2rem',
       width: '100%',
     },
     
     inputLabel: {
-      fontSize: isMobile ? (isSmallMobile ? '0.75rem' : '0.8rem') : '0.875rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.7rem' : '0.75rem') : '0.8rem',
       fontWeight: '600',
       color: colors.background,
       fontFamily: "'Inter', sans-serif",
     },
     
     formInput: {
-      padding: isMobile ? (isSmallMobile ? '0.6rem' : '0.75rem') : '1rem',
-      borderRadius: '12px',
+      padding: isMobile ? (isSmallMobile ? '0.5rem' : '0.6rem') : '0.8rem',
+      borderRadius: '10px',
       border: '2px solid #0A0A0C',
-      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.85rem') : '0.875rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.75rem' : '0.8rem') : '0.85rem',
       transition: 'all 0.3s ease',
       outline: 'none',
       fontFamily: "'Inter', sans-serif",
@@ -2555,10 +2556,10 @@ const HeroSection = () => {
     },
     
     formTextarea: {
-      padding: isMobile ? (isSmallMobile ? '0.6rem' : '0.75rem') : '1rem',
-      borderRadius: '12px',
+      padding: isMobile ? (isSmallMobile ? '0.5rem' : '0.6rem') : '0.8rem',
+      borderRadius: '10px',
       border: '2px solid #0A0A0C',
-      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.85rem') : '0.875rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.75rem' : '0.8rem') : '0.85rem',
       transition: 'all 0.3s ease',
       outline: 'none',
       fontFamily: "'Inter', sans-serif",
@@ -2566,24 +2567,24 @@ const HeroSection = () => {
       width: '100%',
       boxSizing: 'border-box',
       resize: 'vertical',
-      minHeight: isMobile ? '70px' : '100px',
+      minHeight: isMobile ? '60px' : '80px',
     },
     
     formRow: {
       display: 'grid',
       gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-      gap: isMobile ? '0.75rem' : '1rem',
+      gap: isMobile ? '0.5rem' : '0.75rem',
       width: '100%',
     },
     
     submitButton: (active: boolean) => ({
-      marginTop: '0.5rem',
-      padding: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1.25rem',
+      marginTop: '0.25rem',
+      padding: isMobile ? (isSmallMobile ? '0.7rem' : '0.8rem') : '1rem',
       backgroundColor: colors.gold,
       color: colors.background,
       border: 'none',
-      borderRadius: '12px',
-      fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.125rem',
+      borderRadius: '10px',
+      fontSize: isMobile ? (isSmallMobile ? '0.85rem' : '0.9rem') : '1rem',
       fontWeight: '700',
       cursor: 'pointer',
       display: 'flex',
@@ -2592,14 +2593,14 @@ const HeroSection = () => {
       gap: '0.5rem',
       transition: 'all 0.3s ease',
       fontFamily: "'Inter', sans-serif",
-      transform: active ? 'translateY(-3px)' : 'translateY(0)',
-      boxShadow: active ? '0 15px 40px rgba(255, 184, 0, 0.4)' : '0 10px 30px rgba(255, 184, 0, 0.3)',
+      transform: active ? 'translateY(-2px)' : 'translateY(0)',
+      boxShadow: active ? '0 12px 30px rgba(255, 184, 0, 0.4)' : '0 8px 20px rgba(255, 184, 0, 0.3)',
       width: '100%',
       position: 'relative',
     }),
     
     buttonText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.125rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.85rem' : '0.9rem') : '1rem',
       fontWeight: '700',
     },
     
@@ -2609,10 +2610,10 @@ const HeroSection = () => {
     },
     
     successMessage: {
-      marginTop: '1rem',
-      padding: '0.75rem',
+      marginTop: '0.75rem',
+      padding: '0.6rem',
       backgroundColor: '#FFB800',
-      borderRadius: '12px',
+      borderRadius: '10px',
       border: '2px solid #0A0A0C',
       textAlign: 'center',
       width: '100%',
@@ -2620,15 +2621,15 @@ const HeroSection = () => {
     },
     
     successTitle: {
-      fontSize: isMobile ? (isSmallMobile ? '1rem' : '1.1rem') : '1.25rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.1rem',
       fontWeight: '700',
       color: colors.background,
-      marginBottom: '0.25rem',
+      marginBottom: '0.2rem',
       fontFamily: "'Inter', sans-serif",
     },
     
     successText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.85rem') : '1rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.7rem' : '0.75rem') : '0.85rem',
       color: colors.background,
       marginBottom: 0,
       fontFamily: "'Inter', sans-serif",
@@ -2636,10 +2637,10 @@ const HeroSection = () => {
     },
     
     errorMessage: {
-      marginTop: '1rem',
-      padding: '0.75rem',
+      marginTop: '0.75rem',
+      padding: '0.6rem',
       backgroundColor: '#EF4444',
-      borderRadius: '12px',
+      borderRadius: '10px',
       border: '2px solid #0A0A0C',
       textAlign: 'center',
       width: '100%',
@@ -2647,7 +2648,7 @@ const HeroSection = () => {
     },
     
     errorText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.125rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.85rem' : '0.9rem') : '1rem',
       fontWeight: '600',
       color: '#FFFFFF',
       marginBottom: 0,
@@ -2655,11 +2656,11 @@ const HeroSection = () => {
     },
     
     formNote: {
-      fontSize: isMobile ? (isSmallMobile ? '0.6rem' : '0.65rem') : '0.75rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.5rem' : '0.55rem') : '0.7rem',
       color: '#6B7280',
       textAlign: 'center',
-      marginTop: '0.75rem',
-      lineHeight: '1.5',
+      marginTop: '0.5rem',
+      lineHeight: '1.4',
       fontFamily: "'Inter', sans-serif",
       fontWeight: '400',
     },
@@ -2668,20 +2669,20 @@ const HeroSection = () => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: '0.5rem',
-      marginTop: '0.75rem',
-      paddingTop: '0.75rem',
+      gap: '0.4rem',
+      marginTop: '0.5rem',
+      paddingTop: '0.5rem',
       borderTop: '2px solid #0A0A0C',
       width: '100%',
     },
     
     securityIcon: {
-      width: isMobile ? '14px' : '16px',
-      height: isMobile ? '14px' : '16px',
+      width: isMobile ? '12px' : '14px',
+      height: isMobile ? '12px' : '14px',
     },
     
     securityText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.6rem' : '0.65rem') : '0.75rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.5rem' : '0.55rem') : '0.7rem',
       color: '#6B7280',
       fontWeight: '400',
       fontFamily: "'Inter', sans-serif",
@@ -3075,7 +3076,7 @@ const HeroSection = () => {
                         animate={{ x: [0, 5, 0] }}
                         transition={{ duration: 1.5, repeat: Infinity }}
                       >
-                        <svg width={isMobile ? "18" : "20"} height={isMobile ? "18" : "20"} viewBox="0 0 24 24" fill="none">
+                        <svg width={isMobile ? "16" : "18"} height={isMobile ? "16" : "18"} viewBox="0 0 24 24" fill="none">
                           <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#0A0A0C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                       </motion.span>
