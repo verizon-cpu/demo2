@@ -2866,8 +2866,8 @@ const HeroSection = () => {
                   <FloatingBadge amplitude={isMobile ? 5 : 8} duration={4}>
                     <MicroInteraction 
                       src="/image/pointer1.png"
-                      width={isMobile ? (isSmallMobile ? 80 : 100) : 200}
-                      height={isMobile ? (isSmallMobile ? 90 : 110) : 220}
+                      width={isMobile ? (isSmallMobile ? 200 : 200) : 200}
+                      height={isMobile ? (isSmallMobile ? 200 : 200) : 220}
                       style={{ 
                         filter: 'drop-shadow(0 4px 8px rgba(255, 184, 0, 0.3))'
                       }}
@@ -2990,7 +2990,7 @@ const HeroSection = () => {
                   transition={{ type: "spring", stiffness: 300 }}
                 >
                   <img 
-                    src="/image/image1.jpg" 
+                    src="/image/award1.png" 
                     alt="Image 1"
                     style={baseStyles.trustImage}
                   />
@@ -3003,7 +3003,7 @@ const HeroSection = () => {
                   transition={{ type: "spring", stiffness: 300 }}
                 >
                   <img 
-                    src="/image/image2.jpg" 
+                    src="/image/lifetime1.png" 
                     alt="Image 2"
                     style={baseStyles.trustImage}
                   />
@@ -3016,7 +3016,7 @@ const HeroSection = () => {
                   transition={{ type: "spring", stiffness: 300 }}
                 >
                   <img 
-                    src="/image/image3.jpg" 
+                    src="/image/licensed1.png" 
                     alt="Image 3"
                     style={baseStyles.trustImage}
                   />
