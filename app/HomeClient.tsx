@@ -845,8 +845,7 @@ function LogoCarousel({
                 maxWidth: '100%',
                 maxHeight: '100%',
                 objectFit: 'contain',
-                
-    transform: isMobile ? 'scale(3)' : 'scale(3)',
+                transform: isMobile ? 'scale(2)' : 'scale(3)',
               }}
             />
           </motion.div>
@@ -2235,6 +2234,7 @@ const HeroSection = () => {
       position: 'relative',
       marginLeft: isMobile ? 0 : 'auto',
       marginRight: isMobile ? 0 : 'auto',
+      minHeight: isMobile ? (isSmallMobile ? '40px' : '45px') : 'auto',
     }),
     
     numberOneBadge: (active: boolean) => ({
@@ -2693,10 +2693,12 @@ const HeroSection = () => {
 
     microInteractionContainer: {
       position: 'absolute',
-      top: isMobile ? (isSmallMobile ? '70px' : '80px') : '110px',
-      right: isMobile ? (isSmallMobile ? '-200px' : '-250px') : '-400px',
+      top: isMobile ? (isSmallMobile ? '-15px' : '-10px') : '0px',
+      right: isMobile ? (isSmallMobile ? '-20px' : '-25px') : '-50px',
       zIndex: 20,
       pointerEvents: 'none',
+      transform: isMobile ? 'scale(0.5)' : 'scale(1)',
+      transformOrigin: 'top right',
     },
 
     // Rotating star ring positioning
