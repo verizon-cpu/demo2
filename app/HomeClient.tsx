@@ -2195,10 +2195,10 @@ const HeroSection = () => {
     },
     
     heroGrid: {
-      maxWidth: '1280px',
+      maxWidth: '1400px',
       margin: '0 auto',
       display: 'grid',
-      gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+      gridTemplateColumns: isMobile ? '1fr' : '1.2fr 0.9fr', // Adjusted ratio to give form more space
       gap: isMobile ? (isSmallMobile ? '1.5rem' : '2rem') : '4rem',
       alignItems: 'flex-start',
       width: '100%',
@@ -2355,6 +2355,15 @@ const HeroSection = () => {
       textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
     },
 
+    // Logo Carousel Container in Hero
+    heroLogoCarouselContainer: {
+      marginTop: isMobile ? '20px' : '30px',
+      marginBottom: isMobile ? '10px' : '15px',
+      width: '100%',
+      position: 'relative',
+      zIndex: 5,
+    },
+
     reviewsContainer: {
       display: 'flex',
       flexDirection: isMobile ? 'column' : 'row',
@@ -2481,6 +2490,7 @@ const HeroSection = () => {
     rightColumn: {
       marginTop: isMobile ? '0' : '0',
       width: '100%',
+      minWidth: isMobile ? '100%' : '400px', // Ensure minimum width for form
     },
     
     bookingCard: {
@@ -2491,6 +2501,8 @@ const HeroSection = () => {
       border: `2px solid ${colors.gold}`,
       width: '100%',
       boxSizing: 'border-box',
+      maxWidth: isMobile ? '100%' : '500px', // Limit max width on desktop
+      marginLeft: 'auto', // Push to the right
     },
     
     cardHeader: {
@@ -2710,15 +2722,6 @@ const HeroSection = () => {
       left: '50%',
       transform: 'translate(-50%, -50%)',
       zIndex: 0,
-    },
-
-    // Logo Carousel Container in Hero
-    heroLogoCarouselContainer: {
-      marginTop: isMobile ? '20px' : '30px',
-      marginBottom: isMobile ? '10px' : '15px',
-      width: '100%',
-      position: 'relative',
-      zIndex: 5,
     },
   };
 
