@@ -4960,7 +4960,7 @@ const BodySection = () => {
   const handleBeforeAfterClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    window.location.href = '/gallery';
+    window.location.href = '/Gallery';
   };
 
   return (
