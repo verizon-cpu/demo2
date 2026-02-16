@@ -2711,6 +2711,15 @@ const HeroSection = () => {
       transform: 'translate(-50%, -50%)',
       zIndex: 0,
     },
+
+    // Logo Carousel Container in Hero
+    heroLogoCarouselContainer: {
+      marginTop: isMobile ? '20px' : '30px',
+      marginBottom: isMobile ? '10px' : '15px',
+      width: '100%',
+      position: 'relative',
+      zIndex: 5,
+    },
   };
 
   return (
@@ -2865,6 +2874,11 @@ const HeroSection = () => {
                 </motion.div>
               </motion.div>
             </SlideInText>
+
+            {/* LOGO CAROUSEL ADDED HERE - BELOW THE LICENSED, CERTIFIED, TRUSTED SECTION */}
+            <div style={baseStyles.heroLogoCarouselContainer}>
+              <LogoCarousel />
+            </div>
             
             <SlideInText direction="left" delay={1}>
               <div style={baseStyles.reviewsContainer}>
