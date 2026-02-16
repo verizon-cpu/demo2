@@ -2182,13 +2182,13 @@ const HeroSection = () => {
     heroContent: {
       position: 'relative',
       zIndex: 10,
-      paddingTop: isMobile ? (isSmallMobile ? '100px' : '120px') : '140px',
-      paddingBottom: isMobile ? (isSmallMobile ? '60px' : '80px') : '80px',
+      paddingTop: isMobile ? (isSmallMobile ? '80px' : '100px') : '120px',
+      paddingBottom: isMobile ? (isSmallMobile ? '40px' : '60px') : '60px',
       minHeight: 'calc(100dvh - 60px)',
       display: 'flex',
       alignItems: 'center',
-      paddingLeft: isMobile ? (isSmallMobile ? '16px' : '20px') : '40px',
-      paddingRight: isMobile ? (isSmallMobile ? '16px' : '20px') : '40px',
+      paddingLeft: isMobile ? (isSmallMobile ? '12px' : '16px') : '40px',
+      paddingRight: isMobile ? (isSmallMobile ? '12px' : '16px') : '40px',
       width: '100%',
       boxSizing: 'border-box',
       justifyContent: 'center',
@@ -2199,7 +2199,7 @@ const HeroSection = () => {
       margin: '0 auto',
       display: 'grid',
       gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-      gap: isMobile ? (isSmallMobile ? '1.5rem' : '2rem') : '4rem',
+      gap: isMobile ? (isSmallMobile ? '1rem' : '1.5rem') : '4rem',
       alignItems: isMobile ? 'flex-start' : 'center',
       width: '100%',
     },
@@ -2207,21 +2207,22 @@ const HeroSection = () => {
     leftColumn: {
       display: 'flex',
       flexDirection: 'column',
-      gap: isMobile ? (isSmallMobile ? '1rem' : '1.5rem') : '2rem',
+      gap: isMobile ? (isSmallMobile ? '0.75rem' : '1rem') : '2rem',
       width: '100%',
+      position: 'relative',
     },
 
     excellenceBadge: (active: boolean) => ({
       display: 'flex',
       alignItems: 'center',
       justifyContent: isSmallMobile ? 'center' : 'flex-start',
-      gap: isMobile ? (isSmallMobile ? '0.4rem' : '0.5rem') : '1rem',
+      gap: isMobile ? (isSmallMobile ? '0.25rem' : '0.35rem') : '1rem',
       backgroundColor: colors.background,
       border: `2px solid ${colors.gold}`,
-      borderRadius: isSmallMobile ? '40px' : '60px',
-      padding: isMobile ? (isSmallMobile ? '0.4rem 0.6rem' : '0.6rem 0.8rem') : '1rem 1.5rem',
+      borderRadius: isSmallMobile ? '30px' : '60px',
+      padding: isMobile ? (isSmallMobile ? '0.3rem 0.5rem' : '0.4rem 0.6rem') : '1rem 1.5rem',
       width: '100%',
-      maxWidth: '100%',
+      maxWidth: isMobile ? '100%' : 'fit-content',
       boxSizing: 'border-box',
       boxShadow: active 
         ? '0 15px 40px rgba(255, 184, 0, 0.3)' 
@@ -2229,14 +2230,16 @@ const HeroSection = () => {
       transform: active ? 'translateY(-3px) scale(1.05)' : 'translateY(0) scale(1)',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       cursor: 'pointer',
-      flexWrap: isSmallMobile ? 'wrap' : 'nowrap',
+      flexWrap: 'nowrap',
       textAlign: isSmallMobile ? 'center' : 'left',
       position: 'relative',
+      marginLeft: isMobile ? 0 : 'auto',
+      marginRight: isMobile ? 0 : 'auto',
     }),
     
     numberOneBadge: (active: boolean) => ({
-      width: isMobile ? (isSmallMobile ? '32px' : '40px') : '50px',
-      height: isMobile ? (isSmallMobile ? '32px' : '40px') : '50px',
+      width: isMobile ? (isSmallMobile ? '28px' : '32px') : '50px',
+      height: isMobile ? (isSmallMobile ? '28px' : '32px') : '50px',
       backgroundColor: colors.gold,
       borderRadius: '50%',
       display: 'flex',
@@ -2254,20 +2257,20 @@ const HeroSection = () => {
     numberOne: {
       color: colors.background,
       fontWeight: '900',
-      fontSize: isMobile ? (isSmallMobile ? '1.2rem' : '1.4rem') : '1.6rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.6rem',
       fontFamily: "'Inter', sans-serif",
       textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
     },
     
     badgeText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.6rem' : '0.75rem') : '1rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.5rem' : '0.6rem') : '1rem',
       fontWeight: '700',
       color: colors.gold,
       lineHeight: '1.2',
       letterSpacing: isMobile ? (isSmallMobile ? '0.2px' : '0.3px') : '1px',
       fontFamily: "'Inter', sans-serif",
       textTransform: 'uppercase',
-      whiteSpace: isSmallMobile ? 'normal' : 'nowrap',
+      whiteSpace: 'nowrap',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       flexShrink: 1,
@@ -2277,14 +2280,14 @@ const HeroSection = () => {
     houstonBold: {
       fontWeight: '800',
       color: colors.gold,
-      fontSize: isMobile ? (isSmallMobile ? '0.7rem' : '0.85rem') : '1.1rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.55rem' : '0.65rem') : '1.1rem',
       fontFamily: "'Inter', sans-serif",
       textShadow: '0 3px 6px rgba(0, 0, 0, 0.4)',
       display: 'inline',
     },
 
     headline: {
-      fontSize: isMobile ? (isSmallMobile ? '2.2rem' : '2.5rem') : (isTablet ? '3.2rem' : '4rem'),
+      fontSize: isMobile ? (isSmallMobile ? '1.8rem' : '2rem') : (isTablet ? '3.2rem' : '4rem'),
       fontWeight: '800',
       color: colors.white,
       lineHeight: 1.1,
@@ -2299,13 +2302,13 @@ const HeroSection = () => {
       display: 'block',
       fontFamily: "'Inter', sans-serif",
       fontWeight: '800',
-      fontSize: isMobile ? (isSmallMobile ? '2rem' : '2.4rem') : (isTablet ? '3.4rem' : '4rem'),
+      fontSize: isMobile ? (isSmallMobile ? '1.6rem' : '1.8rem') : (isTablet ? '3.4rem' : '4rem'),
       lineHeight: 1.1,
-      marginTop: isMobile ? '0.5rem' : '0',
+      marginTop: isMobile ? '0.25rem' : '0',
     },
 
     subheadline: {
-      fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : (isTablet ? '1.125rem' : '1.25rem'),
+      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : (isTablet ? '1.125rem' : '1.25rem'),
       color: colors.white,
       lineHeight: 1.6,
       maxWidth: '600px',
@@ -2313,7 +2316,7 @@ const HeroSection = () => {
       fontFamily: "'Inter', sans-serif",
       fontWeight: '400',
       textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)',
-      marginTop: '20px',
+      marginTop: isMobile ? '10px' : '20px',
     },
 
     // LICENSED, CERTIFIED & TRUSTED as HEADLINE
@@ -2322,32 +2325,32 @@ const HeroSection = () => {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'flex-start',
-      gap: isMobile ? '10px' : '20px',
-      marginTop: isMobile ? '20px' : '30px',
-      marginBottom: isMobile ? '20px' : '30px',
+      gap: isMobile ? '8px' : '20px',
+      marginTop: isMobile ? '15px' : '30px',
+      marginBottom: isMobile ? '15px' : '30px',
       flexWrap: 'wrap',
     },
     
     trustHeadlineItem: {
       display: 'flex',
       alignItems: 'center',
-      gap: isMobile ? '4px' : '8px',
+      gap: isMobile ? '3px' : '8px',
     },
     
     trustHeadlineCheck: {
       color: colors.gold,
-      fontSize: isMobile ? '1.5rem' : '2rem',
+      fontSize: isMobile ? '1.2rem' : '2rem',
       fontWeight: '700',
       lineHeight: 1,
     },
     
     trustHeadlineText: {
       color: colors.white,
-      fontSize: isMobile ? '1.25rem' : '1.75rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.75rem',
       fontWeight: '700',
       fontFamily: "'Inter', sans-serif",
       textTransform: 'uppercase' as const,
-      letterSpacing: '1px',
+      letterSpacing: isMobile ? '0.5px' : '1px',
       textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
     },
 
@@ -2355,9 +2358,10 @@ const HeroSection = () => {
       display: 'flex',
       flexDirection: isMobile ? 'column' : 'row',
       alignItems: isMobile ? 'flex-start' : 'center',
-      gap: isMobile ? (isSmallMobile ? '0.5rem' : '0.75rem') : '1rem',
+      gap: isMobile ? (isSmallMobile ? '0.4rem' : '0.5rem') : '1rem',
       flexWrap: 'wrap',
       width: '100%',
+      marginTop: isMobile ? '10px' : '0',
     },
     
     stars: {
@@ -2367,13 +2371,13 @@ const HeroSection = () => {
     
     starIcon: {
       color: colors.gold,
-      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '1rem') : '1.5rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1.5rem',
       fontWeight: '700',
       textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
     },
     
     reviewText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1.125rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.7rem' : '0.8rem') : '1.125rem',
       color: colors.white,
       fontFamily: "'Inter', sans-serif",
       fontWeight: '400',
@@ -2383,7 +2387,7 @@ const HeroSection = () => {
       color: colors.gold,
       fontWeight: '700',
       fontFamily: "'Inter', sans-serif",
-      fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.25rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1.25rem',
     },
     
     googleBadge: (active: boolean) => ({
@@ -2391,7 +2395,7 @@ const HeroSection = () => {
       alignItems: 'center',
       gap: '0.5rem',
       backgroundColor: active ? '#FFB800' : '#0A0A0C',
-      padding: isMobile ? (isSmallMobile ? '0.5rem 0.75rem' : '0.75rem 1rem') : '1rem 1.25rem',
+      padding: isMobile ? (isSmallMobile ? '0.4rem 0.6rem' : '0.5rem 0.75rem') : '1rem 1.25rem',
       borderRadius: '30px',
       border: active ? '2px solid #FFB800' : '2px solid #FFB800',
       transition: 'all 0.3s ease',
@@ -2403,7 +2407,7 @@ const HeroSection = () => {
     }),
     
     googleText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.7rem' : '0.8rem') : '1rem',
       color: 'inherit',
       fontWeight: '600',
       fontFamily: "'Inter', sans-serif",
@@ -2417,7 +2421,7 @@ const HeroSection = () => {
       backgroundColor: active ? '#FFB800' : '#0A0A0C',
       color: active ? '#0A0A0C' : '#FFB800',
       border: active ? '2px solid #FFB800' : '2px solid #FFB800',
-      padding: isMobile ? (isSmallMobile ? '0.5rem 0.75rem' : '0.75rem 1rem') : '1rem 1.25rem',
+      padding: isMobile ? (isSmallMobile ? '0.4rem 0.6rem' : '0.5rem 0.75rem') : '1rem 1.25rem',
       borderRadius: '30px',
       transition: 'all 0.3s ease',
       cursor: 'pointer',
@@ -2428,7 +2432,7 @@ const HeroSection = () => {
     }),
     
     googleReviewsText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.7rem' : '0.8rem') : '1rem',
       fontWeight: '600',
       fontFamily: "'Inter', sans-serif",
       letterSpacing: '0.5px',
@@ -2436,15 +2440,15 @@ const HeroSection = () => {
     
     reviewsCTAContainer: {
       display: 'flex',
-      flexDirection: isMobile ? 'column' : 'row',
-      alignItems: isMobile ? 'stretch' : 'center',
-      gap: '0.75rem',
+      flexDirection: isMobile ? 'row' : 'row',
+      alignItems: 'center',
+      gap: isMobile ? '0.5rem' : '0.75rem',
       flexWrap: 'wrap',
       width: '100%',
     },
 
     bostonSection: {
-      marginTop: '1rem',
+      marginTop: isMobile ? '0.75rem' : '1rem',
       width: '100%',
     },
     
@@ -2453,7 +2457,7 @@ const HeroSection = () => {
       alignItems: 'center',
       gap: '0.5rem',
       backgroundColor: '#0A0A0C',
-      padding: '0.5rem 0.75rem',
+      padding: isMobile ? (isSmallMobile ? '0.3rem 0.5rem' : '0.4rem 0.6rem') : '0.5rem 0.75rem',
       borderRadius: '20px',
       width: 'fit-content',
       maxWidth: '100%',
@@ -2461,26 +2465,26 @@ const HeroSection = () => {
     },
     
     bostonIcon: {
-      width: '16px',
-      height: '16px',
+      width: isMobile ? '12px' : '16px',
+      height: isMobile ? '12px' : '16px',
     },
     
     bostonText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.6rem' : '0.7rem') : '0.875rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.55rem' : '0.65rem') : '0.875rem',
       color: colors.white,
       fontWeight: '400',
       fontFamily: "'Inter', sans-serif",
     },
 
     rightColumn: {
-      marginTop: isMobile ? (isSmallMobile ? '1.5rem' : '2rem') : '0',
+      marginTop: isMobile ? (isSmallMobile ? '1rem' : '1.5rem') : '0',
       width: '100%',
     },
     
     bookingCard: {
       backgroundColor: colors.white,
       borderRadius: '20px',
-      padding: isMobile ? (isSmallMobile ? '1.25rem' : '1.75rem') : '2rem',
+      padding: isMobile ? (isSmallMobile ? '1rem' : '1.25rem') : '2rem',
       boxShadow: '0 20px 60px rgba(10, 10, 12, 0.3)',
       border: `2px solid ${colors.gold}`,
       width: '100%',
@@ -2489,21 +2493,21 @@ const HeroSection = () => {
     
     cardHeader: {
       textAlign: 'center',
-      marginBottom: '1.75rem',
+      marginBottom: isMobile ? '1rem' : '1.75rem',
     },
     
     formTitle: {
-      fontSize: isMobile ? (isSmallMobile ? '1.35rem' : '1.6rem') : '1.85rem',
+      fontSize: isMobile ? (isSmallMobile ? '1.1rem' : '1.25rem') : '1.85rem',
       fontWeight: '700',
       color: colors.background,
-      margin: '0 0 0.5rem 0',
+      margin: '0 0 0.25rem 0',
       lineHeight: '1.2',
       fontFamily: "'Inter', sans-serif",
       letterSpacing: '-0.5px',
     },
     
     formSubtitle: {
-      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.7rem' : '0.75rem') : '1rem',
       color: colors.background,
       opacity: 0.8,
       margin: 0,
@@ -2514,29 +2518,29 @@ const HeroSection = () => {
     form: {
       display: 'flex',
       flexDirection: 'column',
-      gap: '1.25rem',
+      gap: isMobile ? '0.75rem' : '1.25rem',
       width: '100%',
     },
     
     formGroup: {
       display: 'flex',
       flexDirection: 'column',
-      gap: '0.5rem',
+      gap: '0.25rem',
       width: '100%',
     },
     
     inputLabel: {
-      fontSize: isMobile ? '0.8rem' : '0.875rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.7rem' : '0.75rem') : '0.875rem',
       fontWeight: '600',
       color: colors.background,
       fontFamily: "'Inter', sans-serif",
     },
     
     formInput: {
-      padding: isMobile ? (isSmallMobile ? '0.6rem' : '0.8rem') : '1rem',
+      padding: isMobile ? (isSmallMobile ? '0.5rem' : '0.6rem') : '1rem',
       borderRadius: '10px',
       border: '2px solid #0A0A0C',
-      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.85rem') : '0.875rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.7rem' : '0.75rem') : '0.875rem',
       transition: 'all 0.3s ease',
       outline: 'none',
       fontFamily: "'Inter', sans-serif",
@@ -2546,10 +2550,10 @@ const HeroSection = () => {
     },
     
     formTextarea: {
-      padding: isMobile ? (isSmallMobile ? '0.6rem' : '0.8rem') : '1rem',
+      padding: isMobile ? (isSmallMobile ? '0.5rem' : '0.6rem') : '1rem',
       borderRadius: '10px',
       border: '2px solid #0A0A0C',
-      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.85rem') : '0.875rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.7rem' : '0.75rem') : '0.875rem',
       transition: 'all 0.3s ease',
       outline: 'none',
       fontFamily: "'Inter', sans-serif",
@@ -2557,24 +2561,24 @@ const HeroSection = () => {
       width: '100%',
       boxSizing: 'border-box',
       resize: 'vertical',
-      minHeight: '100px',
+      minHeight: isMobile ? '60px' : '100px',
     },
     
     formRow: {
       display: 'grid',
       gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-      gap: '1rem',
+      gap: isMobile ? '0.5rem' : '1rem',
       width: '100%',
     },
     
     submitButton: (active: boolean) => ({
-      marginTop: '0.5rem',
-      padding: isMobile ? (isSmallMobile ? '0.9rem' : '1.1rem') : '1.25rem',
+      marginTop: '0.25rem',
+      padding: isMobile ? (isSmallMobile ? '0.7rem' : '0.8rem') : '1.25rem',
       backgroundColor: colors.gold,
       color: colors.background,
       border: 'none',
       borderRadius: '10px',
-      fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.125rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1.125rem',
       fontWeight: '700',
       cursor: 'pointer',
       display: 'flex',
@@ -2590,7 +2594,7 @@ const HeroSection = () => {
     }),
     
     buttonText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.125rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1.125rem',
       fontWeight: '700',
     },
     
@@ -2600,8 +2604,8 @@ const HeroSection = () => {
     },
     
     successMessage: {
-      marginTop: '1.5rem',
-      padding: '1rem',
+      marginTop: '1rem',
+      padding: '0.75rem',
       backgroundColor: '#FFB800',
       borderRadius: '12px',
       border: '2px solid #0A0A0C',
@@ -2611,15 +2615,15 @@ const HeroSection = () => {
     },
     
     successTitle: {
-      fontSize: isMobile ? (isSmallMobile ? '1rem' : '1.1rem') : '1.25rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.25rem',
       fontWeight: '700',
       color: colors.background,
-      marginBottom: '0.5rem',
+      marginBottom: '0.25rem',
       fontFamily: "'Inter', sans-serif",
     },
     
     successText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.7rem' : '0.75rem') : '1rem',
       color: colors.background,
       marginBottom: 0,
       fontFamily: "'Inter', sans-serif",
@@ -2627,8 +2631,8 @@ const HeroSection = () => {
     },
     
     errorMessage: {
-      marginTop: '1.5rem',
-      padding: '1rem',
+      marginTop: '1rem',
+      padding: '0.75rem',
       backgroundColor: '#EF4444',
       borderRadius: '12px',
       border: '2px solid #0A0A0C',
@@ -2638,7 +2642,7 @@ const HeroSection = () => {
     },
     
     errorText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.9rem' : '1rem') : '1.125rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.8rem' : '0.9rem') : '1.125rem',
       fontWeight: '600',
       color: '#FFFFFF',
       marginBottom: 0,
@@ -2646,10 +2650,10 @@ const HeroSection = () => {
     },
     
     formNote: {
-      fontSize: isMobile ? (isSmallMobile ? '0.6rem' : '0.7rem') : '0.75rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.5rem' : '0.55rem') : '0.75rem',
       color: '#6B7280',
       textAlign: 'center',
-      marginTop: '1rem',
+      marginTop: '0.75rem',
       lineHeight: '1.5',
       fontFamily: "'Inter', sans-serif",
       fontWeight: '400',
@@ -2660,22 +2664,48 @@ const HeroSection = () => {
       alignItems: 'center',
       justifyContent: 'center',
       gap: '0.5rem',
-      marginTop: '1rem',
-      paddingTop: '1rem',
+      marginTop: '0.75rem',
+      paddingTop: '0.75rem',
       borderTop: '2px solid #0A0A0C',
       width: '100%',
     },
     
     securityIcon: {
-      width: '16px',
-      height: '16px',
+      width: isMobile ? '12px' : '16px',
+      height: isMobile ? '12px' : '16px',
     },
     
     securityText: {
-      fontSize: isMobile ? (isSmallMobile ? '0.6rem' : '0.7rem') : '0.75rem',
+      fontSize: isMobile ? (isSmallMobile ? '0.5rem' : '0.55rem') : '0.75rem',
       color: '#6B7280',
       fontWeight: '400',
       fontFamily: "'Inter', sans-serif",
+    },
+
+    // Animation elements positioning - FIXED FOR MOBILE
+    wavyFlagContainer: {
+      position: 'absolute',
+      top: isMobile ? (isSmallMobile ? '-35px' : '-40px') : '-40px',
+      left: isMobile ? '5px' : '20px',
+      zIndex: 21,
+      pointerEvents: 'none',
+    },
+
+    microInteractionContainer: {
+      position: 'absolute',
+      top: isMobile ? (isSmallMobile ? '70px' : '80px') : '110px',
+      right: isMobile ? (isSmallMobile ? '-200px' : '-250px') : '-400px',
+      zIndex: 20,
+      pointerEvents: 'none',
+    },
+
+    // Rotating star ring positioning
+    rotatingStarRing: {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      zIndex: 0,
     },
   };
 
@@ -2683,6 +2713,16 @@ const HeroSection = () => {
     <section style={baseStyles.heroSection}>
       <div style={baseStyles.backgroundContainer}>
         <div style={baseStyles.overlayGradient}></div>
+      </div>
+      
+      {/* BIG ROTATING STAR RING BEHIND CONTENT */}
+      <div style={baseStyles.rotatingStarRing}>
+        <RotatingStarRing 
+          size={isMobile ? 400 : 600}
+          color={colors.gold}
+          opacity={0.15}
+          speed={25}
+        />
       </div>
       
       <div style={baseStyles.heroContent}>
@@ -2696,26 +2736,32 @@ const HeroSection = () => {
                 onTouchStart={() => handleTouchStart(setExcellenceBadgeActive, true)}
                 onTouchEnd={() => handleTouchEnd(setExcellenceBadgeActive, false)}
               >
-                {/* Wavy flag image with animation */}
-                <WavyFlag 
-                  src="/image/flag.png"
-                  width={isMobile ? 60 : 80}
-                  height={isMobile ? 40 : 50}
-                />
-                
-                <FloatingBadge amplitude={8} duration={4}>
-                  <MicroInteraction 
-                    src="/image/pointer1.png"
-                    width={200}
-                    height={220}
-                    style={{ 
-                      top: '110px', 
-                      right: '-400px',
-                      filter: 'drop-shadow(0 4px 8px rgba(255, 184, 0, 0.3))'
+                {/* Wavy flag image with animation - FIXED POSITIONING */}
+                <div style={baseStyles.wavyFlagContainer}>
+                  <WavyFlag 
+                    src="/image/flag.png"
+                    width={isMobile ? (isSmallMobile ? 40 : 50) : 80}
+                    height={isMobile ? (isSmallMobile ? 25 : 30) : 50}
+                    style={{
+                      filter: 'drop-shadow(0 8px 16px rgba(255, 184, 0, 0.4))',
                     }}
-                    animate={true}
                   />
-                </FloatingBadge>
+                </div>
+                
+                {/* MicroInteraction - FIXED POSITIONING */}
+                <div style={baseStyles.microInteractionContainer}>
+                  <FloatingBadge amplitude={isMobile ? 5 : 8} duration={4}>
+                    <MicroInteraction 
+                      src="/image/pointer1.png"
+                      width={isMobile ? (isSmallMobile ? 80 : 100) : 200}
+                      height={isMobile ? (isSmallMobile ? 90 : 110) : 220}
+                      style={{ 
+                        filter: 'drop-shadow(0 4px 8px rgba(255, 184, 0, 0.3))'
+                      }}
+                      animate={true}
+                    />
+                  </FloatingBadge>
+                </div>
                 
                 <motion.div 
                   style={baseStyles.numberOneBadge(excellenceBadgeActive)}
@@ -2849,7 +2895,7 @@ const HeroSection = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <svg width="20" height="20" viewBox="0 0 24 24">
+                    <svg width={isMobile ? "16" : "20"} height={isMobile ? "16" : "20"} viewBox="0 0 24 24">
                       <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                       <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                       <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -2867,7 +2913,7 @@ const HeroSection = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <svg width={isMobile ? "14" : "16"} height={isMobile ? "14" : "16"} viewBox="0 0 24 24" fill="none">
                       <path d="M21 11.5C21.0034 12.8199 20.6951 14.1219 20.1 15.3C19.3944 16.7118 18.3098 17.8992 16.9674 18.7293C15.6251 19.5594 14.0782 19.9994 12.5 20C11.1801 20.0035 9.87812 19.6951 8.7 19.1L3 21L4.9 15.3C4.30493 14.1219 3.99656 12.8199 4 11.5C4.00061 9.92179 4.44061 8.37488 5.27072 7.03258C6.10083 5.69028 7.28825 4.6056 8.7 3.9C9.87812 3.30493 11.1801 2.99656 12.5 3H13C15.0843 3.11499 17.053 3.99478 18.5291 5.47087C20.0052 6.94696 20.885 8.91568 21 11V11.5Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                     <span style={baseStyles.googleReviewsText}>Read Reviews</span>
@@ -2887,7 +2933,7 @@ const HeroSection = () => {
                     animate={{ y: [0, -3, 0] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
                       <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2Z" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                       <path d="M12 11C13.1046 11 14 10.1046 14 9C14 7.89543 13.1046 7 12 7C10.8954 7 10 7.89543 10 9C10 10.1046 10.8954 11 12 11Z" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
@@ -3014,20 +3060,6 @@ const HeroSection = () => {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      <FloatingBadge amplitude={5} duration={3}>
-                        <MicroInteraction 
-                          src="/image/pointer1.png"
-                          width={100}
-                          height={100}
-                          style={{ 
-                            top: '-10px', 
-                            right: '-5px',
-                            filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2))'
-                          }}
-                          animate={true}
-                        />
-                      </FloatingBadge>
-                      
                       <span style={baseStyles.buttonText}>
                         {state.submitting ? 'Sending...' : 'Get Free Estimate'}
                       </span>
@@ -3036,7 +3068,7 @@ const HeroSection = () => {
                         animate={{ x: [0, 5, 0] }}
                         transition={{ duration: 1.5, repeat: Infinity }}
                       >
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <svg width={isMobile ? "16" : "20"} height={isMobile ? "16" : "20"} viewBox="0 0 24 24" fill="none">
                           <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#0A0A0C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                       </motion.span>
@@ -3083,7 +3115,7 @@ const HeroSection = () => {
                       animate={{ rotate: [0, 10, -10, 0] }}
                       transition={{ duration: 3, repeat: Infinity }}
                     >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                      <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
                         <path d="M19 11H5C3.89543 11 3 11.8954 3 13V20C3 21.1046 3.89543 22 5 22H19C20.1046 22 21 21.1046 21 20V13C21 11.8954 20.1046 11 19 11Z" stroke="#6B7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         <path d="M7 11V7C7 5.67392 7.52678 4.40215 8.46447 3.46447C9.40215 2.52678 10.6739 2 12 2C13.3261 2 14.5979 2.52678 15.5355 3.46447C16.4732 4.40215 17 5.67392 17 7V11" stroke="#6B7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
