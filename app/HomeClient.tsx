@@ -2491,7 +2491,7 @@ const HeroSection = () => {
       boxShadow: '0 25px 60px rgba(10, 10, 12, 0.4)',
       border: `2px solid ${colors.gold}`,
       width: '100%',
-      maxWidth: isMobile ? '100%' : '480px',
+      maxWidth: isMobile ? '100%' : '200px',
       margin: '0 auto',
       boxSizing: 'border-box',
       overflow: 'hidden',
